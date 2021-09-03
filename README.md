@@ -1,2 +1,2 @@
 # FYS4150
-Computational Physics 1 course at the University of Oslo
+Repository for the Computational Physics 1 masters course at the University of Oslo
