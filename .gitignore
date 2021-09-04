@@ -1,0 +1,8 @@
+# Compiled
+*.exe
+*.o
+
+# Data files
+*.dat
+
+*.md.swp
