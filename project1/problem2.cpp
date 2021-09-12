@@ -16,7 +16,7 @@ double u(double x){
 int main()
 {
 	// output file
-	std::string filename = "problem2_ouput.dat";
+	std::string filename = "problem2_output.dat";
 	std::ofstream ofile;
 	ofile.open(filename);
 	// spacing in outputfile
