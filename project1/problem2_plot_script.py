@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # Open the output file:
-file = open('problem2_output.txt', 'r')
+file = open('problem2_output.dat', 'r')
 
 # Initiate lists to store values:
 x = []; u = []
