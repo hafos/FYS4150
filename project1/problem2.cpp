@@ -26,7 +26,7 @@ int main()
 	int N = 1000;  // number of data points to evaluate
 	double xmin = 0; double xmax = 1;
 	double h = (xmax - xmin)/N;  // step length
-	std::cout << h;
+	
 	std::vector<double> x_array(N, 0);  // x-array
 	double x = xmin;
 	double y = 0;
