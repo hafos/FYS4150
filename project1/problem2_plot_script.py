@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # Open the output file:
-file = open('problem2_output.dat', 'r')
+file = open('problem2_ouput.dat', 'r')
 
 # Initiate lists to store values:
 x = []; u = []
@@ -11,7 +11,7 @@ x = []; u = []
 # Loop through lines in file:
 for line in file:
     # Split each line for x and u:
-    xstr, ustr = line.split(' ')
+    xstr, ustr = line.split()
     # Split scientific notation:
     xdec, xexp = xstr.split('e')
     udec, uexp = ustr.split('e')
