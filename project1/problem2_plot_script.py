@@ -11,7 +11,7 @@ x = []; u = []
 # Loop through lines in file:
 for line in file:
     # Split each line for x and u:
-    xstr, ustr = line.split(' ')
+    xstr, ustr = line.split()
     # Split scientific notation:
     xdec, xexp = xstr.split('e')
     udec, uexp = ustr.split('e')
@@ -25,8 +25,8 @@ file.close()
 # Plot x and u(x):
 plt.figure()
 plt.plot(x, u)
-plt.xlabel('x [1]')
-plt.ylabel('u [1]')
+plt.xlabel('x')
+plt.ylabel('u')
 plt.grid()
 plt.title('Plot of the solution u(x)')
 plt.savefig('problem2_output_plot.pdf')
