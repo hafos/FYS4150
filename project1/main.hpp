@@ -48,5 +48,4 @@ vector<double> specialized_algorithm(int n, vector<double> b, vector<double> g){
     return v;
 }
 
-
 #endif

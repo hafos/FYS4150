@@ -20,23 +20,20 @@ vector<vector<double>> calculate_the_values(int n, bool timing=false){
 
   if (timing == true){
       if (n == 10){
-          // vector<vector<double>> time;
           std::string filename2 = "timing_run.dat";
           std::ofstream otimefile;
           otimefile.open(filename2);
           otimefile << "n: " << n << endl;
-          for (int i = 0; i < 10; i++){
+          for (int i = 0; i < 100; i++){
               clock_t t1 = clock();
               vector<double> gen_time = general_algorithm(n, a, b, c, g);
               clock_t t2 = clock();
               double gen_time_elapsed = ((double) (t2 - t1))/CLOCKS_PER_SEC;
-              // time[0].push_back(gen_time_elapsed);
 
               clock_t t3 = clock();
               vector<double> special_time = specialized_algorithm(n, b, g);
               clock_t t4 = clock();
               double special_time_elapsed = ((double) (t4 - t3))/CLOCKS_PER_SEC;
-              // time[0].push_back(special_time_elapsed);
 
               otimefile << gen_time_elapsed << " "
               << special_time_elapsed
@@ -45,22 +42,19 @@ vector<vector<double>> calculate_the_values(int n, bool timing=false){
           otimefile.close();
       }
       else{
-           // vector<vector<double>> time;
            std::ofstream otimefile;
            otimefile.open("timing_run.dat", std::ofstream::app);
            otimefile << "n: " << n << endl;
-           for (int i = 0; i < 10; i++){
+           for (int i = 0; i < 100; i++){
                clock_t t1 = clock();
                vector<double> gen_time = general_algorithm(n, a, b, c, g);
                clock_t t2 = clock();
                double gen_time_elapsed = ((double) (t2 - t1))/CLOCKS_PER_SEC;
-               // time[0].push_back(gen_time_elapsed);
 
                clock_t t3 = clock();
                vector<double> special_time = specialized_algorithm(n, b, g);
                clock_t t4 = clock();
                double special_time_elapsed = ((double) (t4 - t3))/CLOCKS_PER_SEC;
-               // time[0].push_back(special_time_elapsed);
 
                otimefile << gen_time_elapsed << " "
                << special_time_elapsed
@@ -132,6 +126,9 @@ int main(){
   			  << std::setw(width) << std::setprecision(decimals) << std::scientific << xv[1][i]
   			  << std::endl;
     }
+    // for timing of n=10^6
+    n = 1000000;
+    xv = calculate_the_values(n, true);
     //ofile << std::endl;
 
     ofile.close();
