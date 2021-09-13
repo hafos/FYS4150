@@ -35,35 +35,52 @@ int main(){
     std::ofstream ofile;
     ofile.open(filename);
     // spacing in outputfile
-    int width = 12; int decimals = 4;
+    int width = 12; int decimals = 5;
 
     //  Writing solutions to file
     int n = 10; // grid points in square matrix
-    vector<vector<double>> xv_10 = calculate_the_values(n);
+    vector<vector<double>> xv = calculate_the_values(n);
   	for (int i=0; i < n; i++){
-  		ofile << std::setw(width) << std::setprecision(decimals) << std::scientific << xv_10[0][i]
-  			  << std::setw(width) << std::setprecision(decimals) << std::scientific << xv_10[1][i]
+  		ofile << std::setw(width) << std::setprecision(decimals) << std::scientific << xv[0][i]
+  			  << std::setw(width) << std::setprecision(decimals) << std::scientific << xv[1][i]
   			  << std::endl;
     }
     ofile << std::endl;
 
     n = 100; // grid points in square matrix
-    vector<vector<double>> xv_100 = calculate_the_values(n);
+    xv = calculate_the_values(n);
   	for (int i=0; i < n; i++){
-  		ofile << std::setw(width) << std::setprecision(decimals) << std::scientific << xv_100[0][i]
-  			  << std::setw(width) << std::setprecision(decimals) << std::scientific << xv_100[1][i]
+  		ofile << std::setw(width) << std::setprecision(decimals) << std::scientific << xv[0][i]
+  			  << std::setw(width) << std::setprecision(decimals) << std::scientific << xv[1][i]
   			  << std::endl;
   	}
     ofile << std::endl;
 
     n = 1000; // grid points in square matrix
-    vector<vector<double>> xv_1000 = calculate_the_values(n);
+    xv = calculate_the_values(n);
   	for (int i=0; i < n; i++){
-  		ofile << std::setw(width) << std::setprecision(decimals) << std::scientific << xv_1000[0][i]
-  			  << std::setw(width) << std::setprecision(decimals) << std::scientific << xv_1000[1][i]
+  		ofile << std::setw(width) << std::setprecision(decimals) << std::scientific << xv[0][i]
+  			  << std::setw(width) << std::setprecision(decimals) << std::scientific << xv[1][i]
   			  << std::endl;
     }
     ofile << std::endl;
+
+    n = 10000; // grid points in square matrix
+    xv = calculate_the_values(n);
+  	for (int i=0; i < n; i++){
+  		ofile << std::setw(width) << std::setprecision(decimals) << std::scientific << xv[0][i]
+  			  << std::setw(width) << std::setprecision(decimals) << std::scientific << xv[1][i]
+  			  << std::endl;
+    }
+    ofile << std::endl;
+    n = 100000; // grid points in square matrix
+    xv = calculate_the_values(n);
+  	for (int i=0; i < n; i++){
+  		ofile << std::setw(width) << std::setprecision(decimals) << std::scientific << xv[0][i]
+  			  << std::setw(width) << std::setprecision(decimals) << std::scientific << xv[1][i]
+  			  << std::endl;
+    }
+    //ofile << std::endl;
 
     ofile.close();
     return 0;

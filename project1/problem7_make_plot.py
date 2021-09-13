@@ -49,7 +49,7 @@ for line in file_num:
 file_num.close()
 
 # Plot x and u(x):
-'''plt.figure()
+plt.figure()
 plt.plot(x, u, label='u(x)')
 for i in range(len(y)):
     n = len(y[i])
@@ -60,7 +60,7 @@ plt.grid()
 plt.title('Plot of the solution u(x) \nwith numerical aproximations v_i(n)')
 plt.legend()
 plt.savefig('problem7_output_plot.pdf')
-plt.show()'''
+plt.show()
 
 
 # Plot log of absolute error:
@@ -73,7 +73,7 @@ for i in range(len(y)): # Loop over each run i
         arr = np.abs(np.array(x)-y[i][j]) # Find differences of all x to this y_j
         k_closest +=[np.argmin(arr)] # Store index k of x that fits best to y_j
     u_i += [np.array(u)[k_closest]] # Add this run length u to list with all
-    plt.plot(y[i], np.log10(np.abs((u_i[i]-v[i]))),label=f'v$_i$: n=%g'%n)
+    plt.plot(y[i], np.log10(np.abs((u_i[i]-v[i]))),label=f'v$_i$: n=%g'%n, alpha=0.7)
 plt.xlabel(f'x$_i$')
 plt.ylabel(f'log$_1$$_0$($\Delta_i$)')
 plt.grid()
@@ -100,11 +100,11 @@ plt.show()
 """ Print table of max relative errors: """
 print('-----------------------------------------------------')
 print('Table of maximal relative errors')
-print('    n:     max(epsilon_i):')
+print('   n:     max(epsilon_i):')
 print('-----------------------------------------------------')
 for i in range(len(y)): # Loop over each run i
     n = len(y[i])
-    print('%5g         %5.5e' %(n, np.nanmax(relerr[i])))
+    print('%1.0e         %5.5e' %(n, np.nanmax(relerr[i])))
 print('-----------------------------------------------------')
 
 
