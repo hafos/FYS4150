@@ -7,9 +7,9 @@ vector<vector<double>> calculate_the_values(int n){
   vector<double> g(n, 0);
 
   vector<double> x_array(n, 0);
-  double h = 1.0/(n-1);
+  double h = 1.0/(n+1);
   double h_squared = pow(h, 2.0); // to lessen FLOPs
-  double x = 0;
+  double x = h;
 
   // filling array
   for (int i = 0; i < n; i++){
