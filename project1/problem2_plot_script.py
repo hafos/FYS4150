@@ -12,12 +12,9 @@ x = []; u = []
 for line in file:
     # Split each line for x and u:
     xstr, ustr = line.split()
-    # Split scientific notation:
-    xdec, xexp = xstr.split('e')
-    udec, uexp = ustr.split('e')
     # Convert to float and add to lists:
-    x += [float(xdec)*10**(float(xexp))]
-    u += [float(udec)*10**(float(uexp))]
+    x += [float(xstr)]
+    u += [float(ustr)]
 
 # Close the output file:
 file.close()
