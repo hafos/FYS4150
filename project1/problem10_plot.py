@@ -41,7 +41,7 @@ gen_avg = np.mean(gen, axis=1)
 spes = np.array(spes)
 spes_avg = np.mean(spes, axis=1)
 # plotting
-print(n, gen_avg)
+# print(n, gen_avg, spes_avg)
 #checking ratio """
 ratio = gen_avg/spes_avg
 print('Ratio of the two algorithms:\n', ratio)
