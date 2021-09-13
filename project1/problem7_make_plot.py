@@ -62,6 +62,28 @@ plt.legend()
 plt.savefig('problem7_output_plot.pdf')
 plt.show()
 
+
+# Plot log of absolute error:
+plt.figure()
+for i in range(len(y)): # Loop over each run i
+    n = len(y[i])
+    k_closest = [] # Store index k of x that fit y_j here
+    for j in range(len(y[i])): # Loop over all y_j
+        arr = np.abs(np.array(x)-y[i][j]) # Find differences of all x to this y_j
+        k_closest +=[np.argmin(arr)] # Store index k of x that fits best to y_j
+    plt.plot(y[i], np.log10(np.abs((np.array(u)[k_closest]-v[i]))),label=f'v$_i$: n=%g'%n)
+plt.xlabel(f'x$_i$')
+plt.ylabel(f'log$_1$$_0$($\Delta_i$)')
+plt.grid()
+plt.title('Logarithm of the absolute error')
+plt.legend()
+plt.savefig('problem8_log_abserr.pdf')
+plt.show()
+
+
+
+
+
 """
 Terminal> python3 problem7_make_plot.py
 
