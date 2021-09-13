@@ -40,13 +40,13 @@ for line in file_num:
             y += [[float(ystr)]]
             v += [[float(vstr)]]
             i +=1
+        else:
+            y[i] += [float(ystr)]
+            v[i] += [float(vstr)]
         new_run=0
-        y[i] += [float(ystr)]
-        v[i] += [float(vstr)]
 
 # Close numerical solution output file:
 file_num.close()
-
 
 # Plot x and u(x):
 plt.figure()
