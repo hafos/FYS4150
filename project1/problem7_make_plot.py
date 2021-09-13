@@ -73,7 +73,10 @@ for i in range(len(y)): # Loop over each run i
         arr = np.abs(np.array(x)-y[i][j]) # Find differences of all x to this y_j
         k_closest +=[np.argmin(arr)] # Store index k of x that fits best to y_j
     u_i += [np.array(u)[k_closest]] # Add this run length u to list with all
-    plt.plot(y[i], np.log10(np.abs((u_i[i]-v[i]))),label=f'v$_i$: n=%g'%n, alpha=0.7)
+    if n>=1e4:
+        alpha = 0.4
+    else: alpha = 1.0
+    plt.plot(y[i], np.log10(np.abs((u_i[i]-v[i]))),label=f'v$_i$: n=%g'%n, alpha=alpha)
 plt.xlabel(f'x$_i$')
 plt.ylabel(f'log$_1$$_0$($\Delta_i$)')
 plt.grid()
@@ -88,8 +91,12 @@ relerr = [] # Store relative errors for later
 for i in range(len(y)): # Loop over each run i
     n = len(y[i])
     relerr += [np.abs((u_i[i]-v[i])/u_i[i])]
-    plt.plot(y[i], np.log10(relerr[i]),label=f'v$_i$: n=%g'%n)
+    if n>=1e4:
+        alpha = 0.4
+    else: alpha = 1.0
+    plt.plot(y[i], np.log10(relerr[i]),label=f'v$_i$: n=%g'%n, alpha=alpha)
 plt.xlabel(f'x$_i$')
+plt.ylim([-6,0])
 plt.ylabel(f'log$_1$$_0$($\epsilon_i$)')
 plt.grid()
 plt.title('Logarithm of the relative error')
@@ -111,4 +118,16 @@ print('-----------------------------------------------------')
 """
 Terminal> python3 problem7_make_plot.py
 
+
+
+-----------------------------------------------------
+Table of maximal relative errors
+   n:     max(epsilon_i):
+-----------------------------------------------------
+1e+01         6.70610e-02
+1e+02         1.07161e-02
+1e+03         1.04674e-03
+1e+04           inf
+1e+05           inf
+-----------------------------------------------------
 """

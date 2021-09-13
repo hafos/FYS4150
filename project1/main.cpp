@@ -87,7 +87,7 @@ int main(){
     std::ofstream ofile;
     ofile.open(filename);
     // spacing in outputfile
-    int width = 12; int decimals = 5;
+    int width = 21; int decimals = 9;
 
     //  Writing solutions to file
     int n = 10; // grid points in square matrix
