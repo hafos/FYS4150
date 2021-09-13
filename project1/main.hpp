@@ -7,6 +7,7 @@
 #include <iomanip>
 #include <vector>
 #include <cmath>
+#include <time.h>
 
 using namespace std;
 
@@ -32,7 +33,7 @@ vector<double> general_algorithm(int n, vector<double> a, vector<double> b, vect
     return v;
 }
 
-vector<double> specialized_algorithm(int n, vector<double> a, vector<double> b, vector<double> c, vector<double> g){
+vector<double> specialized_algorithm(int n, vector<double> b, vector<double> g){
     vector<double> v(n, 0);
     // forward subst.
     for (int i = 1; i < n; i++){
