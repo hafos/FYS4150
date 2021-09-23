@@ -6,6 +6,7 @@
 #include <iostream>
 #include <armadillo>
 #include <cmath>
+#include "jacobi.cpp"
 
 using namespace arma;
 
@@ -14,6 +15,7 @@ int main() {
     //Problem 3: initialize a tridiagonal 6x6 matrix A
     //with diagonal 2/h^2 and sub/superdiagonal -1/h^2
     //h = 1/(N+1) so here it's 1/7
+    int N = 6;
     mat A(6, 6, fill::zeros);
     double a = -1.0/pow(1./7., 2);
     double d = 2.0/pow(1./7., 2);
@@ -46,17 +48,33 @@ int main() {
     vec_ana = normalise(vec_ana);
 
     std::cout << "numerical and analytical eigenvalues: " <<endl;
-    eigval.print();
+    //eigval.print();
     std::cout << endl;
-    val_ana.print();
+    //val_ana.print();
     std::cout << endl;
 
     std::cout << "numerical and analytical eigenvectors: " <<endl;
-    eigvec.print();
+    //eigvec.print();
     std::cout << endl;
-    vec_ana.print();
+    //vec_ana.print();
     std::cout << endl;
 
     std::cout << "eigenvalues equal: " << approx_equal(eigval, val_ana, "absdiff", 0.0001) << endl;
     std::cout << "eigenvectors equal: " << approx_equal(eigvec, vec_ana, "absdiff", 0.0001) << endl;
+
+    // Now calculate answers using jacobi rotation method:
+    double tolerance = 1e-8;
+    vec val_jac(N, fill::zeros);
+    mat vec_jac(N, N, fill::zeros);
+    int maxiter = 100;
+    int iterations;
+    bool converged;
+    jacobi_eigensolver(A, tolerance, val_jac, vec_jac,
+                            maxiter, iterations, converged);
+
+    std::cout << endl;
+    val_jac.print();
+    std::cout << endl;
+    vec_jac.print();
+
 }

@@ -18,7 +18,7 @@ double max_offdiag_symmetric(const arma::mat& A, int& k, int &l){
   return max;
 }
 
-int main() {
+int test_ilode() {
   // Make test matrix:
   mat A(4, 4, fill::zeros);
   for (int i = 0; i < 4; i++){
