@@ -17,7 +17,7 @@ int main() {
     mat A(6, 6, fill::zeros);
     double a = -1.0/pow(1./7., 2);
     double d = 2.0/pow(1./7., 2);
-    
+
     for (int i = 0; i < 6; i++){
         A(i, i) = d;
         if (i+1 < 6){
@@ -25,15 +25,14 @@ int main() {
             A(i+1, i) = a;
         }
     }
-    
+
     //initialize arrays to contain the eigenvectors and eigenvalues
     vec eigval;
     mat eigvec;
     //solve the eigenvalue problem
     eig_sym(eigval, eigvec, A);
-    eigval = normalise(eigval);
     eigvec = normalise(eigvec);
-    
+
     //now check with the analytical result:
     vec val_ana(6);
     mat vec_ana(6, 6);
@@ -44,13 +43,20 @@ int main() {
             vec_ana(j-1, i-1) = sin((j*i*datum::pi)/7);
         }
     }
-    val_ana = normalise(val_ana);
     vec_ana = normalise(vec_ana);
-    
+
+    std::cout << "numerical and analytical eigenvalues: " <<endl;
+    eigval.print();
+    std::cout << endl;
+    val_ana.print();
+    std::cout << endl;
+
+    std::cout << "numerical and analytical eigenvectors: " <<endl;
     eigvec.print();
     std::cout << endl;
-    vec_ana.print(); //whyyyyy are the signs different
-    
+    vec_ana.print();
+    std::cout << endl;
+
     std::cout << "eigenvalues equal: " << approx_equal(eigval, val_ana, "absdiff", 0.0001) << endl;
     std::cout << "eigenvectors equal: " << approx_equal(eigvec, vec_ana, "absdiff", 0.0001) << endl;
 }
