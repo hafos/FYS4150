@@ -48,7 +48,7 @@ int main() {
     vec_ana = normalise(vec_ana);
 
     std::cout << "numerical and analytical eigenvalues: " <<endl;
-    //eigval.print();
+    eigval.print();
     std::cout << endl;
     //val_ana.print();
     std::cout << endl;

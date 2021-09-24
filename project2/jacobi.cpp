@@ -6,15 +6,15 @@
 
 using namespace arma;
 
-void jacobi_rotate(arma::mat& B, arma::mat& eigenvectors, arma::mat& R, int k, int l){
-  // Reset R to identity matrix
-  R(k, l) = 0;
-  R(l, k) = 0;
-  R(k, k) = 1;
-  R(l, l) = 1;
+void jacobi_rotate(arma::mat& B, arma::mat& R, int k, int l){
+  // Make idetity matrix S:
+  mat S(B.n_cols, B.n_cols, fill::zeros);
+  for (int i=0; i<B.n_cols; i++){
+    S(i,i) = 1;
+  }
 
   // Get k, l, tau, t, c, s:
-  double maxval = max_offdiag_symmetric(B, k, l); // THIS SETS NEW k AND l
+  double maxval = max_offdiag_symmetric(B, k, l); // sets new k and l
   double tau = (B(l,l) - B(k,k))/(2*B(k,l));
   vec ts(2);
   ts(0) = - tau + sqrt(1 + pow(tau, 2));
@@ -23,16 +23,16 @@ void jacobi_rotate(arma::mat& B, arma::mat& eigenvectors, arma::mat& R, int k, i
   double c = 1/sqrt(1+pow(t,2));
   double s = t*c;
 
-  // Update R:
-  R(k, k) = c;
-  R(l, l) = c;
-  R(k, l) = -s;
-  R(l, k) = s;
+  // Update S:
+  S(k, k) = c;
+  S(l, l) = c;
+  S(k, l) = -s;
+  S(l, k) = s;
 
   // Update B:
-  B = (R.t()*B)*R;
-  // Update eigenvectors:
-  eigenvectors = eigenvectors*R;
+  B = (S.t()*B)*S;
+  // Update R:
+  R = R*S;
 }
 
 void jacobi_eigensolver(const arma::mat& A, double tolerance, arma::vec& eigenvalues, arma::mat& eigenvectors,
@@ -46,7 +46,6 @@ void jacobi_eigensolver(const arma::mat& A, double tolerance, arma::vec& eigenva
   // Make R and eigenvectors identity matrices to edit later
   mat R(A.n_cols, A.n_cols, fill::zeros);
   for (int i=0; i<A.n_cols; i++){
-    eigenvectors(i,i) = 1;
     R(i,i) = 1;
   }
   // Copy A to B
@@ -58,7 +57,7 @@ void jacobi_eigensolver(const arma::mat& A, double tolerance, arma::vec& eigenva
   }
 
   while(pow(B, 2).max() > tolerance){
-    jacobi_rotate(B, eigenvectors, R, k, l);
+    jacobi_rotate(B, R, k, l); // This updates B and R
     iterations = iterations + 1;
 
     // If-tests for convergence etc.:
@@ -78,5 +77,8 @@ void jacobi_eigensolver(const arma::mat& A, double tolerance, arma::vec& eigenva
   std::cout << "Loop Finished " << endl;
   for (int i=0; i<A.n_cols; i++){
     eigenvalues(i) = B(i,i);
+    for (int j=0; j<A.n_cols; j++){
+      eigenvectors(i,j) = R(i,j);
+    }
   }
 }
