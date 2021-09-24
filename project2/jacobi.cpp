@@ -6,15 +6,15 @@
 
 using namespace arma;
 
-void jacobi_rotate(arma::mat& B, arma::mat& R, int k, int l){
-  // Make idetity matrix S:
-  mat S(B.n_cols, B.n_cols, fill::zeros);
-  for (int i=0; i<B.n_cols; i++){
-    S(i,i) = 1;
-  }
+void jacobi_rotate(arma::mat& B, arma::mat& R){
+  int k = 0;
+  int l = 0;
 
   // Get k, l, tau, t, c, s:
   double maxval = max_offdiag_symmetric(B, k, l); // sets new k and l
+  if(k==l){
+    std::cout << "Something went wrong: k = l" << endl;
+  }
   double tau = (B(l,l) - B(k,k))/(2*B(k,l));
   double t;
   if(tau>0){
@@ -26,16 +26,36 @@ void jacobi_rotate(arma::mat& B, arma::mat& R, int k, int l){
   double c = 1/sqrt(1+pow(t,2));
   double s = t*c;
 
-  // Update S:
-  S(k, k) = c;
-  S(l, l) = c;
-  S(k, l) = -s;
-  S(l, k) = s;
-
   // Update B:
-  B = (S.t()*B)*S;
+  //B = (S.t()*B)*S;
+  mat B_temp(B.n_cols, B.n_cols, fill::zeros);
+  B_temp(k,k) = B(k,k)*pow(c, 2) - 2*B(k,l)*c*s + B(l,l)*pow(s,2);
+  B_temp(l,l) = B(l,l)*pow(c, 2) - 2*B(k,l)*c*s + B(k,k)*pow(s,2);
+  B_temp(k,l) = 0;
+  B_temp(l,k) = 0;
+  for (int i=0; i<B.n_cols; i++){
+    if(i!=k){
+      if(i!=l){
+        B_temp(i,k) = B(i,k)*c - B(i,l)*s;
+        B_temp(k,i) = B_temp(i,k);
+        B_temp(i,l) = B(i,l)*c + B(i,k)*s;
+        B_temp(l,i) = B_temp(i,l);
+        B(i,k) = B_temp(i,k);
+        B(k,i) = B_temp(k,i);
+        B(i,l) = B_temp(i,l);
+        B(l,i) = B_temp(l,i);
+      }
+    }
+  }
   // Update R:
-  R = R*S;
+  //R = S*R;
+  mat R_temp(B.n_cols, B.n_cols, fill::zeros);
+  for (int i=0; i<B.n_cols; i++){
+    R_temp(i,k) = R(i,k)*c - R(i,l)*s;
+    R_temp(i,l) = R(i,l)*c + R(i,k)*s;
+    R(i,k) = R_temp(i,k);
+    R(i,l) = R_temp(i,l);
+  }
 }
 
 void jacobi_eigensolver(const arma::mat& A, double tolerance, arma::vec& eigenvalues, arma::mat& eigenvectors,
@@ -43,9 +63,6 @@ void jacobi_eigensolver(const arma::mat& A, double tolerance, arma::vec& eigenva
   //double tolerance = 1e-8;
   iterations = 0;
   converged = 0;
-
-  int k = 0;
-  int l = 0;
 
   // R = I
   mat R(A.n_cols, A.n_cols, fill::zeros);
@@ -60,22 +77,22 @@ void jacobi_eigensolver(const arma::mat& A, double tolerance, arma::vec& eigenva
     }
   }
 
-  while(pow(B, 2).max() > tolerance){
-    jacobi_rotate(B, R, k, l); // This updates B and R
-    iterations = iterations + 1;
+  int k=0;
+  int l=0;
+  double maxoff = max_offdiag_symmetric(B, k, l);
 
+  while(pow(maxoff, 2) > tolerance){
+    jacobi_rotate(B, R); // This updates B and R
+    iterations = iterations + 1;
+    double maxoff = max_offdiag_symmetric(B, k, l);
     // If-tests for convergence etc.:
     if(iterations > maxiter){
       std::cout << "Not converged " << endl;
       break;
     }
-    if(pow(B, 2).max() <= tolerance){
+    if(pow(maxoff, 2) <= tolerance){
       std::cout << "Converged! " << endl;
       converged = 1;
-    }
-    if(k==l){
-      std::cout << "Something went wrong: k = l" << endl;
-      break;
     }
   }
   std::cout << "Loop Finished " << endl;

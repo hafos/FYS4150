@@ -4,12 +4,12 @@
 
 using namespace arma;
 
-double max_offdiag_symmetric(const arma::mat& A, int& k, int &l){
+double max_offdiag_symmetric(const arma::mat& A, int& k, int& l){
   double max = 0;
-  for (int i = 1; i < A.n_rows; i++){
+  for (int i = 1; i < A.n_cols; i++){
     for (int j = 0; j < i; j++){
-      if (A(i,j) > max){
-        max = A(i,j);
+      if (abs(A(i,j)) > max){
+        max = abs(A(i,j));
         k = i;
         l = j;
       }

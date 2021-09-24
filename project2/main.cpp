@@ -54,19 +54,19 @@ int main() {
     std::cout << endl;
 
     std::cout << "numerical and analytical eigenvectors: " <<endl;
-    //eigvec.print();
+    eigvec.print();
     std::cout << endl;
     //vec_ana.print();
     std::cout << endl;
 
-    std::cout << "eigenvalues equal: " << approx_equal(eigval, val_ana, "absdiff", 0.0001) << endl;
-    std::cout << "eigenvectors equal: " << approx_equal(eigvec, vec_ana, "absdiff", 0.0001) << endl;
+    //std::cout << "eigenvalues equal: " << approx_equal(eigval, val_ana, "absdiff", 0.0001) << endl;
+    //std::cout << "eigenvectors equal: " << approx_equal(eigvec, vec_ana, "absdiff", 0.0001) << endl;
 
     // Now calculate answers using jacobi rotation method:
     double tolerance = 1e-8;
     vec val_jac(N, fill::zeros);
     mat vec_jac(N, N, fill::zeros);
-    int maxiter = 100;
+    int maxiter = 50;
     int iterations;
     bool converged;
     jacobi_eigensolver(A, tolerance, val_jac, vec_jac,
@@ -75,6 +75,6 @@ int main() {
     std::cout << endl;
     val_jac.print();
     std::cout << endl;
-    vec_jac.print();
+    normalise(vec_jac).print();
 
 }
