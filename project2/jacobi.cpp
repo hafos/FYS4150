@@ -16,10 +16,13 @@ void jacobi_rotate(arma::mat& B, arma::mat& R, int k, int l){
   // Get k, l, tau, t, c, s:
   double maxval = max_offdiag_symmetric(B, k, l); // sets new k and l
   double tau = (B(l,l) - B(k,k))/(2*B(k,l));
-  vec ts(2);
-  ts(0) = - tau + sqrt(1 + pow(tau, 2));
-  ts(1) = - tau - sqrt(1 + pow(tau, 2));
-  double t = min(ts);
+  double t;
+  if(tau>0){
+    t = - tau + sqrt(1 + pow(tau, 2));
+  }
+  if(tau<=0){
+    t = - tau - sqrt(1 + pow(tau, 2));
+  }
   double c = 1/sqrt(1+pow(t,2));
   double s = t*c;
 
@@ -42,13 +45,14 @@ void jacobi_eigensolver(const arma::mat& A, double tolerance, arma::vec& eigenva
   converged = 0;
 
   int k = 0;
-  int l = 1;
-  // Make R and eigenvectors identity matrices to edit later
+  int l = 0;
+
+  // R = I
   mat R(A.n_cols, A.n_cols, fill::zeros);
   for (int i=0; i<A.n_cols; i++){
     R(i,i) = 1;
   }
-  // Copy A to B
+  // B = A
   mat B(A.n_cols, A.n_cols, fill::zeros);
   for (int i=0; i<A.n_cols; i++){
     for (int j=0; j<A.n_cols; j++){
