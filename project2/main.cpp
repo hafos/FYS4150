@@ -6,7 +6,7 @@
 #include <iostream>
 #include <armadillo>
 #include <cmath>
-#include "jacobi.cpp"
+#include "jacobi.cpp" // includes ilode.cpp
 #include "vector_check.cpp"
 
 using namespace arma;
@@ -65,7 +65,7 @@ int main() {
     double tol = 0.0001;
     std::cout << "Comparing numerical (arma::eig_sym) method to analytical:" << endl;
     bool vecsim = check_eigenvectors(eigvec, vec_ana, tol);
-    std::cout << "Eigenvectors equal True/False: " << vecsim << endl;
+    std::cout << "Eigenvectors equivalent True/False: " << vecsim << endl;
     bool valsim = check_eigenvalues(eigval, val_ana, tol);
     std::cout << "Eigenvalues equal True/False: " << valsim << endl;
 
@@ -92,7 +92,7 @@ int main() {
     // Compare jacobi method to analytical:
     std::cout << "Comparing Jacobi method to analytical:" << endl;
     vecsim = check_eigenvectors(vec_jac, vec_ana, tol);
-    std::cout << "Eigenvectors equal True/False: " << vecsim << endl;
+    std::cout << "Eigenvectors equivalent True/False: " << vecsim << endl;
     valsim = check_eigenvalues(val_jac, val_ana, tol);
     std::cout << "Eigenvalues equal True/False: " << valsim << endl;
 
