@@ -7,6 +7,7 @@
 #include <armadillo>
 #include <cmath>
 #include "jacobi.cpp"
+#include "vector_check.cpp"
 
 using namespace arma;
 
@@ -28,14 +29,13 @@ int main() {
         }
     }
 
-    //initialize arrays to contain the eigenvectors and eigenvalues
+    // Solve the eigenvalue problem numerically:
     vec eigval;
     mat eigvec;
-    //solve the eigenvalue problem
     eig_sym(eigval, eigvec, A);
     eigvec = normalise(eigvec);
 
-    //now check with the analytical result:
+    // Compute analytical result:
     vec val_ana(6);
     mat vec_ana(6, 6);
     for (int i = 1; i < 7; i++){
@@ -47,26 +47,32 @@ int main() {
     }
     vec_ana = normalise(vec_ana);
 
-    std::cout << "numerical and analytical eigenvalues: " <<endl;
-    eigval.print();
-    std::cout << endl;
+    // Print analytical results:
+    //std::cout << "Analytical eigenvalues and eigenvectors: "
     //val_ana.print();
-    std::cout << endl;
-
-    std::cout << "numerical and analytical eigenvectors: " <<endl;
-    eigvec.print();
-    std::cout << endl;
+    //std::cout << endl;
     //vec_ana.print();
-    std::cout << endl;
+    //std::cout << endl;
 
-    //std::cout << "eigenvalues equal: " << approx_equal(eigval, val_ana, "absdiff", 0.0001) << endl;
-    //std::cout << "eigenvectors equal: " << approx_equal(eigvec, vec_ana, "absdiff", 0.0001) << endl;
+    // Print numerical results:
+    //std::cout << "Numerical eigenvalues and eigenvectors: "
+    //eigval.print();
+    //std::cout << endl;
+    //eigvec.print();
+    //std::cout << endl;
+
+    // Compare numerical method to analytical:
+    double tol = 0.0001;
+    std::cout << "Comparing numerical (arma::eig_sym) method to analytical:" << endl;
+    bool vecsim = check_eigenvectors(eigvec, vec_ana, tol);
+    std::cout << "Eigenvectors equal True/False: " << vecsim << endl;
+    bool valsim = check_eigenvalues(eigval, val_ana, tol);
+    std::cout << "Eigenvalues equal True/False: " << valsim << endl;
 
     // Test max_offdiag_symmetric():
     test_ilode();
 
     // Now calculate answers using jacobi rotation method:
-    std::cout << "Using Jacobi rotation method:" << endl;
     double tolerance = 1e-8;
     vec val_jac(N, fill::zeros);
     mat vec_jac(N, N, fill::zeros);
@@ -75,10 +81,19 @@ int main() {
     bool converged;
     jacobi_eigensolver(A, tolerance, val_jac, vec_jac,
                             maxiter, iterations, converged);
+    vec_jac = normalise(vec_jac);
 
-    std::cout << endl;
-    val_jac.print();
-    std::cout << endl;
-    normalise(vec_jac).print();
+    // Print jacobi method results:
+    //std::cout << endl;
+    //val_jac.print();
+    //std::cout << endl;
+    //vec_jac.print();
+
+    // Compare jacobi method to analytical:
+    std::cout << "Comparing Jacobi method to analytical:" << endl;
+    vecsim = check_eigenvectors(vec_jac, vec_ana, tol);
+    std::cout << "Eigenvectors equal True/False: " << vecsim << endl;
+    valsim = check_eigenvalues(val_jac, val_ana, tol);
+    std::cout << "Eigenvalues equal True/False: " << valsim << endl;
 
 }
