@@ -62,6 +62,9 @@ int main() {
     //std::cout << "eigenvalues equal: " << approx_equal(eigval, val_ana, "absdiff", 0.0001) << endl;
     //std::cout << "eigenvectors equal: " << approx_equal(eigvec, vec_ana, "absdiff", 0.0001) << endl;
 
+    // Test max_offdiag_symmetric():
+    test_ilode();
+
     // Now calculate answers using jacobi rotation method:
     std::cout << "Using Jacobi rotation method:" << endl;
     double tolerance = 1e-8;

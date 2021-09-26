@@ -8,8 +8,8 @@ double max_offdiag_symmetric(const arma::mat& A, int& k, int& l){
   double max = 0;
   for (int i = 1; i < A.n_cols; i++){
     for (int j = 0; j < i; j++){
-      if (abs(A(i,j)) > max){
-        max = abs(A(i,j));
+      if (std::abs(A(i,j)) > max){
+        max = std::abs(A(i,j));
         k = i;
         l = j;
       }
@@ -18,22 +18,24 @@ double max_offdiag_symmetric(const arma::mat& A, int& k, int& l){
   return max;
 }
 
-int test_ilode() {
+void test_ilode() {
   // Make test matrix:
-  mat A(4, 4, fill::zeros);
+  mat test_matrix(4, 4, fill::zeros);
   for (int i = 0; i < 4; i++){
-      A(i, i) = 1;
-      if(i==0 || i==3 ){A(i, 3-i) = 0.5;
-      } else{A(i, 3-i) = -0.7 ;
+      test_matrix(i, i) = 1;
+      if(i==0 || i==3 ){test_matrix(i, 3-i) = 0.5;
+      } else{test_matrix(i, 3-i) = -0.7 ;
       }
     }
 
   // Test the function:
   int k = 0;
   int l = 0;
-  double m = max_offdiag_symmetric(A, k, l);
+  double m = max_offdiag_symmetric(test_matrix, k, l);
 
-  std::cout << endl << "Test of max_offdiag_symmetric:" << endl;
+  std::cout << endl << "Test of max_offdiag_symmetric() :" << endl;
   std::cout << "k: "<< k << "  l: " << l << "  max: " << m << endl;
-  return 0;
+  std::cout << "The matrix: " << endl;
+  test_matrix.print();
+  std::cout << endl;
 }
