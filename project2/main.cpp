@@ -63,10 +63,11 @@ int main() {
     //std::cout << "eigenvectors equal: " << approx_equal(eigvec, vec_ana, "absdiff", 0.0001) << endl;
 
     // Now calculate answers using jacobi rotation method:
+    std::cout << "Using Jacobi rotation method:" << endl;
     double tolerance = 1e-8;
     vec val_jac(N, fill::zeros);
     mat vec_jac(N, N, fill::zeros);
-    int maxiter = 50;
+    int maxiter = 40;
     int iterations;
     bool converged;
     jacobi_eigensolver(A, tolerance, val_jac, vec_jac,
