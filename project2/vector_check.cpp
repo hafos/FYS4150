@@ -50,7 +50,7 @@ bool check_eigenvalues(const arma::vec& U, const arma::vec& V, const double& tol
     for (int j=0; j < V.n_elem; j++){
       //std::cout<< i << " " << j << endl;
       if (inVismatched(j)==0){
-        if (std::abs(U(i) - V(j)) <= tolerance){
+        if (std::abs(U(i) - V(j))/std::max(std::abs(U(i)), std::abs(V(j))) <= tolerance){
           //std::cout << U(i) << " " << V(j) << endl;
           inVismatched(j) = 1;
           order(i) = j;
