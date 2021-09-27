@@ -13,13 +13,13 @@ bool check_eigenvectors(const arma::mat& U, const arma::mat& V, const double& to
   for (int i=0; i<U.n_cols; i++){ // Go over column i in U
     for (int j=0; j<V.n_cols; j++){ // Go over column j in V
       if (inVismatched(j)==0){ // Only check the columns in V that are not matched yet
-        if (approx_equal(U.col(i), V.col(j), "absdiff", tolerance)){
+        if (approx_equal(U.col(i), V.col(j), "reldiff", tolerance)){
           inVismatched(j) = 1;
           order(i) = j;
           vecmatched = vecmatched + 1;
           break;
         }
-        else if (approx_equal(U.col(i), -V.col(j), "absdiff", tolerance)){
+        else if (approx_equal(U.col(i), -V.col(j), "reldiff", tolerance)){
           inVismatched(j) = 1;
           order(i) = j;
           vecmatched = vecmatched + 1;
@@ -50,7 +50,7 @@ bool check_eigenvalues(const arma::vec& U, const arma::vec& V, const double& tol
     for (int j=0; j<V.n_elem; j++){
       //std::cout<< i << " " << j << endl;
       if (inVismatched(j)==0){
-        if (std::abs(U(i)-V(j)) <= tolerance){
+        if (std::abs(U(i)-V(j))/std::max(std::abs(U(i)), std::abs(V(j))) <= tolerance){
           //std::cout << U(i) << " " << V(j) << endl;
           inVismatched(j) = 1;
           order(i) = j;

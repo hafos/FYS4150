@@ -62,8 +62,9 @@ int main() {
     //std::cout << endl;
 
     // Compare numerical method to analytical:
-    double tol = 0.0001;
+    double tol = 1e-5; // Tolerance of the relative difference
     std::cout << "Comparing numerical (arma::eig_sym) method to analytical:" << endl;
+    std::cout << "(Considered equal if the relative difference is smaller than " << tol << ")" << endl;
     bool vecsim = check_eigenvectors(eigvec, vec_ana, tol);
     std::cout << "Eigenvectors equivalent True/False: " << vecsim << endl;
     bool valsim = check_eigenvalues(eigval, val_ana, tol);
@@ -73,7 +74,7 @@ int main() {
     test_ilode();
 
     // Now calculate answers using jacobi rotation method:
-    double tolerance = 1e-8;
+    double tolerance = 1e-8; // Absolute tolerance of off-diagonal elements in eigenvalue-matrix
     vec val_jac(N, fill::zeros);
     mat vec_jac(N, N, fill::zeros);
     int maxiter = 40;
@@ -91,6 +92,7 @@ int main() {
 
     // Compare jacobi method to analytical:
     std::cout << "Comparing Jacobi method to analytical:" << endl;
+    std::cout << "(Considered equal if the relative difference is smaller than " << tol << ")" << endl;
     vecsim = check_eigenvectors(vec_jac, vec_ana, tol);
     std::cout << "Eigenvectors equivalent True/False: " << vecsim << endl;
     valsim = check_eigenvalues(val_jac, val_ana, tol);
