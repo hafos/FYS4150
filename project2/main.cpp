@@ -15,7 +15,8 @@ using namespace arma;
 
 
 int main() {
-    // Problem 3: initialize a tridiagonal 6x6 matrix A
+    // Problem 3:
+    // initialize a tridiagonal 6x6 matrix A
     // with diagonal 2/h^2 and sub/superdiagonal -1/h^2
     // N = n-1
     // h = 1/n = 1/(N+1)
@@ -39,18 +40,36 @@ int main() {
 
     // Compare numerical method to analytical:
     double tol = 1e-5; // Tolerance of the relative difference
+    std::cout << "Problem 3:" << endl;
     std::cout << "Comparing numerical (arma::eig_sym) method to analytical:" << endl;
-    std::cout << "(Considered equal if the relative difference is smaller than " << tol << ")" << endl;
+    std::cout << " (Considered equal if the relative difference is smaller than " << tol << ")" << endl;
     bool vecsim = check_eigenvectors(eigvec, vec_ana, tol);
-    std::cout << "Eigenvectors equivalent True/False: " << vecsim << endl;
+    std::cout << " Eigenvectors equivalent (True=1/False=0): " << vecsim << endl;
     bool valsim = check_eigenvalues(eigval, val_ana, tol);
-    std::cout << "Eigenvalues equal True/False: " << valsim << endl;
+    std::cout << " Eigenvalues equal (True=1/False=0): " << valsim << endl;
+
+    // Print analytical results:
+    //std::cout << "Analytical eigenvalues and eigenvectors: " << endl;
+    //val_ana.print();
+    //std::cout << endl;
+    //vec_ana.print();
+    //std::cout << endl;
+
+    // Print numerical results:
+    //std::cout << "Numerical eigenvalues and eigenvectors: " << endl;
+    //eigval.print();
+    //std::cout << endl;
+    //eigvec.print();
+    //std::cout << endl;
 
     // Problem 4
     // Test max_offdiag_symmetric():
+    std::cout << endl << "Problem 4:" << endl;
     test_ilode();
+    std::cout << endl;
 
     // Problem 5
+    std::cout << "Problem 5: " << endl;
     // Now calculate answers using jacobi rotation method:
     double tolerance = 1e-8; // Absolute tolerance of off-diagonal elements in eigenvalue-matrix
     vec val_jac(N, fill::zeros);
@@ -68,11 +87,18 @@ int main() {
 
     // Compare jacobi method to analytical:
     std::cout << "Comparing Jacobi method to analytical:" << endl;
-    std::cout << "(Considered equal if the relative difference is smaller than " << tol << ")" << endl;
+    std::cout << " (Considered equal if the relative difference is smaller than " << tol << ")" << endl;
     vecsim = check_eigenvectors(vec_jac, vec_ana, tol);
-    std::cout << "Eigenvectors equivalent True/False: " << vecsim << endl;
+    std::cout << " Eigenvectors equivalent (True=1/False=0): " << vecsim << endl;
     valsim = check_eigenvalues(val_jac, val_ana, tol);
-    std::cout << "Eigenvalues equal True/False: " << valsim << endl;
+    std::cout << " Eigenvalues equal (True=1/False=0): " << valsim << endl;
+
+    // Print jacobi method results:
+    //std::cout << "Jacobi method results: " << endl;
+    //std::cout << endl;
+    //val_jac.print();
+    //std::cout << endl;
+    //vec_jac.print();
 
     // Problem 7
     // first solve for n = 10

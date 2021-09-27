@@ -33,7 +33,7 @@ bool check_eigenvectors(const arma::mat& U, const arma::mat& V, const double& to
     sim = 0;
   }
   // Print order of vectors:
-  std::cout << "Vector order: ";
+  std::cout << " Vector order: ";
   for (int i=0; i < order.n_elem; i++){
     std::cout << order(i) << " ";
   }
@@ -65,7 +65,7 @@ bool check_eigenvalues(const arma::vec& U, const arma::vec& V, const double& tol
     sim = 0;
   }
   // Print order of values:
-  std::cout << "Value order: ";
+  std::cout << " Value order: ";
   for (int i=0; i < order.n_elem; i++){
     std::cout << order(i) << " ";
   }
