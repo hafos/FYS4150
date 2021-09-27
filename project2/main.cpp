@@ -112,12 +112,6 @@ int main() {
     vec_10 = normalise(vec_10);
     vec_10 = vec_10.cols(indices(span::all));
 
-    // Print results:
-    //std::cout << endl;
-    //val_10.print();
-    //std::cout << endl;
-    //vec_10.print();
-
     // Save results:
     vec_10.save("vec_10.bin");
     val_10.save("val_10.bin");
@@ -125,10 +119,28 @@ int main() {
     // compute analytically for comparison:
     vec val_ana_10 = eigenvalue(9, a_10, d_10);
     val_ana_10 = normalise(val_ana_10);
+    uvec indices_ana = sort_index(val_ana_10);
+    val_ana_10 = sort(val_ana_10);
+    
     mat vec_ana_10 = eigenvector(9, a_10, d_10);
     vec_ana_10 = normalise(vec_ana_10);
+    vec_ana_10 = vec_ana_10.cols(indices_ana(span::all));
+    
     val_ana_10.save("val_ana_10.bin");
     vec_ana_10.save("vec_ana_10.bin");
+    
+    std::cout << "Comparing Jacobi method to analytical:" << endl;
+    vecsim = check_eigenvectors(vec_10, vec_ana_10, 1e-1);
+    std::cout << "Eigenvectors equivalent True/False: " << vecsim << endl;
+    valsim = check_eigenvalues(val_10, val_ana_10, 1e-5);
+    std::cout << "Eigenvalues equal True/False: " << valsim << endl;
+    
+    std::cout << vec_10 << endl;
+    std::cout << vec_ana_10 << endl;
+    
+    std::cout << "Eigenvalues: " << endl;
+    std::cout << val_10 << endl;
+    std::cout << val_ana_10 << endl;
 
     // Repeat for n = 100
     double h_100 = 1./100.;
@@ -148,6 +160,10 @@ int main() {
 
     vec_100 = normalise(vec_100);
     vec_100 = vec_100.cols(indices_100(span::all));
+    //for(int i = 0; i < 100; i++){
+    //    std::cout << vec_100(0, i) << "  ";
+    //    std::cout << vec_100_norm(0, i) << endl;
+    //}
 
     // Save results:
     vec_100.save("vec_100.bin");
@@ -160,5 +176,15 @@ int main() {
     vec_ana_100 = normalise(vec_ana_100);
     val_ana_100.save("val_ana_100.bin");
     vec_ana_100.save("vec_ana_100.bin");
+    
+    //std::cout << "Comparing Jacobi method to analytical:" << endl;
+    //vecsim = check_eigenvectors(vec_100, vec_ana_100, 1e-1);
+    //std::cout << "Eigenvectors equivalent True/False: " << vecsim << endl;
+    //valsim = check_eigenvalues(val_100, val_ana_100, 1e-5);
+    //std::cout << "Eigenvalues equal True/False: " << valsim << endl;
+    
+    //std::cout << vec_100(, 0:5) << endl;
+    //std::cout << vec_ana_100(, 0:5) << endl;
+
 
 }

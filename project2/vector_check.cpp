@@ -5,8 +5,8 @@
 using namespace arma;
 
 bool check_eigenvectors(const arma::mat& U, const arma::mat& V, const double& tolerance){
-  // This function checks wether the eigenvectors in U and V are similar.
-  bool sim = 1; // Wether all the vectors are the similar
+  // This function checks whether the eigenvectors in U and V are similar.
+  bool sim = 1; // Whether all the vectors are the similar
   int vecmatched = 0; // Count how many of U have been matched with columns in V
   arma::vec order(V.n_cols, fill::zeros); // The order of V that fits to U
   arma::vec inVismatched(V.n_cols, fill::zeros); // Counts which columns in V have been matced
