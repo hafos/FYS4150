@@ -57,7 +57,6 @@ void jacobi_rotate(arma::mat& B, arma::mat& R){
 
 void jacobi_eigensolver(const arma::mat& A, double tolerance, arma::vec& eigenvalues, arma::mat& eigenvectors,
                         const int maxiter, int& iterations, bool& converged){
-  //double tolerance = 1e-8;
   iterations = 0;
   converged = 0;
 
@@ -78,21 +77,22 @@ void jacobi_eigensolver(const arma::mat& A, double tolerance, arma::vec& eigenva
   int l=0;
   double maxoff = max_offdiag_symmetric(B, k, l);
   while(pow(maxoff, 2) > tolerance){
-    jacobi_rotate(B, R); // This updates B and R
+    jacobi_rotate(B, R); // This updates k, l then B, R
     iterations = iterations + 1;
     double maxoff = max_offdiag_symmetric(B, k, l);
     // If-tests for convergence etc.:
     if(iterations >= maxiter){
-      std::cout << "Not converged " << endl;
+      std::cout << "Not converged after " << iterations;
+      std::cout << " iterations. (tolerance = " << tolerance << " )" << endl;
       break;
     }
     if(pow(maxoff, 2) <= tolerance){
-      //std::cout << "Converged! " << endl;
+      std::cout << "Jacobi rotation method converged after " << iterations;
+      std::cout << " iterations. (tolerance = " << tolerance << " )" << endl;
       converged = 1;
       break;
     }
   }
-  //std::cout << "Loop Finished " << endl;
   for (int i=0; i<A.n_cols; i++){
     eigenvalues(i) = B(i,i);
     for (int j=0; j<A.n_cols; j++){
