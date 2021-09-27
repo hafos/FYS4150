@@ -10,8 +10,8 @@ bool check_eigenvectors(const arma::mat& U, const arma::mat& V, const double& to
   int vecmatched = 0; // Count how many of U have been matched with columns in V
   arma::vec order(V.n_cols, fill::zeros); // The order of V that fits to U
   arma::vec inVismatched(V.n_cols, fill::zeros); // Counts which columns in V have been matced
-  for (int i=0; i<U.n_cols; i++){ // Go over column i in U
-    for (int j=0; j<V.n_cols; j++){ // Go over column j in V
+  for (int i=0; i < U.n_cols; i++){ // Go over column i in U
+    for (int j=0; j < V.n_cols; j++){ // Go over column j in V
       if (inVismatched(j)==0){ // Only check the columns in V that are not matched yet
         if (approx_equal(U.col(i), V.col(j), "reldiff", tolerance)){
           inVismatched(j) = 1;
@@ -34,7 +34,7 @@ bool check_eigenvectors(const arma::mat& U, const arma::mat& V, const double& to
   }
   // Print order of vectors:
   std::cout << "Vector order: ";
-  for (int i=0; i<order.n_elem; i++){
+  for (int i=0; i < order.n_elem; i++){
     std::cout << order(i) << " ";
   }
   std::cout << endl;
@@ -46,11 +46,11 @@ bool check_eigenvalues(const arma::vec& U, const arma::vec& V, const double& tol
   int vecmatched = 0;
   arma::vec order(V.n_elem, fill::zeros);
   arma::vec inVismatched(V.n_elem, fill::zeros);
-  for (int i=0; i<U.n_elem; i++){
-    for (int j=0; j<V.n_elem; j++){
+  for (int i=0; i < U.n_elem; i++){
+    for (int j=0; j < V.n_elem; j++){
       //std::cout<< i << " " << j << endl;
       if (inVismatched(j)==0){
-        if (std::abs(U(i)-V(j))/std::max(std::abs(U(i)), std::abs(V(j))) <= tolerance){
+        if (std::abs(U(i) - V(j)) <= tolerance){
           //std::cout << U(i) << " " << V(j) << endl;
           inVismatched(j) = 1;
           order(i) = j;
@@ -66,7 +66,7 @@ bool check_eigenvalues(const arma::vec& U, const arma::vec& V, const double& tol
   }
   // Print order of values:
   std::cout << "Value order: ";
-  for (int i=0; i<order.n_elem; i++){
+  for (int i=0; i < order.n_elem; i++){
     std::cout << order(i) << " ";
   }
   std::cout << endl;
