@@ -8,26 +8,23 @@
 #include <cmath>
 #include "jacobi.cpp" // includes ilode.cpp
 #include "vector_check.cpp"
+#include "create_tridiag.cpp"
+#include "eigen_analytical.cpp"
 
 using namespace arma;
 
 
 int main() {
-    //Problem 3: initialize a tridiagonal 6x6 matrix A
-    //with diagonal 2/h^2 and sub/superdiagonal -1/h^2
-    //h = 1/(N+1) so here it's 1/7
+    // Problem 3: initialize a tridiagonal 6x6 matrix A
+    // with diagonal 2/h^2 and sub/superdiagonal -1/h^2
+    // N = n-1
+    // h = 1/n = 1/(N+1)
     int N = 6;
-    mat A(6, 6, fill::zeros);
-    double a = -1.0/pow(1./7., 2);
-    double d = 2.0/pow(1./7., 2);
+    double h = 1./(N+1);
+    double a = -1.0/pow(h, 2);
+    double d = 2.0/pow(h, 2);
 
-    for (int i = 0; i < 6; i++){
-        A(i, i) = d;
-        if (i+1 < 6){
-            A(i, i+1) = a;
-            A(i+1, i) = a;
-        }
-    }
+    mat A = create_symmetric_tridiagonal(N, a, d);
 
     // Solve the eigenvalue problem numerically:
     vec eigval;
@@ -36,15 +33,8 @@ int main() {
     eigvec = normalise(eigvec);
 
     // Compute analytical result:
-    vec val_ana(6);
-    mat vec_ana(6, 6);
-    for (int i = 1; i < 7; i++){
-        val_ana(i-1) = d + 2*a*cos((i*datum::pi)/7);
-        for (int j = 1; j < 7; j++){
-            //there's gotta be a better way to do this than a nested for loop
-            vec_ana(j-1, i-1) = sin((j*i*datum::pi)/7);
-        }
-    }
+    vec val_ana = eigenvalue(N, a, d);
+    mat vec_ana = eigenvector(N, a, d);
     vec_ana = normalise(vec_ana);
 
     // Print analytical results:
@@ -55,7 +45,7 @@ int main() {
     //std::cout << endl;
 
     // Print numerical results:
-    //std::cout << "Numerical eigenvalues and eigenvectors: "
+    //std::cout << "Numerical eigenvalues and eigenvectors: " << endl;
     //eigval.print();
     //std::cout << endl;
     //eigvec.print();
@@ -70,11 +60,13 @@ int main() {
     bool valsim = check_eigenvalues(eigval, val_ana, tol);
     std::cout << "Eigenvalues equal True/False: " << valsim << endl;
 
+    // Problem 4
     // Test max_offdiag_symmetric():
     test_ilode();
-
+    
+    // Problem 5
     // Now calculate answers using jacobi rotation method:
-    double tolerance = 1e-8; // Absolute tolerance of off-diagonal elements in eigenvalue-matrix
+    double tolerance = 1e-8;
     vec val_jac(N, fill::zeros);
     mat vec_jac(N, N, fill::zeros);
     int maxiter = 40;
@@ -97,5 +89,75 @@ int main() {
     std::cout << "Eigenvectors equivalent True/False: " << vecsim << endl;
     valsim = check_eigenvalues(val_jac, val_ana, tol);
     std::cout << "Eigenvalues equal True/False: " << valsim << endl;
+    
+    // Problem 7
+    // first solve for n = 10
+    double h_10 = 1./10.;
+    double a_10 = -1./pow(h_10, 2);
+    double d_10 = 2./pow(h_10, 2);
+    mat A_10 = create_symmetric_tridiagonal(9, a_10, d_10);
+    
+    // solve eigenvalue problem
+    vec val_10(9, fill::zeros);
+    mat vec_10(9, 9, fill::zeros);
+    jacobi_eigensolver(A_10, tolerance, val_10, vec_10,
+                       125, iterations, converged);
+    
+    //normalise and sort
+    val_10 = normalise(val_10);
+    uvec indices = sort_index(val_10);
+    val_10 = sort(val_10);
+    
+    vec_10 = normalise(vec_10);
+    vec_10 = vec_10.cols(indices(span::all));
+    
+    // Print results:
+    //std::cout << endl;
+    //val_10.print();
+    //std::cout << endl;
+    //vec_10.print();
+    
+    // Save results:
+    vec_10.save("vec_10.bin");
+    val_10.save("val_10.bin");
+    
+    // compute analytically for comparison:
+    vec val_ana_10 = eigenvalue(9, a_10, d_10);
+    val_ana_10 = normalise(val_ana_10);
+    mat vec_ana_10 = eigenvector(9, a_10, d_10);
+    vec_ana_10 = normalise(vec_ana_10);
+    val_ana_10.save("val_ana_10.bin");
+    vec_ana_10.save("vec_ana_10.bin");
+    
+    // Repeat for n = 100
+    double h_100 = 1./100.;
+    double a_100 = -1./pow(h_100, 2);
+    double d_100 = 2./pow(h_100, 2);
+    mat A_100 = create_symmetric_tridiagonal(99, a_100, d_100);
+    
+    vec val_100(99, fill::zeros);
+    mat vec_100(99, 99, fill::zeros);
+    jacobi_eigensolver(A_100, tolerance, val_100, vec_100,
+                       15000, iterations, converged);
+    
+    //normalise and sort
+    val_100 = normalise(val_100);
+    uvec indices_100 = sort_index(val_100);
+    val_100 = sort(val_100);
+    
+    vec_100 = normalise(vec_100);
+    vec_100 = vec_100.cols(indices_100(span::all));
+    
+    // Save results:
+    vec_100.save("vec_100.bin");
+    val_100.save("val_100.bin");
+    
+    // compute analytically for comparison:
+    vec val_ana_100 = eigenvalue(99, a_100, d_100);
+    val_ana_100 = normalise(val_ana_100);
+    mat vec_ana_100 = eigenvector(99, a_100, d_100);
+    vec_ana_100 = normalise(vec_ana_100);
+    val_ana_100.save("val_ana_100.bin");
+    vec_ana_100.save("vec_ana_100.bin");
 
 }
