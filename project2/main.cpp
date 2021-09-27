@@ -2,6 +2,7 @@
 //  On Mac, compile in the terminal using command:
 //  g++ main.cpp -std=c++11 -o main.exe -larmadillo
 //
+//Hi test
 
 #include <iostream>
 #include <armadillo>
