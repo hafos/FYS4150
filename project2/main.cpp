@@ -37,20 +37,6 @@ int main() {
     mat vec_ana = eigenvector(N, a, d);
     vec_ana = normalise(vec_ana);
 
-    // Print analytical results:
-    //std::cout << "Analytical eigenvalues and eigenvectors: " << endl;
-    //val_ana.print();
-    //std::cout << endl;
-    //vec_ana.print();
-    //std::cout << endl;
-
-    // Print numerical results:
-    //std::cout << "Numerical eigenvalues and eigenvectors: " << endl;
-    //eigval.print();
-    //std::cout << endl;
-    //eigvec.print();
-    //std::cout << endl;
-
     // Compare numerical method to analytical:
     double tol = 1e-5; // Tolerance of the relative difference
     std::cout << "Comparing numerical (arma::eig_sym) method to analytical:" << endl;
@@ -75,13 +61,6 @@ int main() {
     jacobi_eigensolver(A, tolerance, val_jac, vec_jac,
                             maxiter, iterations, converged);
     vec_jac = normalise(vec_jac);
-
-    // Print jacobi method results:
-    //std::cout << "Jacobi method results: " << endl;
-    //std::cout << endl;
-    //val_jac.print();
-    //std::cout << endl;
-    //vec_jac.print();
 
     // Compare jacobi method to analytical:
     std::cout << "Comparing Jacobi method to analytical:" << endl;
@@ -129,18 +108,6 @@ int main() {
     val_ana_10.save("val_ana_10.bin");
     vec_ana_10.save("vec_ana_10.bin");
     
-    std::cout << "Comparing Jacobi method to analytical:" << endl;
-    vecsim = check_eigenvectors(vec_10, vec_ana_10, 1e-1);
-    std::cout << "Eigenvectors equivalent True/False: " << vecsim << endl;
-    valsim = check_eigenvalues(val_10, val_ana_10, 1e-5);
-    std::cout << "Eigenvalues equal True/False: " << valsim << endl;
-    
-    std::cout << vec_10 << endl;
-    std::cout << vec_ana_10 << endl;
-    
-    std::cout << "Eigenvalues: " << endl;
-    std::cout << val_10 << endl;
-    std::cout << val_ana_10 << endl;
 
     // Repeat for n = 100
     double h_100 = 1./100.;
@@ -160,10 +127,6 @@ int main() {
 
     vec_100 = normalise(vec_100);
     vec_100 = vec_100.cols(indices_100(span::all));
-    //for(int i = 0; i < 100; i++){
-    //    std::cout << vec_100(0, i) << "  ";
-    //    std::cout << vec_100_norm(0, i) << endl;
-    //}
 
     // Save results:
     vec_100.save("vec_100.bin");
@@ -176,15 +139,7 @@ int main() {
     vec_ana_100 = normalise(vec_ana_100);
     val_ana_100.save("val_ana_100.bin");
     vec_ana_100.save("vec_ana_100.bin");
-    
-    //std::cout << "Comparing Jacobi method to analytical:" << endl;
-    //vecsim = check_eigenvectors(vec_100, vec_ana_100, 1e-1);
-    //std::cout << "Eigenvectors equivalent True/False: " << vecsim << endl;
-    //valsim = check_eigenvalues(val_100, val_ana_100, 1e-5);
-    //std::cout << "Eigenvalues equal True/False: " << valsim << endl;
-    
-    //std::cout << vec_100(, 0:5) << endl;
-    //std::cout << vec_ana_100(, 0:5) << endl;
+
 
 
 }
