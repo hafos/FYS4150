@@ -46,11 +46,11 @@ bool check_eigenvalues(const arma::vec& U, const arma::vec& V, const double& tol
   int vecmatched = 0;
   arma::vec order(V.n_elem, fill::zeros);
   arma::vec inVismatched(V.n_elem, fill::zeros);
-  for (int i=0; i<U.n_elem; i++){
-    for (int j=0; j<V.n_elem; j++){
+  for (int i=0; i < U.n_elem; i++){
+    for (int j=0; j < V.n_elem; j++){
       //std::cout<< i << " " << j << endl;
       if (inVismatched(j)==0){
-        if (std::abs(U(i)-V(j)) <= tolerance){
+        if (std::abs(U(i) - V(j)) <= tolerance){
           //std::cout << U(i) << " " << V(j) << endl;
           inVismatched(j) = 1;
           order(i) = j;
@@ -66,7 +66,7 @@ bool check_eigenvalues(const arma::vec& U, const arma::vec& V, const double& tol
   }
   // Print order of values:
   std::cout << "Value order: ";
-  for (int i=0; i<order.n_elem; i++){
+  for (int i=0; i < order.n_elem; i++){
     std::cout << order(i) << " ";
   }
   std::cout << endl;
