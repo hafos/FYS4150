@@ -10,6 +10,7 @@
 #include "vector_check.cpp"
 #include "create_tridiag.cpp"
 #include "eigen_analytical.cpp"
+#include "scaling.cpp"
 
 using namespace arma;
 
@@ -90,6 +91,40 @@ int main() {
     std::cout << "Eigenvectors equivalent True/False: " << vecsim << endl;
     valsim = check_eigenvalues(val_jac, val_ana, tol);
     std::cout << "Eigenvalues equal True/False: " << valsim << endl;
+
+    // Problem 6 a)
+    /* commented out so not to generate anew for every run
+       uncomment to run when you want the .dat file for generating plot
+       with problem6_plot.py
+    */
+
+    // std::string filename = "problem6_a_output.dat";
+    // std::ofstream ofile;
+    // ofile.open(filename);
+    // int iteration;
+    // for (int i=2; i < 121; i+=2){
+    //     scaling_N(i, iteration);
+    //     ofile << "N : " << i << std::endl;
+    //     ofile << "iterations : "
+    //           << iteration << std::endl;
+    // }
+    // ofile.close();
+
+    // Problem 6 b)
+
+    // std::string filename = "problem6_b_output.dat";
+    // std::ofstream ofile;
+    // ofile.open(filename);
+    // int iteration;
+    // for (int i=2; i < 123; i+=4){
+    //     ofile << "N : " << i << std::endl;
+    //     for (int j=0; j < 11; j++){
+    //         scaling_dense(i, iteration);
+    //         ofile << "iterations : "
+    //         << iteration << std::endl;
+    //     }
+    // }
+    // ofile.close();
 
     // Problem 7
     // first solve for n = 10
