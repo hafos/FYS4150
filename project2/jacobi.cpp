@@ -82,7 +82,7 @@ void jacobi_eigensolver(const arma::mat& A, double tolerance, arma::vec& eigenva
     double maxoff = max_offdiag_symmetric(B, k, l);
     // If-tests for convergence etc.:
     if(iterations >= maxiter){
-      std::cout << "Not converged after " << iterations;
+      std::cout << "Jacobi rotation method not converged after " << iterations;
       std::cout << " iterations. (tolerance = " << tolerance << " )" << endl;
       break;
     }
