@@ -60,6 +60,10 @@ int main() {
     bool converged;
     jacobi_eigensolver(A, tolerance, val_jac, vec_jac,
                             maxiter, iterations, converged);
+    if (converged==1){
+      std::cout << "Jacobi rotation method converged after " << iterations;
+      std::cout << " iterations. (tolerance = " << tolerance << " )" << endl;
+    }
     vec_jac = normalise(vec_jac);
 
     // Compare jacobi method to analytical:
@@ -100,14 +104,14 @@ int main() {
     val_ana_10 = normalise(val_ana_10);
     uvec indices_ana = sort_index(val_ana_10);
     val_ana_10 = sort(val_ana_10);
-    
+
     mat vec_ana_10 = eigenvector(9, a_10, d_10);
     vec_ana_10 = normalise(vec_ana_10);
     vec_ana_10 = vec_ana_10.cols(indices_ana(span::all));
-    
+
     val_ana_10.save("val_ana_10.bin");
     vec_ana_10.save("vec_ana_10.bin");
-    
+
 
     // Repeat for n = 100
     double h_100 = 1./100.;
