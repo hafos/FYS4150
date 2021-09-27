@@ -48,14 +48,14 @@ int main() {
     vec_ana = normalise(vec_ana);
 
     // Print analytical results:
-    //std::cout << "Analytical eigenvalues and eigenvectors: "
+    //std::cout << "Analytical eigenvalues and eigenvectors: " << endl;
     //val_ana.print();
     //std::cout << endl;
     //vec_ana.print();
     //std::cout << endl;
 
     // Print numerical results:
-    //std::cout << "Numerical eigenvalues and eigenvectors: "
+    //std::cout << "Numerical eigenvalues and eigenvectors: " << endl;
     //eigval.print();
     //std::cout << endl;
     //eigvec.print();
@@ -85,6 +85,7 @@ int main() {
     vec_jac = normalise(vec_jac);
 
     // Print jacobi method results:
+    //std::cout << "Jacobi method results: " << endl;
     //std::cout << endl;
     //val_jac.print();
     //std::cout << endl;
