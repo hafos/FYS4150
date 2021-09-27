@@ -33,9 +33,9 @@ void test_ilode() {
   int l = 0;
   double m = max_offdiag_symmetric(test_matrix, k, l);
 
-  std::cout << endl << "Test of max_offdiag_symmetric() :" << endl;
-  std::cout << "k: "<< k << "  l: " << l << "  max: " << m << endl;
-  std::cout << "The  test matrix: " << endl;
+  std::cout << "Test of max_offdiag_symmetric() :" << endl;
+  std::cout << " k: "<< k << "  l: " << l << "  max: " << m << endl;
+  std::cout << " The  test matrix: " << endl;
   test_matrix.print();
   std::cout << endl;
 }

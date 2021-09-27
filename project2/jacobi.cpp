@@ -87,8 +87,6 @@ void jacobi_eigensolver(const arma::mat& A, double tolerance, arma::vec& eigenva
       break;
     }
     if(pow(maxoff, 2) <= tolerance){
-      std::cout << "Jacobi rotation method converged after " << iterations;
-      std::cout << " iterations. (tolerance = " << tolerance << " )" << endl;
       converged = 1;
       break;
     }

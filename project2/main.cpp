@@ -16,7 +16,8 @@ using namespace arma;
 
 
 int main() {
-    // Problem 3: initialize a tridiagonal 6x6 matrix A
+    // Problem 3:
+    // initialize a tridiagonal 6x6 matrix A
     // with diagonal 2/h^2 and sub/superdiagonal -1/h^2
     // N = n-1
     // h = 1/n = 1/(N+1)
@@ -38,6 +39,16 @@ int main() {
     mat vec_ana = eigenvector(N, a, d);
     vec_ana = normalise(vec_ana);
 
+    // Compare numerical method to analytical:
+    double tol = 1e-5; // Tolerance of the relative difference
+    std::cout << "Problem 3:" << endl;
+    std::cout << "Comparing numerical (arma::eig_sym) method to analytical:" << endl;
+    std::cout << " (Considered equal if the relative difference is smaller than " << tol << ")" << endl;
+    bool vecsim = check_eigenvectors(eigvec, vec_ana, tol);
+    std::cout << " Eigenvectors equivalent (True=1/False=0): " << vecsim << endl;
+    bool valsim = check_eigenvalues(eigval, val_ana, tol);
+    std::cout << " Eigenvalues equal (True=1/False=0): " << valsim << endl;
+
     // Print analytical results:
     //std::cout << "Analytical eigenvalues and eigenvectors: " << endl;
     //val_ana.print();
@@ -52,20 +63,14 @@ int main() {
     //eigvec.print();
     //std::cout << endl;
 
-    // Compare numerical method to analytical:
-    double tol = 1e-5; // Tolerance of the relative difference
-    std::cout << "Comparing numerical (arma::eig_sym) method to analytical:" << endl;
-    std::cout << "(Considered equal if the relative difference is smaller than " << tol << ")" << endl;
-    bool vecsim = check_eigenvectors(eigvec, vec_ana, tol);
-    std::cout << "Eigenvectors equivalent True/False: " << vecsim << endl;
-    bool valsim = check_eigenvalues(eigval, val_ana, tol);
-    std::cout << "Eigenvalues equal True/False: " << valsim << endl;
-
     // Problem 4
     // Test max_offdiag_symmetric():
+    std::cout << endl << "Problem 4:" << endl;
     test_ilode();
+    std::cout << endl;
 
     // Problem 5
+    std::cout << "Problem 5: " << endl;
     // Now calculate answers using jacobi rotation method:
     double tolerance = 1e-8; // Absolute tolerance of off-diagonal elements in eigenvalue-matrix
     vec val_jac(N, fill::zeros);
@@ -75,7 +80,19 @@ int main() {
     bool converged;
     jacobi_eigensolver(A, tolerance, val_jac, vec_jac,
                             maxiter, iterations, converged);
+    if (converged==1){
+      std::cout << "Jacobi rotation method converged after " << iterations;
+      std::cout << " iterations. (tolerance = " << tolerance << " )" << endl;
+    }
     vec_jac = normalise(vec_jac);
+
+    // Compare jacobi method to analytical:
+    std::cout << "Comparing Jacobi method to analytical:" << endl;
+    std::cout << " (Considered equal if the relative difference is smaller than " << tol << ")" << endl;
+    vecsim = check_eigenvectors(vec_jac, vec_ana, tol);
+    std::cout << " Eigenvectors equivalent (True=1/False=0): " << vecsim << endl;
+    valsim = check_eigenvalues(val_jac, val_ana, tol);
+    std::cout << " Eigenvalues equal (True=1/False=0): " << valsim << endl;
 
     // Print jacobi method results:
     //std::cout << "Jacobi method results: " << endl;
@@ -83,14 +100,6 @@ int main() {
     //val_jac.print();
     //std::cout << endl;
     //vec_jac.print();
-
-    // Compare jacobi method to analytical:
-    std::cout << "Comparing Jacobi method to analytical:" << endl;
-    std::cout << "(Considered equal if the relative difference is smaller than " << tol << ")" << endl;
-    vecsim = check_eigenvectors(vec_jac, vec_ana, tol);
-    std::cout << "Eigenvectors equivalent True/False: " << vecsim << endl;
-    valsim = check_eigenvalues(val_jac, val_ana, tol);
-    std::cout << "Eigenvalues equal True/False: " << valsim << endl;
 
     // Problem 6 a)
     /* commented out so not to generate anew for every run
@@ -147,12 +156,6 @@ int main() {
     vec_10 = normalise(vec_10);
     vec_10 = vec_10.cols(indices(span::all));
 
-    // Print results:
-    //std::cout << endl;
-    //val_10.print();
-    //std::cout << endl;
-    //vec_10.print();
-
     // Save results:
     vec_10.save("vec_10.bin");
     val_10.save("val_10.bin");
@@ -160,10 +163,16 @@ int main() {
     // compute analytically for comparison:
     vec val_ana_10 = eigenvalue(9, a_10, d_10);
     val_ana_10 = normalise(val_ana_10);
+    uvec indices_ana = sort_index(val_ana_10);
+    val_ana_10 = sort(val_ana_10);
+
     mat vec_ana_10 = eigenvector(9, a_10, d_10);
     vec_ana_10 = normalise(vec_ana_10);
+    vec_ana_10 = vec_ana_10.cols(indices_ana(span::all));
+
     val_ana_10.save("val_ana_10.bin");
     vec_ana_10.save("vec_ana_10.bin");
+
 
     // Repeat for n = 100
     double h_100 = 1./100.;
@@ -195,5 +204,4 @@ int main() {
     vec_ana_100 = normalise(vec_ana_100);
     val_ana_100.save("val_ana_100.bin");
     vec_ana_100.save("vec_ana_100.bin");
-
 }
