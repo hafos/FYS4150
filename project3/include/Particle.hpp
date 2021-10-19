@@ -7,6 +7,13 @@ using namespace arma;
 
 class Particle
 {
+private:
+
+  double charge_;
+  double mass_;
+  vec position_;
+  vec velocity_;
+
 public:
   //constructor
   Particle(double q_in, double m_in, vec r_in, vec v_in);

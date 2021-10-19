@@ -9,9 +9,22 @@ using namespace arma;
 
 class PenningTrap
 {
-public:
+  private:
+
+    // Stores all the particles in the PenningTrap
+    std::vector<Particle> particles_;
+
+    // The parameters
+    double B_;
+    double V_;
+    double d_;
+
+  public:
     // Constructor
     PenningTrap(double B0_in, double V0_in, double d_in);
+
+    // Returns the particles
+    std::vector<Particle> particles_in_trap();
 
     // Add a particle to the trap
     void add_particle(Particle p_in);
@@ -39,6 +52,6 @@ public:
 
     // Evolve the system one time step (dt) using Forward Euler
     void evolve_forward_Euler(double dt);
-}
+};
 
 #endif
