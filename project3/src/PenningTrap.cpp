@@ -27,9 +27,9 @@ vec PenningTrap::external_E_field(vec r)
   //this is the negative gradient of the potential
   double x = r(0);
   double y = r(1);
-  double z = r(3);
+  double z = r(2);
 
-  double c = -2.*V/pow(d, 2);
+  double c = 2.*V/pow(d, 2);
 
   vec E_ext = c*{x/2., y/2., -z};
   return E_ext;
