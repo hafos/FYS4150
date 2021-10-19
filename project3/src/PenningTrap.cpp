@@ -56,12 +56,12 @@ vec PenningTrap::total_force_external(int i)
 {
   Particle p = particles.at(i);
   q = p.charge();
-  m = p.mass();
+  // // m = p.mass(); // not needed here
   r = p.position();
   v = p.velocity();
 
-  omega_0 = q*B/m;
-  omega_z2 = 2*q*V/(m*pow(d, 2));
+  // // omega_0 = q*B/m; // not needed here
+  // // omega_z2 = 2*q*V/(m*pow(d, 2)); // not needed here
 
   F_e = q*external_E_field(r);
   F_b = q*cross(v, external_B_field(r));
@@ -102,24 +102,111 @@ void PenningTrap::evolve_forward_Euler(double dt)
 
     particles.at(i) = p_new;
   }
-  return particles;
+  // // return particles; // This function returns void
 }
 
 // Evolve the system one time step (dt) using Runge-Kutta 4th order
 void PenningTrap::evolve_RK4(double dt)
 //unfinished
 {
+  // Places to store stuff in local: size 3xN_particles
+  std::vector<std::vector<double>> vk1;
+  std::vector<std::vector<double>> vk2;
+  std::vector<std::vector<double>> vk3;
+  std::vector<std::vector<double>> vk4;
+  std::vector<std::vector<double>> rk1;
+  std::vector<std::vector<double>> rk2;
+  std::vector<std::vector<double>> rk3;
+  std::vector<std::vector<double>> rk4;
+  std::vector<Particle> particles_old = particles; // To store old particles
+  std::vector<Particle> particles_new; // To store intermediate states while updating individual particles
   for (int i = 0; i < particles.size(); i++)
   {
+    // Get particle properties at old state
     f = total_force(i);
     r = particles.at(i).position();
     v = particles.at(i).velocity();
     m = particles.at(i).mass();
     q = particles.at(i).charge();
 
-    //it seems unwieldy to implement an analytical solution
-    //in the general case of n particles
-    //but idk how to find the intermediate values of f otherwise
+    vk1.push_back(f/m); // slope of v at old
+    rk1.push_back(v); // slope of r at old
 
+    // Set new particle properties at k1
+    Particle p_new(q, m, r+0.5*rk1.at(i), v+0.5*vk1.at(i));
+    particles_new.at(i) = p_new;
+  }
+  // Update particles to k1
+  particles = particles_new;
+  for (int i = 0; i < particles.size(); i++)
+  {
+    // Get particle properties at k1 state
+    f = total_force(i);
+    r = particles.at(i).position();
+    v = particles.at(i).velocity();
+    m = particles.at(i).mass();
+    q = particles.at(i).charge();
+
+    vk2.push_back(f/m); // slope of velocity at k1
+    rk2.push_back(v); // slope of r at k1
+
+    // Set new particle properties at k2
+    r = particles_old.at(i).position();
+    v = particles_old.at(i).velocity();
+    m = particles_old.at(i).mass();
+    q = particles_old.at(i).charge();
+    Particle p_new(q, m, r+0.5*rk2.at(i), v+0.5*vk2.at(i));
+    particles_new.at(i) = p_new;
+  }
+  // Update particles to k2
+  particles = particles_new;
+  for (int i = 0; i < particles.size(); i++)
+  {
+    // Get particle properties at k2 state
+    f = total_force(i);
+    r = particles.at(i).position();
+    v = particles.at(i).velocity();
+    m = particles.at(i).mass();
+    q = particles.at(i).charge();
+
+    vk3.push_back(f/m); // slope of velocity at k2
+    rk3.push_back(v); // slope of r at k2
+
+    // Set new particle properties at k3
+    r = particles_old.at(i).position();
+    v = particles_old.at(i).velocity();
+    m = particles_old.at(i).mass();
+    q = particles_old.at(i).charge();
+    Particle p_new(q, m, r+rk3.at(i), v+vk3.at(i));
+    particles_new.at(i) = p_new;
+  }
+  // Update particles to k3
+  particles = particles_new;
+  for (int i = 0; i < particles.size(); i++)
+  {
+    // Get particle properties at k3 state
+    f = total_force(i);
+    r = particles.at(i).position();
+    v = particles.at(i).velocity();
+    m = particles.at(i).mass();
+    q = particles.at(i).charge();
+
+    vk4.push_back(f/m); // slope of velocity at k3
+    rk4.push_back(v); // slope of r at k3
+  }
+  // Update particles with RK4 method
+  for (int i = 0; i < particles.size(); i++)
+  {
+    r = particles_old.at(i).position();
+    v = particles_old.at(i).velocity();
+    m = particles_old.at(i).mass();
+    q = particles_old.at(i).charge();
+
+    r_new = r + (1/6)*dt*(rk1.at(i) + 2*rk2.at(i) + 2*rk3.at(i) + rk4.at(i));
+    v_new = v + (1/6)*dt*(vk1.at(i) + 2*vk2.at(i) + 2*vk3.at(i) + vk4.at(i));
+
+    Particle p_new(q, m, r_new, v_new);
+
+    particles.at(i) = p_new;
   }
 }
