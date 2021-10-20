@@ -21,6 +21,7 @@ void PenningTrap::add_particle(Particle p_in)
   particles_.push_back(p_in);
 }
 
+// Return the particle objects
 std::vector<Particle> PenningTrap::particles_in_trap()
 {
   return particles_;

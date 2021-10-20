@@ -1,14 +1,11 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
+# Plot the two particle trajectories in the euler_test file.
 file = open('euler_test.dat', 'r')
 t = []
-x = []
-y = []
-z = []
-x2 = []
-y2 = []
-z2 = []
+x = []; y = []; z = []
+x2 = []; y2 = []; z2 = []
 
 
 for line in file:
@@ -22,11 +19,8 @@ for line in file:
     z2 += [float(z2_new)]
 
 t = np.array(t)
-x = np.array(x)
-y = np.array(y)
-z = np.array(z)
-x2 = np.array(x2)
-y2 = np.array(y2)
+x = np.array(x); y = np.array(y); z = np.array(z)
+x2 = np.array(x2); y2 = np.array(y2)
 
 plt.figure()
 plt.plot(x,y)

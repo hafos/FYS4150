@@ -1,5 +1,5 @@
 #include <iostream>
-#include <iomanip>
+#include <iomanip> // Writing to file in nice format
 #include <armadillo> // vectors and matrices
 #include <cmath>
 
@@ -10,6 +10,7 @@ using namespace arma;
 
 int main()
 {
+  // Set parameters
   double sim_time = 1; // [microseconds]
   double dt = 0.001; // [microseconds]
   double B0_in = 9.65*1e1;
@@ -40,7 +41,7 @@ int main()
   // Test euler method
   double t = 0;
   int count = 0;
-  int maxiter = 1001;
+  int maxiter = 1001; // Safeguard
   vec r(3);
   vec r2(3);
   while (t <= sim_time){
@@ -65,6 +66,6 @@ int main()
         << std::setw(width) << std::setprecision(decimals) << std::scientific << r2(2)
         << std::endl;
   }
-
+  // Close file
   ofile.close();
 }

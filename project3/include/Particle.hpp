@@ -9,6 +9,7 @@ class Particle
 {
 private:
 
+  // Stores the parameters of the particle
   double charge_;
   double mass_;
   vec position_;
