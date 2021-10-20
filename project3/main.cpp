@@ -19,17 +19,17 @@ int main()
 
   // Initialize the system
   PenningTrap PT(B0_in, V0_in, d_in);
-  // Add two particles
+  // Add particles
   double q_in = 1;
   double m_in = 1;
-  vec r_in = { 0, 1, 0 };
-  vec v_in = { 0.1, 0, 0 };
-  vec v_in2 = { 0.01, 0, 0 };
+  vec r_in = { 1, 0, 0 };
+  vec v_in = { 0, 0.1, 0 };
+  //vec v_in2 = { 0, 0, 0 };
 
   Particle p_in = Particle(q_in, m_in, r_in, v_in);
   PT.add_particle(p_in);
-  Particle p_in2 = Particle(q_in, m_in, r_in, v_in2);
-  PT.add_particle(p_in2);
+  //Particle p_in2 = Particle(q_in, m_in, r_in, v_in2);
+  //PT.add_particle(p_in2);
 
   // Make test output file
   std::string filename = "euler_test.dat";
@@ -43,7 +43,14 @@ int main()
   int count = 0;
   int maxiter = 1001; // Safeguard
   vec r(3);
-  vec r2(3);
+  //vec r2(3);
+  // Write parameters to first line of file:
+  ofile << std::setw(width) << std::setprecision(decimals) << std::scientific << B0_in
+    << std::setw(width) << std::setprecision(decimals) << std::scientific << V0_in
+    << std::setw(width) << std::setprecision(decimals) << std::scientific << d_in
+    << std::setw(width) << std::setprecision(decimals) << std::scientific << q_in
+    << std::setw(width) << std::setprecision(decimals) << std::scientific << m_in
+    << endl;
   while (t <= sim_time){
     PT.evolve_forward_Euler(dt);
     t += dt;
@@ -54,16 +61,12 @@ int main()
     }
 
     r = PT.particles_in_trap().at(0).position();
-    r2 = PT.particles_in_trap().at(1).position();
     //std::cout << r << endl;
 
     ofile << std::setw(width) << std::setprecision(decimals) << std::scientific << t
         << std::setw(width) << std::setprecision(decimals) << std::scientific << r(0)
         << std::setw(width) << std::setprecision(decimals) << std::scientific << r(1)
         << std::setw(width) << std::setprecision(decimals) << std::scientific << r(2)
-        << std::setw(width) << std::setprecision(decimals) << std::scientific << r2(0)
-        << std::setw(width) << std::setprecision(decimals) << std::scientific << r2(1)
-        << std::setw(width) << std::setprecision(decimals) << std::scientific << r2(2)
         << std::endl;
   }
   // Close file
