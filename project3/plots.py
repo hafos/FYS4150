@@ -87,3 +87,30 @@ plt.plot(x2, y2, label = 'p2 - Result')
 plt.axis('equal')
 plt.legend()
 plt.show()
+
+#plot trajectories of 2 particles (RK4)
+file3 = open('RK4_test_2particles.dat', 'r')
+B0, V0, d, q, m = file3.readline().split() # Get parameters of PT and particles
+t = []
+x = []; y = []; z = []
+x2 = []; y2 = []; z2 = []
+
+
+for line in file3:
+    t_new, x_new, y_new, z_new, x2_new, y2_new, z2_new = line.split()
+    t += [float(t_new)]
+    x += [float(x_new)]
+    y += [float(y_new)]
+    z += [float(z_new)]
+    x2 += [float(x2_new)]; y2 += [float(y2_new)]; z2 += [float(z2_new)]
+
+t = np.array(t)
+x = np.array(x); y = np.array(y); z = np.array(z)
+x2 = np.array(x2); y2 = np.array(y2); z2 = np.array(z2)
+
+plt.figure()
+plt.plot(x,y, label='p1 - Result')
+plt.plot(x2, y2, label = 'p2 - Result')
+plt.axis('equal')
+plt.legend()
+plt.show()

@@ -34,8 +34,9 @@ int main()
 
   // Make test output file
   //std::string filename = "euler_test.dat";
-  std::string filename = "RK4_test.dat";
+  //std::string filename = "RK4_test.dat";
   //std::string filename = "euler_test_2particles.dat";
+  std::string filename = "RK4_test_2particles.dat";
   std::ofstream ofile;
   ofile.open(filename);
   // spacing in outputfile
@@ -45,8 +46,8 @@ int main()
   double t = 0;
   int count = 0;
 
-  int maxiter_rk4 = 1001; // Safeguard
-  int maxiter_euler = 100001; // Safeguard
+  //int maxiter = 1001; // Safeguard
+  int maxiter = 100001; // Safeguard
   vec r1(3);
   vec r2(3);
   // Write parameters to first line of file:
@@ -61,8 +62,7 @@ int main()
     //PT.evolve_forward_Euler(dt);
     t += dt;
     count +=1;
-    if (count >= maxiter_rk4){
-    //if (count >= maxiter_euler)
+    if (count >= maxiter){
       std::cout << "Maxiter, t:" << t << endl;
       break;
     }
