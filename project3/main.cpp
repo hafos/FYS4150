@@ -35,7 +35,7 @@ int main()
   // Make test output file
   //std::string filename = "euler_test.dat";
   std::string filename = "RK4_test.dat";
-  std::string filename = "euler_test_2particles.dat";
+  //std::string filename = "euler_test_2particles.dat";
   std::ofstream ofile;
   ofile.open(filename);
   // spacing in outputfile
@@ -62,6 +62,7 @@ int main()
     t += dt;
     count +=1;
     if (count >= maxiter_rk4){
+    //if (count >= maxiter_euler)
       std::cout << "Maxiter, t:" << t << endl;
       break;
     }
