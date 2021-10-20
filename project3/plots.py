@@ -33,28 +33,29 @@ plt.figure()
 plt.plot(x_ana, y_ana, label='Expected')
 #plt.show()
 
-# Plot the two particle trajectories in the euler_test file.
-file = open('euler_test.dat', 'r')
-B0, V0, d, q, m = file.readline().split() # Get parameters of PT and particles
-t = []
-x = []; y = []; z = []
-#x2 = []; y2 = []; z2 = []
+def read_file(filename):
+    # Plot the two particle trajectories in the euler_test file.
+    file = open(filename, 'r')
+    B0, V0, d, q, m = file.readline().split() # Get parameters of PT and particles
+    t = []; x = []; y = []; z = []
 
+    for line in file:
+        t_new, x_new, y_new, z_new = line.split()
+        t += [float(t_new)]
+        x += [float(x_new)]
+        y += [float(y_new)]
+        z += [float(z_new)]
 
-for line in file:
-    t_new, x_new, y_new, z_new = line.split()
-    t += [float(t_new)]
-    x += [float(x_new)]
-    y += [float(y_new)]
-    z += [float(z_new)]
-    #x2 += [float(x2_new)]; y2 += [float(y2_new)]; z2 += [float(z2_new)]
+    t = np.array(t)
+    x = np.array(x); y = np.array(y); z = np.array(z)
+    return float(B0), float(V0), float(d), float(q), float(m), t, x, y, z
 
-t = np.array(t)
-x = np.array(x); y = np.array(y); z = np.array(z)
-#x2 = np.array(x2); y2 = np.array(y2)
+B0, V0, d, q, m, t, x, y, z = read_file('euler_test.dat')
+plt.plot(x,y, label='FE - Result')
 
-#plt.figure()
-plt.plot(x,y, label='p1 - Result')
+B0, V0, d, q, m, t, x, y, z = read_file('RK4_test.dat')
+plt.plot(x,y, '--', label='RK4 - Result')
+
 plt.axis('equal')
 plt.legend()
 plt.show()
