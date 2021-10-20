@@ -7,17 +7,17 @@ def analytical_solution(t, x0, z0, v0, B0, V0, d, q, m):
     for starting point r = (x0, 0, z0), v = (0, v0, o)
     """
     w0 = q*B0/m
-    wz = 2*q*V0/(m*d**2)
+    wz = np.sqrt(2*q*V0/(m*d**2))
     wp = w0/2 + np.sqrt(w0**2 - 2*wz**2)/2
     wm = w0/2 - np.sqrt(w0**2 - 2*wz**2)/2
     Ap = (v0 + wm*x0)/(wm - wp)
-    Am = (v0 + wp*x0)/(wm - wp)
+    Am = -(v0 + wp*x0)/(wm - wp)
     x = Ap*np.cos(wp*t) + Am*np.cos(wm*t)
     y = -Ap*np.sin(wp*t) + -Am*np.sin(wm*t)
     z = z0*np.cos(wz*t)
     return x,y,z
 
-t = np.linspace(0, 10, 5000)
+t = np.linspace(0, 1, 5000)
 B0 = 9.65*1e1;
 V0 = 9.65*1e8;
 d = 1e4;
