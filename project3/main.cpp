@@ -24,26 +24,23 @@ int main()
   double m_in = 1;
   vec r_in = { 1, 0, 0 };
   vec v_in = { 0, 0.1, 0 };
-  //vec v_in2 = { 0, 0, 0 };
 
   Particle p_in = Particle(q_in, m_in, r_in, v_in);
   PT.add_particle(p_in);
-  //Particle p_in2 = Particle(q_in, m_in, r_in, v_in2);
-  //PT.add_particle(p_in2);
 
   // Make test output file
-  std::string filename = "euler_test.dat";
+  std::string filename = "RK4_test.dat";
+  //std::string filename = "euler_test.dat";
   std::ofstream ofile;
   ofile.open(filename);
   // spacing in outputfile
   int width = 21; int decimals = 9;
 
-  // Test euler method
+  // Test method
   double t = 0;
   int count = 0;
   int maxiter = 1001; // Safeguard
   vec r(3);
-  //vec r2(3);
   // Write parameters to first line of file:
   ofile << std::setw(width) << std::setprecision(decimals) << std::scientific << B0_in
     << std::setw(width) << std::setprecision(decimals) << std::scientific << V0_in
@@ -52,7 +49,8 @@ int main()
     << std::setw(width) << std::setprecision(decimals) << std::scientific << m_in
     << endl;
   while (t <= sim_time){
-    PT.evolve_forward_Euler(dt);
+    PT.evolve_RK4(dt);
+    //PT.evolve_forward_Euler(dt);
     t += dt;
     count +=1;
     if (count >= maxiter){
