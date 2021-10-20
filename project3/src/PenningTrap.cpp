@@ -52,8 +52,18 @@ vec PenningTrap::external_B_field(vec r)
 // Force on particle_i from particle_j
 vec PenningTrap::force_particle(int i, int j)
 {
-  //placeholder
-  vec F_p = {0, 0, 0};
+  //define variables
+  double q_i = particles_.at(i).charge();
+  vec r_i = particles_.at(i).position();
+  double q_j = particles_.at(j).charge();
+  vec r_j = particles_.at(j).position();
+  //Coulomb constant
+  const double k_e = 1.38935333*pow(10, 5);
+
+  double r = norm(r_i - r_j, 2); //absolute distance
+
+  vec F_p = k_e * q_i * q_j * (r_i - r_j)/pow(r, 3);
+
   return F_p;
 }
 
@@ -62,12 +72,8 @@ vec PenningTrap::total_force_external(int i)
 {
   Particle p = particles_.at(i);
   double q = p.charge();
-  // // m = p.mass(); // not needed here
   vec r = p.position();
   vec v = p.velocity();
-
-  // // omega_0 = q*B_/m; // not needed here
-  // // omega_z2 = 2*q*V_/(m*pow(d, 2)); // not needed here
 
   vec F_e = q*external_E_field(r);
   vec F_b = q*cross(v, external_B_field(r));
@@ -78,10 +84,19 @@ vec PenningTrap::total_force_external(int i)
 // The total force on particle_i from the other particles
 vec PenningTrap::total_force_particles(int i)
 {
-  //this is a placeholder
-  vec F_p_all = {0, 0, 0};
-
-  return F_p_all;
+  mat F_p_all(3, particles_.size());
+  for (int j = 0; j < particles_.size(); j++)
+  {
+    if (j == i)
+    {
+      F_p_all.col(j).zeros();
+    }
+    else
+    {
+      F_p_all.col(j) = force_particle(i, j);
+    }
+  }
+  return sum(F_p_all, 1);
 }
 
 // The total force on particle_i from both external fields and other particles
