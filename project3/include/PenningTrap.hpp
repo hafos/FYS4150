@@ -19,6 +19,9 @@ class PenningTrap
     double V_;
     double d_;
 
+    // Constants
+    double k_e;
+
   public:
     // Constructor
     PenningTrap(double B0_in, double V0_in, double d_in);

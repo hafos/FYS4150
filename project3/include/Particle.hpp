@@ -9,21 +9,21 @@ class Particle
 {
 private:
 
-  // Stores the parameters of the particle
+  // Stores the parameters of the particle that can't be changed from outside:
   double charge_;
   double mass_;
-  vec position_;
-  vec velocity_;
 
 public:
   //constructor
   Particle(double q_in, double m_in, vec r_in, vec v_in);
 
-  //methods to return all the variables:
+  // Parameters of the particle that can be changed from outside:
+  vec position;
+  vec velocity;
+
+  //methods to return charge and mass:
   double charge();
   double mass();
-  vec position();
-  vec velocity();
 };
 
 #endif
