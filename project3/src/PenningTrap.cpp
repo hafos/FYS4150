@@ -103,7 +103,6 @@ vec PenningTrap::total_force_particles(int i)
 vec PenningTrap::total_force(int i)
 {
   return total_force_external(i) + total_force_particles(i);
-  //return total_force_particles(i);
 }
 
 // Evolve the system one time step (dt) using Forward Euler
