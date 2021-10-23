@@ -135,20 +135,10 @@ void PenningTrap::evolve_forward_Euler(double dt)
 // Evolve the system one time step (dt) using Runge-Kutta 4th order
 void PenningTrap::evolve_RK4(double dt)
 {
-  // This method currently stores a lot of extra stuff...
-  // Could probably be made more effective
-  // These matrices are necessary in order to update all particles simultaneously:
-  mat vk1(3, particles_.size(), fill::zeros);
-  mat vk2(3, particles_.size(), fill::zeros);
-  mat vk3(3, particles_.size(), fill::zeros);
-  mat vk4(3, particles_.size(), fill::zeros);
-  mat rk1(3, particles_.size(), fill::zeros);
-  mat rk2(3, particles_.size(), fill::zeros);
-  mat rk3(3, particles_.size(), fill::zeros);
-  mat rk4(3, particles_.size(), fill::zeros);
   // These vectors are needed to store old and intermediate states:
-  std::vector<Particle> particles_old = particles_;
-  std::vector<Particle> particles_new = particles_;
+  std::vector<Particle> particles_old = particles_; // Store old
+  std::vector<Particle> particles_k = particles_; // Store k1, k2, k3 updates
+  std::vector<Particle> particles_new = particles_; // Fill on to get final
 
   // First loop: k1
   for (int i = 0; i < particles_.size(); i++)
@@ -159,82 +149,100 @@ void PenningTrap::evolve_RK4(double dt)
       vec v = particles_.at(i).velocity;
       double m = particles_.at(i).mass();
 
-      //f has 3 rows and 1 column -> want insert_cols to a col with 3 rows
-      vk1.insert_cols(i, dt*f/m); // slope of v at old * dt
-      rk1.insert_cols(i, dt*v); // slope of r at old * dt
+      // Get slopes * dt (k1)
+      vec vk = dt*f/m;
+      vec rk = dt*v;
 
-      // Set new particle properties at k1 (start from old)
-      particles_new.at(i).position = r+0.5*rk1.col(i);
-      particles_new.at(i).velocity = v+0.5*vk1.col(i);
+      // Add this to new
+      vec r_new = particles_new.at(i).position;
+      vec v_new = particles_new.at(i).velocity;
+      particles_new.at(i).position = r_new + rk/6.;
+      particles_new.at(i).velocity = v_new + vk/6.;
+
+      // Update temp. particles with k1 (start from old)
+      particles_k.at(i).position = r+0.5*rk;
+      particles_k.at(i).velocity = v+0.5*vk;
+
     }
-  // Update particles to k1
-  particles_ = particles_new;
+  // Update particles with k1
+  particles_ = particles_k;
 
   // Second loop: k2
   for (int i = 0; i < particles_.size(); i++)
     {
-      // Get particle properties at k1 state
+      // Get particle properties at k1 updated state
       vec f = total_force(i);
       vec r = particles_.at(i).position;
       vec v = particles_.at(i).velocity;
       double m = particles_.at(i).mass();
 
-      vk2.insert_cols(i, dt*f/m); // slope of velocity at k1 * dt
-      rk2.insert_cols(i, dt*v); // slope of r at k1 * dt
+      // Get slopes * dt (k2)
+      vec vk = dt*f/m;
+      vec rk = dt*v;
 
-      // Set new particle properties at k2 (start from old)
+      // Add this to new
+      vec r_new = particles_new.at(i).position;
+      vec v_new = particles_new.at(i).velocity;
+      particles_new.at(i).position = r_new + 2.*rk/6.;
+      particles_new.at(i).velocity = v_new + 2.*vk/6.;
+
+      // Update temp. particles with k2 (start from old)
       r = particles_old.at(i).position;
       v = particles_old.at(i).velocity;
-      particles_new.at(i).position = r+0.5*rk2.col(i);
-      particles_new.at(i).velocity = v+0.5*vk2.col(i);
+      particles_k.at(i).position = r + 0.5*rk;
+      particles_k.at(i).velocity = v + 0.5*vk;
     }
-  // Update particles to k2
-  particles_ = particles_new;
+  // Update particles with k2
+  particles_ = particles_k;
 
   // Third loop: k3
   for (int i = 0; i < particles_.size(); i++)
     {
-      // Get particle properties at k2 state
+      // Get particle properties at k2 updated state
       vec f = total_force(i);
       vec r = particles_.at(i).position;
       vec v = particles_.at(i).velocity;
       double m = particles_.at(i).mass();
 
-      vk3.insert_cols(i, dt*f/m); // slope of velocity at k2 * dt
-      rk3.insert_cols(i, dt*v); // slope of r at k2 * dt
+      // Get slopes * dt (k3)
+      vec vk = dt*f/m;
+      vec rk = dt*v;
 
-      // Set new particle properties at k3 (start from old)
+      // Add this to new
+      vec r_new = particles_new.at(i).position;
+      vec v_new = particles_new.at(i).velocity;
+      particles_new.at(i).position = r_new + 2.*rk/6.;
+      particles_new.at(i).velocity = v_new + 2.*vk/6.;
+
+      // Update temp. particle with k3 (start from old)
       r = particles_old.at(i).position;
       v = particles_old.at(i).velocity;
-      particles_new.at(i).position = r+rk3.col(i);
-      particles_new.at(i).velocity = v+vk3.col(i);
+      particles_k.at(i).position = r + rk;
+      particles_k.at(i).velocity = v + vk;
     }
-  // Update particles to k3
-  particles_ = particles_new;
+  // Update particles with k3
+  particles_ = particles_k;
 
   // Fourth loop: k4
   for (int i = 0; i < particles_.size(); i++)
     {
-      // Get particle properties at k3 state
+      // Get particle properties at k3 updated state
       vec f = total_force(i);
       vec r = particles_.at(i).position;
       vec v = particles_.at(i).velocity;
       double m = particles_.at(i).mass();
 
-      vk4.insert_cols(i, dt*f/m); // slope of velocity at k3 * dt
-      rk4.insert_cols(i, dt*v); // slope of r at k3 * dt
+      // Get slopes * dt (k4)
+      vec vk = dt*f/m;
+      vec rk = dt*v;
+
+      // Add this to new
+      vec r_new = particles_new.at(i).position;
+      vec v_new = particles_new.at(i).velocity;
+      particles_new.at(i).position = r_new + rk/6.;
+      particles_new.at(i).velocity = v_new + vk/6.;
     }
 
-  // Final loop: Update particles with RK4 method
-  for (int i = 0; i < particles_.size(); i++)
-    {
-      vec r = particles_old.at(i).position;
-      vec v = particles_old.at(i).velocity;
-
-      vec r_new = r + (rk1.col(i) + 2.*rk2.col(i) + 2.*rk3.col(i) + rk4.col(i))/6.;
-      vec v_new = v + (vk1.col(i) + 2.*vk2.col(i) + 2.*vk3.col(i) + vk4.col(i))/6.;
-
-      particles_.at(i).position = r_new;
-      particles_.at(i).velocity = v_new;
-    }
+    // Finally: set particles to particles_new
+    particles_ = particles_new;
 }
