@@ -12,7 +12,7 @@ int main()
 {
   // Set parameters
   double sim_time = 1; // [microseconds]
-  double dt = 0.0001; // [microseconds]
+  double dt = 0.001; // [microseconds]
   double B0_in = 9.65*1e1;
   double V0_in = 9.65*1e8;
   double d_in = 1e4;
@@ -69,7 +69,6 @@ int main()
 
     r1 = PT.particles_in_trap().at(0).position;
     r2 = PT.particles_in_trap().at(1).position;
-    //std::cout << r << endl;
 
     ofile << std::setw(width) << std::setprecision(decimals) << std::scientific << t
         << std::setw(width) << std::setprecision(decimals) << std::scientific << r1(0)
