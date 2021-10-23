@@ -67,8 +67,8 @@ int main()
       break;
     }
 
-    r1 = PT.particles_in_trap().at(0).position();
-    r2 = PT.particles_in_trap().at(1).position();
+    r1 = PT.particles_in_trap().at(0).position;
+    r2 = PT.particles_in_trap().at(1).position;
     //std::cout << r << endl;
 
     ofile << std::setw(width) << std::setprecision(decimals) << std::scientific << t
