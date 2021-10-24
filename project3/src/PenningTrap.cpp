@@ -9,8 +9,8 @@ using namespace arma;
 // Constructor
 PenningTrap::PenningTrap(double B0_in, double V0_in, double d_in, bool Interactions)
 {
-  B_ = B0_in;
-  V = V0_in;
+  B0_ = B0_in;
+  V0 = V0_in;
   d_ = d_in;
   Interactions_ = Interactions;
 
@@ -38,7 +38,7 @@ vec PenningTrap::external_E_field(vec r)
   double y = r(1);
   double z = r(2);
 
-  double c = 2.*V/pow(d_, 2);
+  double c = 2.*V0/pow(d_, 2);
 
   vec E_ext = {c*x/2., c*y/2., -c*z};
   //set to 0 outside trap
@@ -52,7 +52,7 @@ vec PenningTrap::external_E_field(vec r)
 vec PenningTrap::external_B_field(vec r)
 {
   //this is just B0 in the z direction
-  vec B_ext = {0, 0, B_};
+  vec B_ext = {0, 0, B0_};
 
   //set to 0 outside trap
   if (abs(norm(r)) > d_){

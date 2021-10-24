@@ -15,7 +15,7 @@ class PenningTrap
     std::vector<Particle> particles_;
 
     // The parameters
-    double B_;
+    double B0_;
     double d_;
     bool Interactions_;
 
@@ -27,7 +27,7 @@ class PenningTrap
     PenningTrap(double B0_in, double V0_in, double d_in, bool Interactions);
 
     // Parameters of the trap that can be changed from outside:
-    double V;
+    double V0;
 
     // Returns the particles
     std::vector<Particle> particles_in_trap();
