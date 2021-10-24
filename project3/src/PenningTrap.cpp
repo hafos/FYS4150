@@ -23,14 +23,13 @@ PenningTrap::PenningTrap(double B0_in, double V0_in, double d_in, bool Interacti
           between the particles in the trap
 
   */
-  B_ = B0_in;
-  V_ = V0_in;
+  B0_ = B0_in;
   d_ = d_in;
   c0_ = 2.*V0_in/pow(d_in, 2);
-  c_ = c0_; // Is updated with update_time
   Interactions_ = Interactions;
-  // Use set_time_dependence to edit the following:
+  c_ = c0_; // Is updated with update_time
   time_ = 0; // also updated cumilatively with update_time in the methods
+  // Use set_time_dependence to edit the following:
   f_ = 0;
   wV_ = 0;
 
