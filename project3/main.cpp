@@ -24,7 +24,7 @@ void single_particle_test(double dt)
   // Add particles
   double q_in = 1;
   double m_in = 1;
-  vec r_in = { 10, 0, 5 };
+  vec r_in = { 10, 0, 10 };
   vec v_in = { 0, -1, 0 };
 
   Particle p_in = Particle(q_in, m_in, r_in, v_in);
@@ -34,7 +34,7 @@ void single_particle_test(double dt)
   // Make test output files
   std::ostringstream dt_string;
   dt_string << std::setw(5) << std::setprecision(1) << std::scientific << dt;
-  std::string filename = "test_RK4-FE_dt" + dt_string.str() + ".dat";
+  std::string filename = "test_results/test_RK4-FE_dt" + dt_string.str() + ".dat";
 
   std::ofstream ofile;
   ofile.open(filename);

@@ -4,7 +4,7 @@ import numpy as np
 
 def analytical_solution(t, x0, z0, v0, B0, V0, d, q, m):
     """
-    The specific analytical solution
+    Returns the specific analytical solution
     for starting point r = (x0, 0, z0), v = (0, v0, o)
     for a single point
     """
@@ -18,6 +18,13 @@ def analytical_solution(t, x0, z0, v0, B0, V0, d, q, m):
     y = -Ap*np.sin(wp*t) + -Am*np.sin(wm*t)
     z = z0*np.cos(wz*t)
     return x,y,z
+
+def relative_error(ana_sol, num_sol):
+    """
+    Returns the relative error of the numerical solution
+    """
+    relerr = np.linalg.norm( np.abs( (ana_sol - num_sol)/ana_sol ), axis=1 )
+    return relerr
 
 
 def read_file(filename):
@@ -44,28 +51,44 @@ def read_file(filename):
 
 
 
-# Open all files:
-B0, V0, d, q, m, v0, t1, RKx1, RKy1, RKz1, FEx1, FEy1, FEz1 = read_file('test_RK4-FE_dt1.0e-04.dat')
+# Open all files: They all have same B0, V0 etc.. Only change is dt
+B0, V0, d, q, m, v0, t1, RKx1, RKy1, RKz1, FEx1, FEy1, FEz1 = read_file('test_results/test_RK4-FE_dt1.0e-04.dat')
+B0, V0, d, q, m, v0, t2, RKx2, RKy2, RKz2, FEx2, FEy2, FEz2 = read_file('test_results/test_RK4-FE_dt5.0e-04.dat')
+B0, V0, d, q, m, v0, t3, RKx3, RKy3, RKz3, FEx3, FEy3, FEz3 = read_file('test_results/test_RK4-FE_dt1.0e-03.dat')
+B0, V0, d, q, m, v0, t4, RKx4, RKy4, RKz4, FEx4, FEy4, FEz4 = read_file('test_results/test_RK4-FE_dt5.0e-03.dat')
+B0, V0, d, q, m, v0, t5, RKx5, RKy5, RKz5, FEx5, FEy5, FEz5 = read_file('test_results/test_RK4-FE_dt1.0e-02.dat')
+
+# Get analytical solution:
 t = np.linspace(0,100,10000)
 x_ana, y_ana, z_ana = analytical_solution(t, RKx1[0], RKz1[0], v0, B0, V0, d, q, m)
-B0, V0, d, q, m, v0, t2, RKx2, RKy2, RKz2, FEx2, FEy2, FEz2 = read_file('test_RK4-FE_dt5.0e-04.dat')
-B0, V0, d, q, m, v0, t3, RKx3, RKy3, RKz3, FEx3, FEy3, FEz3 = read_file('test_RK4-FE_dt1.0e-03.dat')
-B0, V0, d, q, m, v0, t4, RKx4, RKy4, RKz4, FEx4, FEy4, FEz4 = read_file('test_RK4-FE_dt5.0e-03.dat')
-B0, V0, d, q, m, v0, t5, RKx5, RKy5, RKz5, FEx5, FEy5, FEz5 = read_file('test_RK4-FE_dt1.0e-02.dat')
+wz_expected = np.sqrt(2*q*V0/(m*d**2))
 
+## Plot the relevant stuff for the single particle tests in 9, this is in progess:
 
-# Plot the relevant stuff for the single particle tests in 9, this is in progess:
-plt.figure()
-plt.plot(t1 , RKz1, label='RK4 - Result')
-plt.plot(t1 , FEz1, label='FE - Result')
-plt.plot(t, z_ana, 'k--', label='Analytical Solution')
-
-plt.axis('equal')
-plt.xlabel('t'); plt.ylabel('z')
+# Check if z-frequency is as expected:
+fz_expected = wz_expected / (2*np.pi) # (transform from ang. freq to freq)
+print('Checking frequency in z-direction:')
+print('----------------------------------')
+print('Expexted z-frequency: %.2e' %fz_expected)
+print('Approximate frequency (counting from image): %.2e \n' %(7/10))
+fig, ax = plt.subplots(2,1, figsize=(8,6))
+ax[0].plot(t1 , RKz1, label='RK4 method')
+ax[0].plot(t, z_ana, '--', label='Analytical Solution')
+ax[1].plot(t1[:len(t1)//10] , RKz1[:len(t1)//10], label='RK4 method')
+ax[1].plot(t[:len(t)//10], z_ana[:len(t)//10], '--', label='Analytical Solution')
+ax[0].grid(); ax[1].grid()
+ax[0].set_xlabel(r't [$\mu$s]'); ax[0].set_ylabel(r'z [$\mu$m]')
+ax[1].set_xlabel(r't [$\mu$s]'); ax[1].set_ylabel(r'z [$\mu$m]')
 plt.legend()
+ax[0].set_title(r'Single particle, h = 10$^{-4}$')
+plt.tight_layout()
+plt.savefig('test_results/test_frequency_z.pdf')
 plt.show()
 
-plt.figure()
+# Plot relative errors for all runs and methods for single particle:
+
+
+"""plt.figure()
 plt.plot(RKx3 , RKy3, label='RK4 - Result')
 #plt.plot(FEx3 , FEy3, label='FE - Result')
 plt.plot(RKx4 , RKy4, label='RK4 - Result')
@@ -77,3 +100,4 @@ plt.axis('equal')
 plt.xlabel('x'); plt.ylabel('y')
 plt.legend()
 plt.show()
+"""
