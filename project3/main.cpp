@@ -229,5 +229,18 @@ int main()
   //   }
   // }
 
+  //test random particles:
+  // double q_in = 1;
+  // double m_in = 1;
+  // double B0_in = 9.65*1e1;
+  // double V0_in = 9.65*1e8;
+  // double d_in = 1e4;
+  // int n = 10;
+  // bool Interactions = 1;
+  // 
+  // PenningTrap PT(B0_in, V0_in, d_in, Interactions);
+  // PT.add_n_particles(n, q_in, m_in);
+  // std::cout << PT.count_particles() << endl;
+
   //multiple_particle_test();
 }

@@ -50,6 +50,19 @@ void PenningTrap::add_particle(Particle p_in)
   particles_.push_back(p_in);
 }
 
+// Add n randomly generated particles
+void PenningTrap::add_n_particles(int n, double q, double m)
+{
+  arma_rng::set_seed(123);
+  for (int i = 0; i < n; i++)
+  {
+    vec r = vec(3).randn()*0.1*d_; //random initial position
+    vec v = vec(3).randn()*0.1*d_; //random initial velocity
+    Particle p = Particle(q, m, r, v);
+    particles_.push_back(p);
+  }
+}
+
 // Count partices in the trap
 int PenningTrap::count_particles()
 {

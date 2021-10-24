@@ -37,6 +37,9 @@ class PenningTrap
     // Add a particle to the trap
     void add_particle(Particle p_in);
 
+    // Add n randomly generated particles
+    void add_n_particles(int n, double q, double m);
+
     // Count particles in the trap
     int count_particles();
 
