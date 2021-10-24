@@ -37,6 +37,9 @@ class PenningTrap
     // Add a particle to the trap
     void add_particle(Particle p_in);
 
+    // Count particles in the trap
+    int count_particles();
+
     // Set the time-dependent potential parameters:
     void set_time_dependence(double f, double wV, double start_time);
 

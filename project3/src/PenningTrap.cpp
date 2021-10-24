@@ -36,6 +36,21 @@ void PenningTrap::add_particle(Particle p_in)
   particles_.push_back(p_in);
 }
 
+// Count partices in the trap
+int PenningTrap::count_particles()
+{
+  int count = 0;
+  for (int i = 0; i < particles_.size(); i++)
+  {
+    vec r = particles_.at(i).position;
+    if (abs(norm(r)) < d_)
+    {
+      count += 1;
+    }
+  }
+  return count;
+}
+
 // Set the time-dependent potential parameters:
 void PenningTrap::set_time_dependence(double f, double wV, double start_time)
 { // For backwards compatibility with earlier versions...
