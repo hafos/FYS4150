@@ -16,16 +16,18 @@ class PenningTrap
 
     // The parameters
     double B_;
-    double V_;
     double d_;
     bool Interactions_;
 
     // Constants
-    double k_e;
+    double k_e_;
 
   public:
     // Constructor
     PenningTrap(double B0_in, double V0_in, double d_in, bool Interactions);
+
+    // Parameters of the trap that can be changed from outside:
+    double V;
 
     // Returns the particles
     std::vector<Particle> particles_in_trap();

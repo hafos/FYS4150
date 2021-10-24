@@ -10,12 +10,12 @@ using namespace arma;
 PenningTrap::PenningTrap(double B0_in, double V0_in, double d_in, bool Interactions)
 {
   B_ = B0_in;
-  V_ = V0_in;
+  V = V0_in;
   d_ = d_in;
   Interactions_ = Interactions;
 
   //Coulomb constant
-  k_e = 1.38935333*1e5;//pow(10, 5);
+  k_e_ = 1.38935333*1e5;//pow(10, 5);
 }
 
 // Add a particle to the trap
@@ -38,7 +38,7 @@ vec PenningTrap::external_E_field(vec r)
   double y = r(1);
   double z = r(2);
 
-  double c = 2.*V_/pow(d_, 2);
+  double c = 2.*V/pow(d_, 2);
 
   vec E_ext = {c*x/2., c*y/2., -c*z};
   //set to 0 outside trap
@@ -72,7 +72,7 @@ vec PenningTrap::force_particle(int i, int j)
 
   double r = norm(r_i - r_j, 2); //absolute distance
 
-  vec F_p = k_e * q_i * q_j * (r_i - r_j)/pow(r, 3);
+  vec F_p = k_e_ * q_i * q_j * (r_i - r_j)/pow(r, 3);
 
   return F_p;
 }
