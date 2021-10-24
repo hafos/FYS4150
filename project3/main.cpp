@@ -100,24 +100,22 @@ void single_particle_test(double dt)
   ofile.close();
 }
 
-void multiple_particle_test()
-{
+void multiple_particle_test(double dt, bool Interactions)
+{ // This could definitely be made prettier with some loops
   // Set parameters
-  double sim_time = 1; // [microseconds]
-  double dt = 0.001; // [microseconds]
+  double sim_time = 100; // [microseconds]
   double B0_in = 9.65*1e1;
   double V0_in = 9.65*1e8;
-  double d_in = 1e4;
-  bool Interactions = 1;
+  double d_in = 1e4; // [micrometers]
 
-  // Initialize the system
+  // Initialize the systems
   PenningTrap PT(B0_in, V0_in, d_in, Interactions);
   // Add particles
   double q_in = 1;
   double m_in = 1;
-  vec r_in = { 1, 0, 0 };
-  vec v_in = { 0, 0.1, 0 };
-  vec r_in2 = {0, 1, 0};
+  vec r_in = { 10, 0, 10 };
+  vec v_in = { 0, -1, 0 };
+  vec r_in2 = {0, 10, 0};
   vec v_in2 = { 0, 0, 0 };
 
   Particle p_in = Particle(q_in, m_in, r_in, v_in);
@@ -126,10 +124,10 @@ void multiple_particle_test()
   PT.add_particle(p_in2);
 
   // Make test output file
-  //std::string filename = "euler_test.dat";
-  //std::string filename = "RK4_test.dat";
-  //std::string filename = "euler_test_2particles.dat";
-  std::string filename = "RK4_test_2particles.dat";
+  std::string filename = "test_results/2particles_RK4_interactions_off.dat";
+  if (Interactions==1){
+    filename = "test_results/2particles_RK4_interactions_on.dat";
+  }
   std::ofstream ofile;
   ofile.open(filename);
   // spacing in outputfile
@@ -137,40 +135,63 @@ void multiple_particle_test()
 
   // Test method
   double t = 0;
-  int count = 0;
-
-  //int maxiter = 1001; // Safeguard
-  int maxiter = 100001; // Safeguard
   vec r1(3);
   vec r2(3);
+  vec v1(3);
+  vec v2(3);
+
+
   // Write parameters to first line of file:
   ofile << std::setw(width) << std::setprecision(decimals) << std::scientific << B0_in
     << std::setw(width) << std::setprecision(decimals) << std::scientific << V0_in
     << std::setw(width) << std::setprecision(decimals) << std::scientific << d_in
     << std::setw(width) << std::setprecision(decimals) << std::scientific << q_in
     << std::setw(width) << std::setprecision(decimals) << std::scientific << m_in
-    << endl;
+    << std::endl;
+  ofile << "t x y z vx vy vz x2 y2 z2 vx2 vy2 vz2" << endl;
+  ofile << std::setw(width) << std::setprecision(decimals) << std::scientific << 0
+    << std::setw(width) << std::setprecision(decimals) << std::scientific << r_in.at(0)
+    << std::setw(width) << std::setprecision(decimals) << std::scientific << r_in.at(1)
+    << std::setw(width) << std::setprecision(decimals) << std::scientific << r_in.at(2)
+    << std::setw(width) << std::setprecision(decimals) << std::scientific << v_in.at(0)
+    << std::setw(width) << std::setprecision(decimals) << std::scientific << v_in.at(1)
+    << std::setw(width) << std::setprecision(decimals) << std::scientific << v_in.at(2)
+    << std::setw(width) << std::setprecision(decimals) << std::scientific << r_in2.at(0)
+    << std::setw(width) << std::setprecision(decimals) << std::scientific << r_in2.at(1)
+    << std::setw(width) << std::setprecision(decimals) << std::scientific << r_in2.at(2)
+    << std::setw(width) << std::setprecision(decimals) << std::scientific << v_in2.at(0)
+    << std::setw(width) << std::setprecision(decimals) << std::scientific << v_in2.at(1)
+    << std::setw(width) << std::setprecision(decimals) << std::scientific << v_in2.at(2)
+    << std::endl;
+
   while (t <= sim_time){
     PT.evolve_RK4(dt);
-    //PT.evolve_forward_Euler(dt);
     t += dt;
-    count +=1;
-    if (count >= maxiter){
-      std::cout << "Maxiter, t:" << t << endl;
-      break;
-    }
 
     r1 = PT.particles_in_trap().at(0).position;
     r2 = PT.particles_in_trap().at(1).position;
+    v1 = PT.particles_in_trap().at(0).velocity;
+    v2 = PT.particles_in_trap().at(1).velocity;
 
     ofile << std::setw(width) << std::setprecision(decimals) << std::scientific << t
-        << std::setw(width) << std::setprecision(decimals) << std::scientific << r1(0)
-        << std::setw(width) << std::setprecision(decimals) << std::scientific << r1(1)
-        << std::setw(width) << std::setprecision(decimals) << std::scientific << r1(2)
-        << std::setw(width) << std::setprecision(decimals) << std::scientific << r2(0)
-        << std::setw(width) << std::setprecision(decimals) << std::scientific << r2(1)
-        << std::setw(width) << std::setprecision(decimals) << std::scientific << r2(2)
-        << std::endl;
+      << std::setw(width) << std::setprecision(decimals) << std::scientific << r1.at(0)
+      << std::setw(width) << std::setprecision(decimals) << std::scientific << r1.at(1)
+      << std::setw(width) << std::setprecision(decimals) << std::scientific << r1.at(2)
+      << std::setw(width) << std::setprecision(decimals) << std::scientific << v1.at(0)
+      << std::setw(width) << std::setprecision(decimals) << std::scientific << v1.at(1)
+      << std::setw(width) << std::setprecision(decimals) << std::scientific << v1.at(2)
+      << std::setw(width) << std::setprecision(decimals) << std::scientific << r2.at(0)
+      << std::setw(width) << std::setprecision(decimals) << std::scientific << r2.at(1)
+      << std::setw(width) << std::setprecision(decimals) << std::scientific << r2.at(2)
+      << std::setw(width) << std::setprecision(decimals) << std::scientific << v2.at(0)
+      << std::setw(width) << std::setprecision(decimals) << std::scientific << v2.at(1)
+      << std::setw(width) << std::setprecision(decimals) << std::scientific << v2.at(2)
+      << std::endl;
+    if (dt <= 0)
+      {
+        std::cout << "What are you doing... dt should be positive!   dt: "<< dt << std::endl;
+        break;
+      }
   }
   // Close file
   ofile.close();
@@ -182,15 +203,25 @@ int main()
   // They save position and time to file
   // Use plot_tests.py to view the results
   double dt = 0.01;
-  single_particle_test(dt);
-  dt = 0.005;
-  single_particle_test(dt);
-  dt = 0.001;
-  single_particle_test(dt);
-  dt = 0.0005;
-  single_particle_test(dt);
-  dt = 0.0001;
-  single_particle_test(dt);
+  //single_particle_test(dt);
+  //dt = 0.005;
+  //single_particle_test(dt);
+  //dt = 0.001;
+  //single_particle_test(dt);
+  //dt = 0.0005;
+  //single_particle_test(dt);
+  //dt = 0.0001;
+  //single_particle_test(dt);
+
+  // Test runs with two particles, using RK4
+  // They save position, velocity and time to file
+  // Use plot_tests.py to view the results
+  //dt = 0.0001;
+  //bool Interactions = 0;
+  //multiple_particle_test(dt, Interactions);
+  //Interactions = 1;
+  //multiple_particle_test(dt, Interactions);
+
 
   //test particle count
   // double sim_time = 1; // [microseconds]
@@ -237,10 +268,8 @@ int main()
   // double d_in = 1e4;
   // int n = 10;
   // bool Interactions = 1;
-  // 
+  //
   // PenningTrap PT(B0_in, V0_in, d_in, Interactions);
   // PT.add_n_particles(n, q_in, m_in);
   // std::cout << PT.count_particles() << endl;
-
-  //multiple_particle_test();
 }
