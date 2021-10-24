@@ -42,7 +42,7 @@ vec PenningTrap::external_E_field(vec r)
   vec E_ext = {c*x/2., c*y/2., -c*z};
   //set to 0 outside trap
   if (abs(norm(r)) > d_){
-    E_ext.zeros;
+    E_ext.zeros();
   }
   return E_ext;
 }
@@ -55,7 +55,7 @@ vec PenningTrap::external_B_field(vec r)
 
   //set to 0 outside trap
   if (abs(norm(r)) > d_){
-    B_ext.zeros;
+    B_ext.zeros();
   }
   return B_ext;
 }
