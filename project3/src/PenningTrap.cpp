@@ -8,14 +8,27 @@ using namespace arma;
 
 // Constructor
 PenningTrap::PenningTrap(double B0_in, double V0_in, double d_in, bool Interactions)
-{
+{/* Initialising the Penning Trap class object with its configuration parameters
+  Parameters:
+  -----------
+  B0_in : double
+          Magnetic field strength in the trap
+  V0_in : double
+          Applied potential to the elctrodes in the trap
+  d_in : double
+          Characteristic dimension of the trap
+  Interaction : bool
+          Choosing whether or not there will be Columb interactions
+          between the particles in the trap
+
+  */
   B_ = B0_in;
   V_ = V0_in;
   d_ = d_in;
   Interactions_ = Interactions;
 
   //Coulomb constant
-  k_e = 1.38935333*1e5;//pow(10, 5);
+  k_e = 1.38935333e5;
 }
 
 // Add a particle to the trap

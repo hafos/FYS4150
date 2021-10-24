@@ -8,7 +8,7 @@
 using namespace arma;
 
 class PenningTrap
-{
+{/* Class for simulating the motion of positive ions moving in an ideal Penning Trap */
   private:
 
     // Stores all the particles in the PenningTrap
