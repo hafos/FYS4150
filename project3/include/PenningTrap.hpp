@@ -18,13 +18,14 @@ class PenningTrap
     double B_;
     double V_;
     double d_;
+    bool Interactions_;
 
     // Constants
     double k_e;
 
   public:
     // Constructor
-    PenningTrap(double B0_in, double V0_in, double d_in);
+    PenningTrap(double B0_in, double V0_in, double d_in, bool Interactions);
 
     // Returns the particles
     std::vector<Particle> particles_in_trap();

@@ -17,10 +17,11 @@ void single_particle_test(double dt)
   double B0_in = 9.65*1e1;
   double V0_in = 9.65*1e8;
   double d_in = 1e4; // [micrometers]
+  bool Inter = 0; // One particle, does not matter if on or off here
 
   // Initialize the system
-  PenningTrap PT(B0_in, V0_in, d_in);
-  PenningTrap PT2(B0_in, V0_in, d_in);
+  PenningTrap PT(B0_in, V0_in, d_in, Inter);
+  PenningTrap PT2(B0_in, V0_in, d_in, Inter);
   // Add particles
   double q_in = 1;
   double m_in = 1;
@@ -107,9 +108,10 @@ void multiple_particle_test()
   double B0_in = 9.65*1e1;
   double V0_in = 9.65*1e8;
   double d_in = 1e4;
+  bool Interactions = 1;
 
   // Initialize the system
-  PenningTrap PT(B0_in, V0_in, d_in);
+  PenningTrap PT(B0_in, V0_in, d_in, Interactions);
   // Add particles
   double q_in = 1;
   double m_in = 1;
@@ -189,4 +191,6 @@ int main()
   single_particle_test(dt);
   dt = 0.0001;
   single_particle_test(dt);
+
+  //multiple_particle_test();
 }

@@ -7,11 +7,12 @@
 using namespace arma;
 
 // Constructor
-PenningTrap::PenningTrap(double B0_in, double V0_in, double d_in)
+PenningTrap::PenningTrap(double B0_in, double V0_in, double d_in, bool Interactions)
 {
   B_ = B0_in;
   V_ = V0_in;
   d_ = d_in;
+  Interactions_ = Interactions;
 
   //Coulomb constant
   k_e = 1.38935333*1e5;//pow(10, 5);
@@ -111,7 +112,12 @@ vec PenningTrap::total_force_particles(int i)
 // The total force on particle_i from both external fields and other particles
 vec PenningTrap::total_force(int i)
 {
-  return total_force_external(i) + total_force_particles(i);
+  vec total_force = total_force_external(i);
+  if (Interactions_ == 1)
+  {
+    total_force += total_force_particles(i);
+  }
+  return total_force;
 }
 
 // Evolve the system one time step (dt) using Forward Euler
