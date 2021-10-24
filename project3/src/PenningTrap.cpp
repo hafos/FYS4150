@@ -14,7 +14,7 @@ PenningTrap::PenningTrap(double B0_in, double V0_in, double d_in)
   d_ = d_in;
 
   //Coulomb constant
-  k_e = 1.38935333*pow(10, 5);
+  k_e = 1.38935333*1e5;//pow(10, 5);
 }
 
 // Add a particle to the trap
@@ -55,10 +55,10 @@ vec PenningTrap::external_B_field(vec r)
 vec PenningTrap::force_particle(int i, int j)
 {
   //define variables
-  double q_i = particles_.at(i).charge();
-  vec r_i = particles_.at(i).position;
-  double q_j = particles_.at(j).charge();
-  vec r_j = particles_.at(j).position;
+  double q_i = particles_[i].charge();
+  vec r_i = particles_[i].position;
+  double q_j = particles_[j].charge();
+  vec r_j = particles_[j].position;
 
   double r = norm(r_i - r_j, 2); //absolute distance
 
@@ -70,7 +70,7 @@ vec PenningTrap::force_particle(int i, int j)
 // The total force on particle_i from the external fields
 vec PenningTrap::total_force_external(int i)
 {
-  Particle p = particles_.at(i);
+  Particle p = particles_[i];
   double q = p.charge();
   vec r = p.position;
   vec v = p.velocity;
@@ -116,9 +116,9 @@ void PenningTrap::evolve_forward_Euler(double dt)
   for (int i = 0; i < particles_.size(); i++)
   {
     vec f = total_force(i);
-    vec r = particles_.at(i).position;
-    vec v = particles_.at(i).velocity;
-    double m = particles_.at(i).mass();
+    vec r = particles_[i].position;
+    vec v = particles_[i].velocity;
+    double m = particles_[i].mass();
 
     r_new.insert_cols(i, r + dt*v);
     v_new.insert_cols(i, v + dt*f/m);
@@ -127,8 +127,8 @@ void PenningTrap::evolve_forward_Euler(double dt)
   // Then update all particles at the same time with new r and v
   for (int i = 0; i < particles_.size(); i++)
   {
-    particles_.at(i).position = r_new.col(i);
-    particles_.at(i).velocity = v_new.col(i);
+    particles_[i].position = r_new.col(i);
+    particles_[i].velocity = v_new.col(i);
   }
 }
 
@@ -145,23 +145,23 @@ void PenningTrap::evolve_RK4(double dt)
     {
       // Get particle properties at old state
       vec f = total_force(i);
-      vec r = particles_.at(i).position;
-      vec v = particles_.at(i).velocity;
-      double m = particles_.at(i).mass();
+      vec r = particles_[i].position;
+      vec v = particles_[i].velocity;
+      double m = particles_[i].mass();
 
       // Get slopes * dt (k1)
       vec vk = dt*f/m;
       vec rk = dt*v;
 
       // Add this to new
-      vec r_new = particles_new.at(i).position;
-      vec v_new = particles_new.at(i).velocity;
-      particles_new.at(i).position = r_new + rk/6.;
-      particles_new.at(i).velocity = v_new + vk/6.;
+      vec r_new = particles_new[i].position;
+      vec v_new = particles_new[i].velocity;
+      particles_new[i].position = r_new + rk/6.;
+      particles_new[i].velocity = v_new + vk/6.;
 
       // Update temp. particles with k1 (start from old)
-      particles_k.at(i).position = r+0.5*rk;
-      particles_k.at(i).velocity = v+0.5*vk;
+      particles_k[i].position = r+0.5*rk;
+      particles_k[i].velocity = v+0.5*vk;
 
     }
   // Update particles with k1
@@ -172,25 +172,25 @@ void PenningTrap::evolve_RK4(double dt)
     {
       // Get particle properties at k1 updated state
       vec f = total_force(i);
-      vec r = particles_.at(i).position;
-      vec v = particles_.at(i).velocity;
-      double m = particles_.at(i).mass();
+      vec r = particles_[i].position;
+      vec v = particles_[i].velocity;
+      double m = particles_[i].mass();
 
       // Get slopes * dt (k2)
       vec vk = dt*f/m;
       vec rk = dt*v;
 
       // Add this to new
-      vec r_new = particles_new.at(i).position;
-      vec v_new = particles_new.at(i).velocity;
-      particles_new.at(i).position = r_new + 2.*rk/6.;
-      particles_new.at(i).velocity = v_new + 2.*vk/6.;
+      vec r_new = particles_new[i].position;
+      vec v_new = particles_new[i].velocity;
+      particles_new[i].position = r_new + 2.*rk/6.;
+      particles_new[i].velocity = v_new + 2.*vk/6.;
 
       // Update temp. particles with k2 (start from old)
-      r = particles_old.at(i).position;
-      v = particles_old.at(i).velocity;
-      particles_k.at(i).position = r + 0.5*rk;
-      particles_k.at(i).velocity = v + 0.5*vk;
+      r = particles_old[i].position;
+      v = particles_old[i].velocity;
+      particles_k[i].position = r + 0.5*rk;
+      particles_k[i].velocity = v + 0.5*vk;
     }
   // Update particles with k2
   particles_ = particles_k;
@@ -200,25 +200,25 @@ void PenningTrap::evolve_RK4(double dt)
     {
       // Get particle properties at k2 updated state
       vec f = total_force(i);
-      vec r = particles_.at(i).position;
-      vec v = particles_.at(i).velocity;
-      double m = particles_.at(i).mass();
+      vec r = particles_[i].position;
+      vec v = particles_[i].velocity;
+      double m = particles_[i].mass();
 
       // Get slopes * dt (k3)
       vec vk = dt*f/m;
       vec rk = dt*v;
 
       // Add this to new
-      vec r_new = particles_new.at(i).position;
-      vec v_new = particles_new.at(i).velocity;
-      particles_new.at(i).position = r_new + 2.*rk/6.;
-      particles_new.at(i).velocity = v_new + 2.*vk/6.;
+      vec r_new = particles_new[i].position;
+      vec v_new = particles_new[i].velocity;
+      particles_new[i].position = r_new + 2.*rk/6.;
+      particles_new[i].velocity = v_new + 2.*vk/6.;
 
       // Update temp. particle with k3 (start from old)
-      r = particles_old.at(i).position;
-      v = particles_old.at(i).velocity;
-      particles_k.at(i).position = r + rk;
-      particles_k.at(i).velocity = v + vk;
+      r = particles_old[i].position;
+      v = particles_old[i].velocity;
+      particles_k[i].position = r + rk;
+      particles_k[i].velocity = v + vk;
     }
   // Update particles with k3
   particles_ = particles_k;
@@ -228,19 +228,19 @@ void PenningTrap::evolve_RK4(double dt)
     {
       // Get particle properties at k3 updated state
       vec f = total_force(i);
-      vec r = particles_.at(i).position;
-      vec v = particles_.at(i).velocity;
-      double m = particles_.at(i).mass();
+      vec r = particles_[i].position;
+      vec v = particles_[i].velocity;
+      double m = particles_[i].mass();
 
       // Get slopes * dt (k4)
       vec vk = dt*f/m;
       vec rk = dt*v;
 
       // Add this to new
-      vec r_new = particles_new.at(i).position;
-      vec v_new = particles_new.at(i).velocity;
-      particles_new.at(i).position = r_new + rk/6.;
-      particles_new.at(i).velocity = v_new + vk/6.;
+      vec r_new = particles_new[i].position;
+      vec v_new = particles_new[i].velocity;
+      particles_new[i].position = r_new + rk/6.;
+      particles_new[i].velocity = v_new + vk/6.;
     }
 
     // Finally: set particles to particles_new
