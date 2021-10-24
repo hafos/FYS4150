@@ -1,5 +1,6 @@
 #include <vector>
 #include <armadillo>
+#include <cmath>
 
 #include "Particle.hpp"
 #include "PenningTrap.hpp"
@@ -25,10 +26,22 @@ PenningTrap::PenningTrap(double B0_in, double V0_in, double d_in, bool Interacti
   B_ = B0_in;
   V_ = V0_in;
   d_ = d_in;
+  c0_ = 2.*V0_in/pow(d_in, 2);
+  c_ = c0_; // Is updated with update_time
   Interactions_ = Interactions;
+  // Use set_time_dependence to edit the following:
+  time_ = 0; // also updated cumilatively with update_time in the methods
+  f_ = 0;
+  wV_ = 0;
 
   //Coulomb constant
-  k_e = 1.38935333e5;
+  k_e_ = 1.38935333e5;
+}
+
+// Return the particle objects
+std::vector<Particle> PenningTrap::particles_in_trap()
+{
+  return particles_;
 }
 
 // Add a particle to the trap
@@ -37,10 +50,34 @@ void PenningTrap::add_particle(Particle p_in)
   particles_.push_back(p_in);
 }
 
-// Return the particle objects
-std::vector<Particle> PenningTrap::particles_in_trap()
+// Count partices in the trap
+int PenningTrap::count_particles()
 {
-  return particles_;
+  int count = 0;
+  for (int i = 0; i < particles_.size(); i++)
+  {
+    vec r = particles_.at(i).position;
+    if (abs(norm(r)) < d_)
+    {
+      count += 1;
+    }
+  }
+  return count;
+}
+
+// Set the time-dependent potential parameters:
+void PenningTrap::set_time_dependence(double f, double wV, double start_time)
+{ // For backwards compatibility with earlier versions...
+  f_ = f;
+  wV_ = wV;
+  time_ = start_time;
+}
+
+// Update time and c (enables time dependent potential)
+void PenningTrap::update_time(double h)
+{
+  time_ = time_ + h;
+  c_ = c0_ * (1. + f_*std::cos(wV_*time_));
 }
 
 // External electric field at point r=(x,y,z)
@@ -51,9 +88,7 @@ vec PenningTrap::external_E_field(vec r)
   double y = r(1);
   double z = r(2);
 
-  double c = 2.*V_/pow(d_, 2);
-
-  vec E_ext = {c*x/2., c*y/2., -c*z};
+  vec E_ext = {c_*x/2., c_*y/2., -c_*z};
   //set to 0 outside trap
   if (abs(norm(r)) > d_){
     E_ext.zeros();
@@ -65,7 +100,7 @@ vec PenningTrap::external_E_field(vec r)
 vec PenningTrap::external_B_field(vec r)
 {
   //this is just B0 in the z direction
-  vec B_ext = {0, 0, B_};
+  vec B_ext = {0, 0, B0_};
 
   //set to 0 outside trap
   if (abs(norm(r)) > d_){
@@ -85,7 +120,7 @@ vec PenningTrap::force_particle(int i, int j)
 
   double r = norm(r_i - r_j, 2); //absolute distance
 
-  vec F_p = k_e * q_i * q_j * (r_i - r_j)/pow(r, 3);
+  vec F_p = k_e_ * q_i * q_j * (r_i - r_j)/pow(r, 3);
 
   return F_p;
 }
@@ -158,6 +193,7 @@ void PenningTrap::evolve_forward_Euler(double dt)
     particles_[i].position = r_new.col(i);
     particles_[i].velocity = v_new.col(i);
   }
+  update_time(dt); // Updates potential
 }
 
 // Evolve the system one time step (dt) using Runge-Kutta 4th order
@@ -194,12 +230,14 @@ void PenningTrap::evolve_RK4(double dt)
     }
   // Update particles with k1
   particles_ = particles_k;
+  // Update time and potential of system: t0+dt/2:
+  update_time(dt/2.);
 
   // Second loop: k2
   for (int i = 0; i < particles_.size(); i++)
     {
       // Get particle properties at k1 updated state
-      vec f = total_force(i);
+      vec f = total_force(i); // Forces at t0+dt/2
       vec r = particles_[i].position;
       vec v = particles_[i].velocity;
       double m = particles_[i].mass();
@@ -222,12 +260,13 @@ void PenningTrap::evolve_RK4(double dt)
     }
   // Update particles with k2
   particles_ = particles_k;
+  // time_ already updated to t0 + dt/2
 
   // Third loop: k3
   for (int i = 0; i < particles_.size(); i++)
     {
       // Get particle properties at k2 updated state
-      vec f = total_force(i);
+      vec f = total_force(i); // Forces at t0+dt/2
       vec r = particles_[i].position;
       vec v = particles_[i].velocity;
       double m = particles_[i].mass();
@@ -250,12 +289,14 @@ void PenningTrap::evolve_RK4(double dt)
     }
   // Update particles with k3
   particles_ = particles_k;
+  // Update time and potential of system: (t0+dt/2)+dt/2:
+  update_time(dt/2.);
 
   // Fourth loop: k4
   for (int i = 0; i < particles_.size(); i++)
     {
       // Get particle properties at k3 updated state
-      vec f = total_force(i);
+      vec f = total_force(i); // Forces at t+dt
       vec r = particles_[i].position;
       vec v = particles_[i].velocity;
       double m = particles_[i].mass();
@@ -273,4 +314,5 @@ void PenningTrap::evolve_RK4(double dt)
 
     // Finally: set particles to particles_new
     particles_ = particles_new;
+    // time_ already updated to t0 + dt
 }

@@ -15,13 +15,17 @@ class PenningTrap
     std::vector<Particle> particles_;
 
     // The parameters
-    double B_;
-    double V_;
+    double B0_;
+    double c_;
+    double c0_;
     double d_;
     bool Interactions_;
+    double time_;
+    double f_;
+    double wV_;
 
     // Constants
-    double k_e;
+    double k_e_;
 
   public:
     // Constructor
@@ -32,6 +36,15 @@ class PenningTrap
 
     // Add a particle to the trap
     void add_particle(Particle p_in);
+
+    // Count particles in the trap
+    int count_particles();
+
+    // Set the time-dependent potential parameters:
+    void set_time_dependence(double f, double wV, double start_time);
+
+    // Update time_ and c_ (for time dependent potential):
+    void update_time(double h);
 
     // External electric field at point r=(x,y,z)
     vec external_E_field(vec r);
