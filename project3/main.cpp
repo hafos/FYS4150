@@ -197,7 +197,7 @@ void multiple_particle_test(double dt, bool Interactions)
   ofile.close();
 }
 
-void resonance_test(double f, vec wV, double dt, bool Interactions)
+void resonance_test(double f, vec wV, double dt, bool Interactions, std::string comment)
 {
   // Test for resonance phenomena: unfinished
   // Set parameters
@@ -219,9 +219,11 @@ void resonance_test(double f, vec wV, double dt, bool Interactions)
   std::vector <Particle> p_initial = PT.particles_in_trap();
 
   // Make test output file
-  std::string filename = "test_results/resonance_interactions_off_f="+std::to_string(f)+".dat";
+  std::ostringstream f_string;
+  f_string << std::setw(5) << std::setprecision(1) << std::scientific << f;
+  std::string filename = "test_results/resonance_interactions_off_f="+f_string.str()+ comment +".dat";
   if (Interactions==1){
-    filename = "test_results/resonance_interactions_on_f="+std::to_string(f)+".dat";
+    filename = "test_results/resonance_interactions_on_f="+f_string.str()+ comment +".dat";
   }
   std::ofstream ofile;
   ofile.open(filename);
@@ -294,15 +296,32 @@ int main()
   // Test resonance without interactions
   dt = 0.1;
   vec f_in = {0.1, 0.4, 0.7};
-  //vec f_in = {0.1};
   vec wV_in = linspace(0.2, 2.5, 115); //MHz, step size 0.02
-  //vec wV_in = {0.2};
   bool Interactions = 0;
-  for (double n:f_in)
-  {
-    std::cout << "f = " << n << endl;
-    resonance_test(n, wV_in, dt, Interactions);
-  }
+  std::string comment = "_broad";
+  //for (double n:f_in)
+  //{
+  //  std::cout << "f = " << n << endl;
+  //  resonance_test(n, wV_in, dt, Interactions, comment);
+  //}
+
+  // Test resonance with and without interactions
+  // dt = 0.1;
+  // f_in = {0.1, 0.4, 0.7};
+  // wV_in = linspace(0.3, 0.6, 115); //Centered on 2.2 MHz
+  // comment = "_narrow";
+  // Interactions = 0;
+  // for (double n:f_in)
+  // {
+  //  std::cout << "f = " << n << endl;
+  //  resonance_test(n, wV_in, dt, Interactions, comment);
+  // }
+  // Interactions = 1;
+  // for (double n:f_in)
+  // {
+  //   std::cout << "f = " << n << endl;
+  //   resonance_test(n, wV_in, dt, Interactions, comment);
+  // }
 
   //test particle count
   // double sim_time = 1; // [microseconds]
