@@ -24,7 +24,7 @@ void single_particle_test(double dt)
   PenningTrap PT2(B0_in, V0_in, d_in, Inter);
   // Add particles
   double q_in = 1;
-  double m_in = 1;
+  double m_in = 40.08; // Mass of Ca+ ion in atomic units
   vec r_in = { 10, 0, 10 };
   vec v_in = { 0, -1, 0 };
 
@@ -64,15 +64,10 @@ void single_particle_test(double dt)
   double t = 0;
   vec r(3);
   vec r2(3);
-  bool stop_FE = 0;
   while (t <= sim_time){
     // Update:
     PT.evolve_RK4(dt);
-    if (norm(PT2.particles_in_trap()[0].position) < d_in)
-    { // After this point it is pointless to continue updating, it just grows
-      PT2.evolve_forward_Euler(dt);
-      stop_FE = 1;
-    }
+    PT2.evolve_forward_Euler(dt);
     t += dt;
     // Write to file:
     r = PT.particles_in_trap()[0].position;
@@ -86,10 +81,6 @@ void single_particle_test(double dt)
         << std::setw(width) << std::setprecision(decimals) << std::scientific << r2.at(2)
         << std::endl;
     // Stop conditions:
-    if ((norm(PT.particles_in_trap()[0].position) > d_in) and (stop_FE == 1))
-    { // After this point it is pointless to continue updating, both are out of bounds
-      break;
-    }
     if (dt <= 0)
     {
       std::cout << "What are you doing... dt should be positive!   dt: "<< dt << std::endl;
@@ -181,15 +172,15 @@ int main()
   // Test runs with single particle, using both FE and RK4
   // They save position and time to file
   // Use plot_tests.py to view the results
-  double dt = 0.01;
+  double dt = 0.1;
+  single_particle_test(dt);
+  dt = 0.05;
+  single_particle_test(dt);
+  dt = 0.01;
   single_particle_test(dt);
   dt = 0.005;
   single_particle_test(dt);
   dt = 0.001;
-  single_particle_test(dt);
-  dt = 0.0005;
-  single_particle_test(dt);
-  dt = 0.0001;
   single_particle_test(dt);
 
   //test particle count
