@@ -103,7 +103,7 @@ void multiple_particle_test(double dt, bool Interactions)
   PenningTrap PT(B0_in, V0_in, d_in, Interactions);
   // Add particles
   double q_in = 1;
-  double m_in = 1;
+  double m_in = 40.08;
   vec r_in = { 10, 0, 10 };
   vec v_in = { 0, -1, 0 };
   vec r_in2 = {0, 10, 0};
@@ -263,37 +263,37 @@ int main()
   // They save position and time to file
   // Use plot_tests.py to view the results
   double dt = 0.1;
-  single_particle_test(dt);
-  dt = 0.05;
-  single_particle_test(dt);
-  dt = 0.01;
-  single_particle_test(dt);
-  dt = 0.005;
-  single_particle_test(dt);
-  dt = 0.001;
-  single_particle_test(dt);
+  // single_particle_test(dt);
+  // dt = 0.05;
+  // single_particle_test(dt);
+  // dt = 0.01;
+  // single_particle_test(dt);
+  // dt = 0.005;
+  // single_particle_test(dt);
+  // dt = 0.001;
+  // single_particle_test(dt);
 
   // Test runs with two particles, using RK4
   // They save position, velocity and time to file
   // Use plot_tests.py to view the results
-  // dt = 0.0001;
-  // bool Interactions = 0;
-  // multiple_particle_test(dt, Interactions);
-  // Interactions = 1;
-  // multiple_particle_test(dt, Interactions);
+  dt = 0.001;
+  bool Interactions = 0;
+  multiple_particle_test(dt, Interactions);
+  Interactions = 1;
+  multiple_particle_test(dt, Interactions);
 
   // Test resonance without interactions
-  dt = 0.1;
-  vec f_in = {0.1, 0.4, 0.7};
-  //vec f_in = {0.1};
-  vec wV_in = linspace(0.2, 2.5, 115); //MHz, step size 0.02
-  //vec wV_in = {0.2};
-  bool Interactions = 0;
-  for (double n:f_in)
-  {
-    std::cout << "f = " << n << endl;
-    resonance_test(n, wV_in, dt, Interactions);
-  }
+  // dt = 0.1;
+  // vec f_in = {0.1, 0.4, 0.7};
+  // //vec f_in = {0.1};
+  // vec wV_in = linspace(0.2, 2.5, 115); //MHz, step size 0.02
+  // //vec wV_in = {0.2};
+  // bool Interactions = 0;
+  // for (double n:f_in)
+  // {
+  //   std::cout << "f = " << n << endl;
+  //   resonance_test(n, wV_in, dt, Interactions);
+  // }
 
   //test particle count
   // double sim_time = 1; // [microseconds]
