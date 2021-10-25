@@ -72,6 +72,9 @@ class PenningTrap
 
     // Evolve the system one time step (dt) using Forward Euler
     void evolve_forward_Euler(double dt);
+
+    // Reset trap with new particles
+    void reset_trap(std::vector<Particle> p_in);
 };
 
 #endif

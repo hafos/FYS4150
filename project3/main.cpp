@@ -214,6 +214,9 @@ void resonance_test(double f, vec wV, double dt, bool Interactions)
   int n = 100;
   PT.add_n_particles(n, q_in, m_in);
 
+  //make a vector of initial conditions of all particles
+  std::vector <Particle> p_initial = PT.particles_in_trap();
+
   // Make test output file
   std::string filename = "test_results/resonance_interactions_off_f="+std::to_string(f)+".dat";
   if (Interactions==1){
@@ -237,22 +240,25 @@ void resonance_test(double f, vec wV, double dt, bool Interactions)
 
   for (int i = 0; i < wV.size(); i++)
   {
+    // Set time dependence
+    PT.set_time_dependence(f, wV.at(i), 0.0);
+
     while (t <= sim_time)
     {
-      // Set time dependence
-      PT.set_time_dependence(f, wV.at(i), 0.0);
       PT.evolve_RK4(dt);
       t += dt;
-
     }
 
     //count fraction of particles in trap
     double frac = PT.count_particles()/100.;
 
     //write to file
-    ofile << std::setw(width) << std::setprecision(decimals) << std::scientific << wV
+    ofile << std::setw(width) << std::setprecision(decimals) << std::scientific << wV.at(i)
       << std::setw(width) << std::setprecision(decimals) << std::scientific << frac
       << std::endl;
+
+    //reset trap to initial conditions
+    PT.reset_trap(p_initial);
   }
 
 }
@@ -282,6 +288,14 @@ int main()
   // Interactions = 1;
   // multiple_particle_test(dt, Interactions);
 
+  // Test resonance without interactions
+  vec f_in = {0.1, 0.4, 0.7};
+  vec wV_in = linspace(0.2, 2.5, 115); //MHz, step size 0.02
+  bool Interactions = 0;
+  for (double n:f_in)
+  {
+    resonance_test(n, wV_in, dt, Interactions);
+  }
 
   //test particle count
   // double sim_time = 1; // [microseconds]

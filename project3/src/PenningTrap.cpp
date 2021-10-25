@@ -28,7 +28,7 @@ PenningTrap::PenningTrap(double B0_in, double V0_in, double d_in, bool Interacti
   c0_ = 2.*V0_in/pow(d_in, 2);
   Interactions_ = Interactions;
   c_ = c0_; // Is updated with update_time
-  time_ = 0; // also updated cumilatively with update_time in the methods
+  time_ = 0; // also updated cumulatively with update_time in the methods
   // Use set_time_dependence to edit the following:
   f_ = 0;
   wV_ = 0;
@@ -327,4 +327,10 @@ void PenningTrap::evolve_RK4(double dt)
     // Finally: set particles to particles_new
     particles_ = particles_new;
     // time_ already updated to t0 + dt
+}
+
+// Reset trap with new particles
+void PenningTrap::reset_trap(std::vector<Particle> p_in)
+{
+  particles_ = p_in;
 }
