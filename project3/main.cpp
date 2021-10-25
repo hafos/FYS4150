@@ -202,6 +202,7 @@ void resonance_test(double f, vec wV, double dt, bool Interactions)
   // Test for resonance phenomena: unfinished
   // Set parameters
   double sim_time = 500; // [microseconds]
+  //double sim_time = 10; //shorter time to test if function works
   double B0_in = 9.65*1e1;
   double V0_in = 9.65*1e7*0.0025;
   double d_in = 0.05*1e4; // [micrometers]
@@ -210,7 +211,7 @@ void resonance_test(double f, vec wV, double dt, bool Interactions)
   PenningTrap PT(B0_in, V0_in, d_in, Interactions);
   // Add particles
   double q_in = 1;
-  double m_in = 1;
+  double m_in = 40.08;
   int n = 100;
   PT.add_n_particles(n, q_in, m_in);
 
@@ -233,15 +234,15 @@ void resonance_test(double f, vec wV, double dt, bool Interactions)
     << std::setw(width) << std::setprecision(decimals) << std::scientific << d_in
     << std::setw(width) << std::setprecision(decimals) << std::scientific << q_in
     << std::setw(width) << std::setprecision(decimals) << std::scientific << m_in
+    << std::setw(width) << std::setprecision(decimals) << std::scientific << f
     << std::endl;
   ofile << "wV frac" << endl;
-
-  double t = 0;
 
   for (int i = 0; i < wV.size(); i++)
   {
     // Set time dependence
-    PT.set_time_dependence(f, wV.at(i), 0.0);
+    double t = 0; //start time
+    PT.set_time_dependence(f, wV.at(i), t);
 
     while (t <= sim_time)
     {
@@ -249,13 +250,15 @@ void resonance_test(double f, vec wV, double dt, bool Interactions)
       t += dt;
     }
 
-    //count fraction of particles in trap
-    double frac = PT.count_particles()/100.;
+    //count particles in trap
+    int n_particles = PT.count_particles();
 
     //write to file
     ofile << std::setw(width) << std::setprecision(decimals) << std::scientific << wV.at(i)
-      << std::setw(width) << std::setprecision(decimals) << std::scientific << frac
-      << std::endl;
+       << std::setw(width) << std::setprecision(decimals) << std::scientific << n_particles
+       << std::endl;
+
+    std::cout << n_particles << endl;
 
     //reset trap to initial conditions
     PT.reset_trap(p_initial);
@@ -289,11 +292,15 @@ int main()
   // multiple_particle_test(dt, Interactions);
 
   // Test resonance without interactions
+  dt = 0.1;
   vec f_in = {0.1, 0.4, 0.7};
+  //vec f_in = {0.1};
   vec wV_in = linspace(0.2, 2.5, 115); //MHz, step size 0.02
+  //vec wV_in = {0.2};
   bool Interactions = 0;
   for (double n:f_in)
   {
+    std::cout << "f = " << n << endl;
     resonance_test(n, wV_in, dt, Interactions);
   }
 

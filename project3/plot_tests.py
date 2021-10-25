@@ -76,6 +76,24 @@ def read_file_double(filename):
     x2 = np.array(x2); y2 = np.array(y2); z2 = np.array(z2); vx2 = np.array(vx2); vy2 = np.array(vy2); vz2 = np.array(vz2)
     return float(B0), float(V0), float(d), float(q), float(m), t, np.array([x1,y1,z1]), np.array([vx1, vy1, vz1]), np.array([x2, y2, z2]), np.array([vx2, vy2, vz2])
 
+def read_file_resonance(filename):
+    """
+    Read the data for resonance testing from file
+    """
+    file = open(filename, 'r')
+    B0, V0, d, q, m, f = file.readline().split() # Get parameters of PT and particle
+    file.readline()
+    wV = []; n_particles = []
+
+    for line in file:
+        wV_n, particles_n = line.split()
+        wV += [float(wV_n)]
+        n_particles += [float(particles_n)]
+    file.close()
+
+    wV = np.array(wV)
+    frac = np.array(n_particles)/100.0
+    return float(B0), float(V0), float(d), float(q), float(m), float(f), wV, frac
 
 """# Open all files: They all have same B0, V0 etc.. Only change is dt
 B0, V0, d, q, m, v0, t1, RKx1, RKy1, RKz1, FEx1, FEy1, FEz1 = read_file('test_results/test_RK4-FE_dt1.0e-04.dat')
@@ -110,6 +128,9 @@ ax[0].set_title(r'Single particle, h = 10$^{-4}$')
 plt.tight_layout()
 plt.savefig('test_results/test_frequency_z.pdf')
 plt.show()"""
+
+# Plot fraction of particles in trap vs frequency
+B0, V0, d, q, m, f, wV, frac01 = read_file_resonance('resonance_interactions_off_f=')
 
 # Plot relative errors for all runs and methods for single particle:
 B0, V0, d, q, m, t, r1, v1, r2, v2 = read_file_double('test_results/2particles_RK4_interactions_on.dat')
