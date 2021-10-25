@@ -197,6 +197,66 @@ void multiple_particle_test(double dt, bool Interactions)
   ofile.close();
 }
 
+void resonance_test(double f, vec wV, double dt, bool Interactions)
+{
+  // Test for resonance phenomena: unfinished
+  // Set parameters
+  double sim_time = 500; // [microseconds]
+  double B0_in = 9.65*1e1;
+  double V0_in = 9.65*1e7*0.0025;
+  double d_in = 0.05*1e4; // [micrometers]
+
+  // Initialize the system
+  PenningTrap PT(B0_in, V0_in, d_in, Interactions);
+  // Add particles
+  double q_in = 1;
+  double m_in = 1;
+  int n = 100;
+  PT.add_n_particles(n, q_in, m_in);
+
+  // Make test output file
+  std::string filename = "test_results/resonance_interactions_off_f="+std::to_string(f)+".dat";
+  if (Interactions==1){
+    filename = "test_results/resonance_interactions_on_f="+std::to_string(f)+".dat";
+  }
+  std::ofstream ofile;
+  ofile.open(filename);
+  // spacing in outputfile
+  int width = 21; int decimals = 9;
+
+  // Write parameters to first line of file:
+  ofile << std::setw(width) << std::setprecision(decimals) << std::scientific << B0_in
+    << std::setw(width) << std::setprecision(decimals) << std::scientific << V0_in
+    << std::setw(width) << std::setprecision(decimals) << std::scientific << d_in
+    << std::setw(width) << std::setprecision(decimals) << std::scientific << q_in
+    << std::setw(width) << std::setprecision(decimals) << std::scientific << m_in
+    << std::endl;
+  ofile << "wV frac" << endl;
+
+  double t = 0;
+
+  for (int i = 0; i < wV.size(); i++)
+  {
+    while (t <= sim_time)
+    {
+      // Set time dependence
+      PT.set_time_dependence(f, wV.at(i), 0.0);
+      PT.evolve_RK4(dt);
+      t += dt;
+
+    }
+
+    //count fraction of particles in trap
+    double frac = PT.count_particles()/100.;
+
+    //write to file
+    ofile << std::setw(width) << std::setprecision(decimals) << std::scientific << wV
+      << std::setw(width) << std::setprecision(decimals) << std::scientific << frac
+      << std::endl;
+  }
+
+}
+
 int main()
 {
   // Test runs with single particle, using both FE and RK4
@@ -216,11 +276,11 @@ int main()
   // Test runs with two particles, using RK4
   // They save position, velocity and time to file
   // Use plot_tests.py to view the results
-  //dt = 0.0001;
-  //bool Interactions = 0;
-  //multiple_particle_test(dt, Interactions);
-  //Interactions = 1;
-  //multiple_particle_test(dt, Interactions);
+  // dt = 0.0001;
+  // bool Interactions = 0;
+  // multiple_particle_test(dt, Interactions);
+  // Interactions = 1;
+  // multiple_particle_test(dt, Interactions);
 
 
   //test particle count

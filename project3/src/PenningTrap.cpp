@@ -19,7 +19,7 @@ PenningTrap::PenningTrap(double B0_in, double V0_in, double d_in, bool Interacti
   d_in : double
           Characteristic dimension of the trap
   Interaction : bool
-          Choosing whether or not there will be Columb interactions
+          Choosing whether or not there will be Coulomb interactions
           between the particles in the trap
 
   */
