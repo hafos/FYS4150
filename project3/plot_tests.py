@@ -171,6 +171,31 @@ if __name__ == "__main__":
     """ Problem 9: Test with Two particles with and without Coulomb interactions """
     pos1, vel1, pos2, vel2 = read_file_double('test_results/2particles_RK4_interactions_off.dat')[6:10]
     pos3, vel3, pos4, vel4 = read_file_double('test_results/2particles_RK4_interactions_on.dat')[6:10]
+    fig = plt.figure(figsize = (7, 7))
+    ax = plt.axes(projection = '3d')
+    ax.plot3D(pos1[0], pos1[1], pos1[2], label = 'Particle 1')
+    ax.plot3D(pos2[0], pos2[1], pos2[2], label = 'Particle 2')
+    ax.set_xlabel('X [μm]')
+    ax.set_ylabel('Y [μm]')
+    ax.set_zlabel('Z [μm]')
+    ax.set_title('No interaction')
+    plt.legend()
+    plt.savefig('test_results/2particles_3D_off.pdf')
+    plt.show()
+
+    fig = plt.figure(figsize = (7, 7))
+    ax = plt.axes(projection = '3d')
+    ax.plot3D(pos3[0], pos3[1], pos3[2], label = 'Particle 1')
+    ax.plot3D(pos4[0], pos4[1], pos4[2], label = 'Particle 2')
+    ax.set_xlabel('X [μm]')
+    ax.set_ylabel('Y [μm]')
+    ax.set_zlabel('Z [μm]')
+    ax.set_title('Interaction')
+    plt.legend()
+    plt.savefig('test_results/2particles_3D_on.pdf')
+    plt.show()
+
+    '''
     plt.figure()
     # n = 100000
     plt.plot(pos1[0], pos1[1], label='Particle 1: Off')
@@ -180,3 +205,4 @@ if __name__ == "__main__":
     plt.legend()
     plt.axis('equal')
     plt.show()
+    '''
