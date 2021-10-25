@@ -37,6 +37,9 @@ class PenningTrap
     // Add a particle to the trap
     void add_particle(Particle p_in);
 
+    // Add n randomly generated particles
+    void add_n_particles(int n, double q, double m);
+
     // Count particles in the trap
     int count_particles();
 
@@ -69,6 +72,9 @@ class PenningTrap
 
     // Evolve the system one time step (dt) using Forward Euler
     void evolve_forward_Euler(double dt);
+
+    // Reset trap with new particles
+    void reset_trap(std::vector<Particle> p_in);
 };
 
 #endif

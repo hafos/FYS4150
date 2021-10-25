@@ -26,10 +26,10 @@ PenningTrap::PenningTrap(double B0_in, double V0_in, double d_in, bool Interacti
   B0_ = B0_in;
   d_ = d_in;
   c0_ = 2.*V0_in/pow(d_in, 2);
-  c_ = c0_; // Is updated with update_time
   Interactions_ = Interactions;
+  c_ = c0_; // Is updated with update_time
+  time_ = 0; // also updated cumulatively with update_time in the methods
   // Use set_time_dependence to edit the following:
-  time_ = 0; // also updated cumilatively with update_time in the methods
   f_ = 0;
   wV_ = 0;
 
@@ -47,6 +47,19 @@ std::vector<Particle> PenningTrap::particles_in_trap()
 void PenningTrap::add_particle(Particle p_in)
 {
   particles_.push_back(p_in);
+}
+
+// Add n randomly generated particles
+void PenningTrap::add_n_particles(int n, double q, double m)
+{
+  arma_rng::set_seed(123);
+  for (int i = 0; i < n; i++)
+  {
+    vec r = vec(3).randn()*0.1*d_; //random initial position
+    vec v = vec(3).randn()*0.1*d_; //random initial velocity
+    Particle p = Particle(q, m, r, v);
+    particles_.push_back(p);
+  }
 }
 
 // Count partices in the trap
@@ -314,4 +327,10 @@ void PenningTrap::evolve_RK4(double dt)
     // Finally: set particles to particles_new
     particles_ = particles_new;
     // time_ already updated to t0 + dt
+}
+
+// Reset trap with new particles
+void PenningTrap::reset_trap(std::vector <Particle> p_in)
+{
+  particles_ = p_in;
 }

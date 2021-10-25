@@ -56,6 +56,33 @@ def read_file(filename):
     x2 = np.array(x2); y2 = np.array(y2); z2 = np.array(z2)
     return float(B0), float(V0), float(d), float(q), float(m), float(v0), t, x1, y1, z1, x2, y2, z2
 
+def read_file_double(filename):
+    """
+    Read the test data for 2particles_RK4 from file
+    """
+    file = open(filename, 'r')
+    B0, V0, d, q, m = file.readline().split() # Get parameters of PT and particle
+    file.readline()
+    t = []; x1 = []; y1 = []; z1 = []; x2 = []; y2 = []; z2 = []
+    vx1 = []; vy1 = []; vz1 = []; vx2 = []; vy2 = []; vz2 = []
+
+    for line in file:
+        t_n, x1_n, y1_n, z1_n, vx1_n, vy1_n, vz1_n, x2_n, y2_n, z2_n, vx2_n, vy2_n, vz2_n = line.split()
+        t += [float(t_n)]
+        x1 += [float(x1_n)]; x2 += [float(x2_n)]
+        y1 += [float(y1_n)]; y2 += [float(y2_n)]
+        z1 += [float(z1_n)]; z2 += [float(z2_n)]
+        vx1 += [float(vx1_n)]; vx2 += [float(vx2_n)]
+        vy1 += [float(vy1_n)]; vy2 += [float(vy2_n)]
+        vz1 += [float(vz1_n)]; vz2 += [float(vz2_n)]
+
+    file.close()
+
+    t = np.array(t)
+    x1 = np.array(x1); y1 = np.array(y1); z1 = np.array(z1); vx1 = np.array(vx1); vy1 = np.array(vy1); vz1 = np.array(vz1)
+    x2 = np.array(x2); y2 = np.array(y2); z2 = np.array(z2); vx2 = np.array(vx2); vy2 = np.array(vy2); vz2 = np.array(vz2)
+    return float(B0), float(V0), float(d), float(q), float(m), t, np.array([x1,y1,z1]), np.array([vx1, vy1, vz1]), np.array([x2, y2, z2]), np.array([vx2, vy2, vz2])
+
 if __name__ == "__main__":
     """ Problem 9: Single Particle experiments: """
     """ Getting data from single particle simulation run with different time steps and
@@ -140,5 +167,18 @@ if __name__ == "__main__":
     # plt.savefig('test_results/relative_error.pdf')
     # plt.legend()
     # plt.show()
+
+    # Plot relative errors for all runs and methods for single particle:
+    B0, V0, d, q, m, t, r1, v1, r2, v2 = read_file_double('test_results/2particles_RK4_interactions_on.dat')
+    plt.figure()
+    n = 100000
+    plt.plot(r1[0, :n], r1[1, :n], label='1: On')
+    plt.plot(r2[0, :n], r2[1, :n], label='2: On')
+    B0, V0, d, q, m, t, r1, v1, r2, v2 = read_file_double('test_results/2particles_RK4_interactions_off.dat')
+    plt.plot(r1[0, :n], r1[1, :n], label='1: Off')
+    plt.plot(r2[0, :n], r2[1, :n], label='2: Off')
+    plt.legend()
+    plt.axis('equal')
+    plt.show()
 
     # Plot the relevant stuff for the single particle tests in 9, this is in progess:
