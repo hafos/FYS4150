@@ -25,8 +25,7 @@ PenningTrap::PenningTrap(double B0_in, double V0_in, double d_in, bool Interacti
   */
   B0_ = B0_in;
   d_ = d_in;
-  V0_ = V0_in; //we need this for update_time; it's V0 that is updated not c
-  c0_ = 2.*V0_/pow(d_in, 2);
+  c0_ = 2.*V0_in/pow(d_in, 2);
   Interactions_ = Interactions;
   c_ = c0_; // Is updated with update_time
   time_ = 0; // also updated cumulatively with update_time in the methods

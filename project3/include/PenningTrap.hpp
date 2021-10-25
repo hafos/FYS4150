@@ -16,7 +16,6 @@ class PenningTrap
 
     // The parameters
     double B0_;
-    double V0_;
     double c_;
     double c0_;
     double d_;
