@@ -87,48 +87,48 @@ if __name__ == "__main__":
     """ Problem 9: Single Particle experiments: """
     """ Getting data from single particle simulation run with different time steps and
         using either the Runge-Kutta4 or Forward-Euler integrator. """
-    B0, V0, d, q, m, v0, t1, RKx1, RKy1, RKz1, FEx1, FEy1, FEz1 = read_file('test_results/test_RK4-FE_dt1.0e-01.dat')
-    RK1 = np.array([RKx1, RKy1, RKz1]); FE1 = np.array([FEx1, FEy1, FEz1])
-    B0, V0, d, q, m, v0, t2, RKx2, RKy2, RKz2, FEx2, FEy2, FEz2 = read_file('test_results/test_RK4-FE_dt5.0e-02.dat')
-    RK2 = np.array([RKx2, RKy2, RKz2]); FE2 = np.array([FEx2, FEy2, FEz2])
-    B0, V0, d, q, m, v0, t3, RKx3, RKy3, RKz3, FEx3, FEy3, FEz3 = read_file('test_results/test_RK4-FE_dt1.0e-02.dat')
-    RK3 = np.array([RKx3, RKy3, RKz3]); FE3 = np.array([FEx3, FEy3, FEz3])
-    B0, V0, d, q, m, v0, t4, RKx4, RKy4, RKz4, FEx4, FEy4, FEz4 = read_file('test_results/test_RK4-FE_dt5.0e-03.dat')
-    RK4 = np.array([RKx4, RKy4, RKz4]); FE4 = np.array([FEx4, FEy4, FEz4])
-    B0, V0, d, q, m, v0, t5, RKx5, RKy5, RKz5, FEx5, FEy5, FEz5 = read_file('test_results/test_RK4-FE_dt1.0e-03.dat')
-    RK5 = np.array([RKx5, RKy5, RKz5]); FE5 = np.array([FEx5, FEy5, FEz5])
-    RK = [RK1, RK2, RK3, RK4, RK5]
-    FE = [FE1, FE2, FE3, FE4, FE5]
-    h_list = [0.1, 0.05, 0.01, 0.005, 0.001]
-    t_list = [t1, t2, t3, t4, t5]
-
-    t = np.linspace(0, 100, len(RKx1))
-    omega_z_expected = np.sqrt(2*q*V0/(m*d**2))
+    # B0, V0, d, q, m, v0, t1, RKx1, RKy1, RKz1, FEx1, FEy1, FEz1 = read_file('test_results/test_RK4-FE_dt1.0e-01.dat')
+    # RK1 = np.array([RKx1, RKy1, RKz1]); FE1 = np.array([FEx1, FEy1, FEz1])
+    # B0, V0, d, q, m, v0, t2, RKx2, RKy2, RKz2, FEx2, FEy2, FEz2 = read_file('test_results/test_RK4-FE_dt5.0e-02.dat')
+    # RK2 = np.array([RKx2, RKy2, RKz2]); FE2 = np.array([FEx2, FEy2, FEz2])
+    # B0, V0, d, q, m, v0, t3, RKx3, RKy3, RKz3, FEx3, FEy3, FEz3 = read_file('test_results/test_RK4-FE_dt1.0e-02.dat')
+    # RK3 = np.array([RKx3, RKy3, RKz3]); FE3 = np.array([FEx3, FEy3, FEz3])
+    # B0, V0, d, q, m, v0, t4, RKx4, RKy4, RKz4, FEx4, FEy4, FEz4 = read_file('test_results/test_RK4-FE_dt5.0e-03.dat')
+    # RK4 = np.array([RKx4, RKy4, RKz4]); FE4 = np.array([FEx4, FEy4, FEz4])
+    # B0, V0, d, q, m, v0, t5, RKx5, RKy5, RKz5, FEx5, FEy5, FEz5 = read_file('test_results/test_RK4-FE_dt1.0e-03.dat')
+    # RK5 = np.array([RKx5, RKy5, RKz5]); FE5 = np.array([FEx5, FEy5, FEz5])
+    # RK = [RK1, RK2, RK3, RK4, RK5]
+    # FE = [FE1, FE2, FE3, FE4, FE5]
+    # h_list = [0.1, 0.05, 0.01, 0.005, 0.001]
+    # t_list = [t1, t2, t3, t4, t5]
+    #
+    # t = np.linspace(0, 100, len(RKx1))
+    # omega_z_expected = np.sqrt(2*q*V0/(m*d**2))
 
     """ Checking if movement in z-direction is as expected given the z-frequency omega_z: """
-    fz_expected = omega_z_expected / (2*np.pi) # (transform from ang.freq to freq)
-    # We use the simulation run with the highest accuracy; RK4 with smallest time step
-    z_ana = analytical_solution(t_list[-1], RK[-1][0][0], RK[-1][2][0], v0, B0, V0, d, q, m)[2]
-    print('Checking frequency in z-direction over 100 microseconds:')
-    print('----------------------------------')
-    print(f'Expected z-frequency: {fz_expected}')
-    tol = 6e-7
-    max = np.argwhere(np.abs(RKz5 - 10) < tol) # finds all the peaks for infering the frequency
-    print(f'Approximate frequency from simulation: {1/(t5[max[-1]] - t5[max[-2]])}')
-    print(f'Difference: {fz_expected - 1/(t5[max[-1]] - t5[max[-2]])}')
-    plt.plot(t5, z_ana, label='Analytical Solution')
-    plt.plot(t5[::100] , RKz5[::100], '--', label=f'RK4 with h = {h_list[-1]}')
-    # If one wants to check the peaks are hit
-    # for top in max:
-    #     plt.plot(t5[top] , RKz5[top], 'o')
-    # plt.plot(t5[::100] , FEz5[::100], '.', markersize=2, label='FE method')
-    plt.grid();
-    plt.xlabel(r't [$\mu s$]'); plt.ylabel(r'z [$\mu m$]')
-    plt.legend()
-    plt.title(r'Oscillation in z-direction of a single $Ca^+$ atom')
-    plt.tight_layout()
-    plt.savefig('test_results/test_frequency_z.pdf')
-    plt.show()
+    # fz_expected = omega_z_expected / (2*np.pi) # (transform from ang.freq to freq)
+    # # We use the simulation run with the highest accuracy; RK4 with smallest time step
+    # z_ana = analytical_solution(t_list[-1], RK[-1][0][0], RK[-1][2][0], v0, B0, V0, d, q, m)[2]
+    # print('Checking frequency in z-direction over 100 microseconds:')
+    # print('----------------------------------')
+    # print(f'Expected z-frequency: {fz_expected}')
+    # tol = 6e-7
+    # max = np.argwhere(np.abs(RKz5 - 10) < tol) # finds all the peaks for infering the frequency
+    # print(f'Approximate frequency from simulation: {1/(t5[max[-1]] - t5[max[-2]])}')
+    # print(f'Difference: {fz_expected - 1/(t5[max[-1]] - t5[max[-2]])}')
+    # plt.plot(t5, z_ana, label='Analytical Solution')
+    # plt.plot(t5[::100] , RKz5[::100], '--', label=f'RK4 with h = {h_list[-1]}')
+    # # If one wants to check the peaks are hit
+    # # for top in max:
+    # #     plt.plot(t5[top] , RKz5[top], 'o')
+    # # plt.plot(t5[::100] , FEz5[::100], '.', markersize=2, label='FE method')
+    # plt.grid();
+    # plt.xlabel(r't [$\mu s$]'); plt.ylabel(r'z [$\mu m$]')
+    # plt.legend()
+    # plt.title(r'Oscillation in z-direction of a single $Ca^+$ atom')
+    # plt.tight_layout()
+    # plt.savefig('test_results/test_frequency_z.pdf')
+    # plt.show()
 
     """ The relative errors and error convergence rate for the different integrators RK4 vs. FE """
     # relative_errors = [[],[]]; max_error = [[],[]]
@@ -164,21 +164,19 @@ if __name__ == "__main__":
     # fig.supylabel(r'Relative Error $[\log_{10}]$')
     # fig.supxlabel('Time 'r'$[\mu s]$')
     # fig.tight_layout()
-    # plt.savefig('test_results/relative_error.pdf')
     # plt.legend()
+    # plt.savefig('test_results/relative_error.pdf')
     # plt.show()
 
-    # Plot relative errors for all runs and methods for single particle:
-    B0, V0, d, q, m, t, r1, v1, r2, v2 = read_file_double('test_results/2particles_RK4_interactions_on.dat')
+    """ Problem 9: Test with Two particles with and without Coulomb interactions """
+    pos1, vel1, pos2, vel2 = read_file_double('test_results/2particles_RK4_interactions_off.dat')[6:10]
+    pos3, vel3, pos4, vel4 = read_file_double('test_results/2particles_RK4_interactions_on.dat')[6:10]
     plt.figure()
-    n = 100000
-    plt.plot(r1[0, :n], r1[1, :n], label='1: On')
-    plt.plot(r2[0, :n], r2[1, :n], label='2: On')
-    B0, V0, d, q, m, t, r1, v1, r2, v2 = read_file_double('test_results/2particles_RK4_interactions_off.dat')
-    plt.plot(r1[0, :n], r1[1, :n], label='1: Off')
-    plt.plot(r2[0, :n], r2[1, :n], label='2: Off')
+    # n = 100000
+    plt.plot(pos1[0], pos1[1], label='Particle 1: Off')
+    plt.plot(pos2[0], pos2[1], label='Particle 2: Off')
+    plt.plot(pos3[0], pos3[1], label='Particle 1: On')
+    plt.plot(pos4[0], pos4[1], label='Particle 2: On')
     plt.legend()
     plt.axis('equal')
     plt.show()
-
-    # Plot the relevant stuff for the single particle tests in 9, this is in progess:
