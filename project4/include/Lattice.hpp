@@ -10,32 +10,32 @@ using namespace arma;
 class Lattice
 {
 private:
-  //stores the whole lattice
+  // Stores the whole lattice
   imat spin_config_;
-  //size
+  // Size
   int L_;
-  // stores the five possible boltzmann factors
+  // Stores the five possible boltzmann factors
   vec boltzmann_factors_;
   // Mersenne twister random number generator
   std::mt19937 generator_;
 
 public:
-  //constructor
-  Lattice(int L, double T);
+  // Constructor
+  Lattice(int L, double T, bool Ordered);
 
-  //return the lattice
+  // Return the lattice
   imat get_config();
 
-  //flip one spin
+  // Pick one random spin. Flip it if accepted
   void spin_flip();
 
-  // Update borders
+  // Update all borders
   void update_borders();
 
-  // Return energy
+  // Return total energy
   double get_energy();
 
-  // Return magnetizaton
+  // Return total magnetizaton
   double get_magnetization();
 };
 

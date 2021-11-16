@@ -1,44 +1,61 @@
 #include "Lattice.hpp"
 
-//constructor
-Lattice::Lattice(int L_in, double T_in)
+// Constructor
+Lattice::Lattice(int L_in, double T_in, bool Ordered)
 {
   L_ = L_in;
+  // The 5 energy differences:
   arma::vec dE = {8., 4., 0., -4., -8.}; // [J]
-  boltzmann_factors_ = arma::exp(-dE/T_in);
-  //set seed for random number generator using system clock:
-  unsigned int seed = std::chrono::system_clock::now().time_since_epoch().count();
-  generator_.seed(seed);
+  // The 5 corresponding boltzmann factors :
+  boltzmann_factors_ = arma::exp(-dE/T_in); // = p(new state) / p(old)
+  if (Ordered == 0)
+  {
+    // Fill spin config with random spins
+    // Set seed for random number generator using system clock:
+    unsigned int seed = std::chrono::system_clock::now().time_since_epoch().count();
+    generator_.seed(seed);
 
-  //generate matrix of spins
-  std::uniform_int_distribution<int> initial(0,1); //uniform integer distribution
+    // Generate matrix of spins
+    std::uniform_int_distribution<int> initial(0,1); //uniform integer distribution
 
-  spin_config_ = imat(L_+2, L_+2, fill::none);
-  spin_config_.imbue( [&]() { return initial(generator_); } ); //fill spin_config
-  spin_config_.replace(0, -1);
-  // Set borders
-  update_borders();
+    spin_config_ = imat(L_+2, L_+2, fill::none);
+    spin_config_.imbue( [&]() { return initial(generator_); } ); //fill spin_config
+    spin_config_.replace(0, -1);
+
+    // Set outer borders
+    update_borders();
+  } else
+  {
+    // Fill spin config with only ones
+    spin_config_ = imat(L_+2, L_+2, fill::ones);
+  }
 }
 
-//return the configuration
+// Return the configuration
 imat Lattice::get_config()
 {
   return spin_config_( span(1,L_), span(1,L_) );
 }
 
-//flip one random spin
+// Pick one random spin, flip it if accepted
 void Lattice::spin_flip()
 {
+  // Choose random spin in lattice:
   std::uniform_int_distribution<int> row(1, L_);
   std::uniform_int_distribution<int> col(1, L_);
   int i = row(generator_);
   int j = col(generator_);
 
+  // Find its neighbours and the corresponding case (which dE it is)
   arma::ivec neighbours = {spin_config_(i+1,j), spin_config_(i-1,j),
                                 spin_config_(i,j+1), spin_config_(i,j-1)};
   int case_n = arma::sum(arma::abs(spin_config_(i,j) - neighbours)) /2;
+
+  // Generate random r between 0 and 1
   std::uniform_real_distribution<double> U(0.0 ,1.0);
   double r = U(generator_);
+
+  // Accept/reject step:
   if (r < boltzmann_factors_(case_n)) {
     spin_config_(i, j) = -1*spin_config_(i, j);
     //update_borders(); // Potentially faster than the following if-tests?
@@ -57,7 +74,7 @@ void Lattice::spin_flip()
   }
 }
 
-// Update borders
+// Update all borders
 void Lattice::update_borders()
 {
   spin_config_.col(0) = spin_config_.col(L_);
@@ -70,12 +87,14 @@ void Lattice::update_borders()
 double Lattice::get_energy()
 {
   double S = 0;
-  for (int i=1; i<=L_; i++)
+  for (int j=1; j<=L_; j++) // Column-major order in armadillo
   {
-    for (int j=1; j<=L_; j++)
+    arma::ivec tmp_col = spin_config_.col(j); // To reduce memory traffic
+    arma::ivec tmp_col_left = spin_config_.col(j-1); // To reduce memory traffic
+    for (int i=1; i<=L_; i++) // Do not loop over the outer borders
     {
-      S += spin_config_(i, j) * spin_config_(i-1, j);
-      S += spin_config_(i, j) * spin_config_(i, j-1);
+      S += tmp_col(i) * tmp_col(i-1); // add upward spin interaction
+      S += tmp_col(i) * tmp_col_left(i); // and leftward spin interaction
     }
   }
   return -S;
