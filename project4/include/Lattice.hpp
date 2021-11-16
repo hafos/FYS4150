@@ -14,18 +14,29 @@ private:
   imat spin_config_;
   //size
   int L_;
+  // stores the five possible boltzmann factors
+  vec boltzmann_factors_;
   // Mersenne twister random number generator
   std::mt19937 generator_;
 
 public:
   //constructor
-  Lattice(int L);
+  Lattice(int L, double T);
 
   //return the lattice
   imat get_config();
 
   //flip one spin
   void spin_flip();
+
+  // Update borders
+  void update_borders();
+
+  // Return energy
+  double get_energy();
+
+  // Return magnetizaton
+  double get_magnetization();
 };
 
 #endif
