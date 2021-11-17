@@ -13,7 +13,7 @@ def exp_magn(T):
     T in units J/kB
     """
     beta = 1/T # [1/J]
-    return (2*np.exp(8*beta) + 1)/(4*(np.cosh(8*beta)+3))
+    return (2*np.exp(8*beta) + 4)/(4*(np.cosh(8*beta)+3))
 
 def exp_Cv(T):
     """
@@ -34,7 +34,7 @@ def exp_X(T):
     """
     beta = 1/T # [1/J]
     M = exp_magn(T)*4
-    M2 = (8*np.exp(8*beta) + 2)/((np.cosh(8*beta)+3))
+    M2 = (8*np.exp(8*beta) + 8)/((np.cosh(8*beta)+3))
     return (M2 - M**2)/(T*4) # [1/J]
 
 # Load data:
@@ -48,13 +48,15 @@ for line in file:
     m += [float(m_)]; Cv += [float(Cv_)]; X += [float(X_)];
 
 i1 = int(len(T)/3)
+i2 = 2*i1
 #print(n_s[i1], n_s[i1-1])
 
 temp = np.linspace(0.1, 50.0, 1000)
 fig, ax = plt.subplots(2,2)
 ax[0,0].plot(temp, exp_epsilon(temp), label='Analytical')
 ax[0,0].plot(T[:i1], eps[:i1], '+', label='Computed')
-ax[0,0].plot(T[i1:], eps[i1:], '+', label='Computed')
+ax[0,0].plot(T[i1:i2], eps[i1:i2], '+', label='Computed')
+ax[0,0].plot(T[i2:], eps[i2:], '+', label='Computed')
 ax[0,0].set_ylabel(r'$\epsilon$ [J]')
 ax[0,0].set_xlabel(r'T [J/k$_B$]')
 
