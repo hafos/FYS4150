@@ -90,3 +90,54 @@ plt.show()
 #print(exp_magn(1))
 #print(exp_Cv(1))
 #print(exp_X(1))
+
+#plot burn-in tests
+burnin_ordered = open('burnin_test_ordered.dat')
+burnin_ordered.readline()
+T = []; nc_o = []; eps_o = []; m_o = [];
+for line in burnin_ordered:
+    T_, nc_o_, eps_o_, m_o_, = line.split()
+    T += [float(T_)]
+    nc_o += [float(nc_o_)]
+    eps_o += [float(eps_o_)]
+    m_o += [float(m_o_)]
+
+burnin_random = open('burnin_test_random.dat')
+burnin_random.readline()
+nc_r = []; eps_r = []; m_r = [];
+for line in burnin_random:
+    T_r_, nc_r_, eps_r_, m_r_, = line.split()
+    nc_r += [float(nc_r_)]
+    eps_r += [float(eps_r_)]
+    m_r += [float(m_r_)]
+
+i1 = int(len(T)/2)
+
+fig, ax = plt.subplots(2, 2)
+ax[0, 0].plot(nc_o[:i1], eps_o[:i1], label = "T = %.2f J/kB" %T[0])
+ax[0, 0].plot(nc_o[i1:], eps_o[i1:], label = "T = %.2f J/kB" %T[-1])
+ax[0, 0].legend()
+ax[0, 0].set_xlabel("Number of cycles")
+ax[0, 0].set_ylabel(r"$\left<\epsilon\right>$ [J]")
+ax[0, 0].set_title("Ordered")
+
+ax[1, 0].plot(nc_o[:i1], m_o[:i1], label = "T = %.2f J/kB" %T[0])
+ax[1, 0].plot(nc_o[i1:], m_o[i1:], label = "T = %.2f J/kB" %T[-1])
+ax[1, 0].legend()
+ax[1, 0].set_xlabel("Number of cycles")
+ax[1, 0].set_ylabel(r"$\left<|m|\right>$ [1]")
+
+ax[0, 1].plot(nc_r[:i1], eps_r[:i1], label = "T = %.2f J/kB" %T[0])
+ax[0, 1].plot(nc_r[i1:], eps_r[i1:], label = "T = %.2f J/kB" %T[-1])
+ax[0, 1].legend()
+ax[0, 1].set_xlabel("Number of cycles")
+ax[0, 1].set_ylabel(r"$\left<\epsilon\right>$ [J]")
+ax[0, 1].set_title("Random")
+
+ax[1, 1].plot(nc_r[:i1], m_r[:i1], label = "T = %.2f J/kB" %T[0])
+ax[1, 1].plot(nc_r[i1:], m_r[i1:], label = "T = %.2f J/kB" %T[-1])
+ax[1, 1].legend()
+ax[1, 1].set_xlabel("Number of cycles")
+ax[1, 1].set_ylabel(r"$\left<|m|\right>$ [1]")
+plt.tight_layout()
+plt.show()

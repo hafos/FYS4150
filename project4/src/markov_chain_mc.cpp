@@ -2,7 +2,7 @@
 
 // Compute expectation values
 void expectation_values(int L, double T, bool Ordered, int n_cycles, int n_steps,
-                        double& eps, double& mag, double& heat, double& sus)
+                        vec& eps, vec& mag, vec& heat, vec& sus)
 {
   double E2 = 0; // To accumulate total energy**2 exp. val.
   double E = 0; // To accumulate total energy exp.val.
@@ -26,10 +26,13 @@ void expectation_values(int L, double T, bool Ordered, int n_cycles, int n_steps
     M += magnetization/n_cycles;
     E2 += energy*energy/n_cycles;
     M2 += magnetization*magnetization/n_cycles;
+
+    // Calculate and store the values:
+    eps(j) = E/N; // Units [J]
+    mag(j) = M/N; // Units [1] or [spin]
+    heat(j) = (E2 - E*E)/(T*T*N); // units [kB]
+    sus(j) = (M2 - M*M)/(T*N); // units [1/J] or [spin^2 / J]
+
   }
-  // Calculate the values:
-  eps = E/N; // Units [J]
-  mag = M/N; // Units [1] or [spin]
-  heat = (E2 - E*E)/(T*T*N); // units [kB]
-  sus = (M2 - M*M)/(T*N); // units [1/J] or [spin^2 / J]
+  //std::cout << eps.n_elem <<endl;
 }
