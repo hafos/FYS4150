@@ -58,19 +58,21 @@ void Lattice::spin_flip()
   // Accept/reject step:
   if (r < boltzmann_factors_(case_n)) {
     spin_config_(i, j) = -1*spin_config_(i, j);
-    //update_borders(); // Potentially faster than the following if-tests?
-    if (i==L_){
-      spin_config_(0, j)=spin_config_(i, j);
-    }
-    else if (i==1){
-      spin_config_(L_+1, j)=spin_config_(i, j);
-    }
-    if (j==L_){
-      spin_config_(i, 0)=spin_config_(i, j);
-    }
-    else if (j==1){
-      spin_config_(i, L_+1)=spin_config_(i, j);
-    }
+    update_borders(); // Potentially faster (with compiler optimization)
+    // than the following if-tests?
+    // update_borders() seems to be around as fast with -02 and -O3 but slower without
+    //if (i==L_){
+    //  spin_config_(0, j)=spin_config_(i, j);
+    //}
+    //else if (i==1){
+    //  spin_config_(L_+1, j)=spin_config_(i, j);
+    //}
+    //if (j==L_){
+    //  spin_config_(i, 0)=spin_config_(i, j);
+    //}
+    //else if (j==1){
+    //  spin_config_(i, L_+1)=spin_config_(i, j);
+    //}
   }
 }
 

@@ -1,97 +1,60 @@
-#include <iostream>
-#include <iomanip> //Writing to file
-#include <armadillo> //Vectors and matrices
-#include <cmath>
-#include <ctime>
+#include <iomanip> // Writing to file
+#include <string> // Turn to string
+#include <sstream> // String formatting
 
 #include "Lattice.hpp"
+#include "timecheck.hpp"
+#include "markov_chain_mc.hpp"
 
 using namespace arma;
 
-void expval_MCMC(int L, double T, bool Ordered, int n_cycles, int n_steps, double& eps, double& mag, double& heat, double& sus)
-{
-  double energy;
-  double E2;
-  double E;
-  double magnetization;
-  double M2;
-  double M;
-
-  int N = L*L;
-
-  for (int j=0; j<n_cycles; j++){
-    Lattice config(L, T, Ordered);
-    for (int i=0; i<n_steps; i++){
-      config.spin_flip();
-    }
-    energy = config.get_energy();
-    magnetization = abs(config.get_magnetization());
-    E += energy/n_cycles;
-    M += magnetization/n_cycles;
-    E2 += energy*energy/n_cycles;
-    M2 += magnetization*magnetization/n_cycles;
-  }
-  // Calculate the values:
-  eps = E/N; // Units [J]
-  mag = M/N; // Units [1] or [spin]
-  heat = (E2 - E*E)/(T*T*N); // units [kB]
-  sus = (M2 - M*M)/(T*N); // units [1/J] or [spin^2 / J]
-}
-
-void timecheck()
-{
-  bool check = 1;
-  int L = 1000;
-  double T = 1;
-  double energy;
-  Lattice config(L, T, check);
-  std::clock_t start = std::clock();
-  for (int i=0; i<100; i++){
-    energy = config.get_energy();
-  }
-  std::clock_t end = std::clock();
-  double timeused = 1.*(end-start)/CLOCKS_PER_SEC;
-  std::cout << "timeused = " << timeused << " seconds " << endl;
-
-  //start = std::clock();
-  //for (int i=0; i<100; i++){
-  //  energy = config.get_energy_test();
-  //}
-  //end = std::clock();
-  //timeused = 1.*(end-start)/CLOCKS_PER_SEC;
-  //std::cout << "timeused = " << timeused << " seconds " << endl;
-}
-
 int main()
 {
-  //some test code for the Lattice methods
+  // Test Lattice and MCMC:
   int L = 2;
-  double T = 1; // [J/kB]
-  //Lattice config(L, T);
-  //std::cout << config.get_config() << endl;
-
-  //config.spin_flip();
-  //std::cout <<config.get_config() << endl;
-
-  //config.spin_flip();
-  //std::cout <<config.get_config() << endl;
+  vec T = {0.1, 1.5, 3.0, 4.5, 7.0, 9.5, 30.0}; // [J/kB]
 
   // Sample spin configurations:
-  int n_cycles = 50; // n monte carlo cycles
-  int n_steps = 50; // steps in each monte carlo cycle
+  ivec n_cycles = {100, 200, 500}; // n monte carlo cycles
+  int n_steps = 100; // steps in each monte carlo cycle
   bool Ordered = 0;
 
-  double energy;
-  double magnetization;
-  double heat_capacity;
-  double susceptibility;
+  // Open outputfile
+  std::ofstream ofile;
+  ofile.open("simple_expectation_value_tests.dat");
+  ofile << "T   n_cycles   n_steps   epsilon   m   Cv   X" << std::endl;
 
-  expval_MCMC(L, T, Ordered, n_cycles, n_steps, energy, magnetization, heat_capacity, susceptibility);
+  // spacing in outputfile
+  int width = 21; int decimals = 9;
 
-  std::cout << " <eps> " << energy << "  J" << endl;
-  std::cout << " <|m|> " << magnetization << endl;
-  std::cout << " Cv " << heat_capacity << "  kB" << endl;
-  std::cout << " X " << susceptibility << "  1/J" << endl;
+  // Compute exp values for different temperatures and n_cycles/steps and write to file
+  for (int j=0; j<n_cycles.n_elem; j++)
+  {
+    for (int i=0; i<T.n_elem; i++)
+    {
+      double energy;
+      double magnetization;
+      double heat_capacity;
+      double susceptibility;
+      expectation_values(L, T(i), Ordered, n_cycles(j), n_steps, energy, magnetization, heat_capacity, susceptibility);
+      ofile << std::setw(width) << std::setprecision(decimals) << std::scientific << T(i)
+      << std::setw(width) << std::setprecision(decimals) << std::scientific << n_cycles(j)
+      << std::setw(width) << std::setprecision(decimals) << std::scientific << n_steps
+      << std::setw(width) << std::setprecision(decimals) << std::scientific << energy
+      << std::setw(width) << std::setprecision(decimals) << std::scientific << magnetization
+      << std::setw(width) << std::setprecision(decimals) << std::scientific << heat_capacity
+      << std::setw(width) << std::setprecision(decimals) << std::scientific << susceptibility
+      << std::endl;
+    }
+  }
+  // Close output file
+  ofile.close();
 
-  timecheck();
+
+  //std::cout << " <eps> " << energy << "  J" << endl;
+  //std::cout << " <|m|> " << magnetization << endl;
+  //std::cout << " Cv " << heat_capacity << "  kB" << endl;
+  //std::cout << " X " << susceptibility << "  1/J" << endl;
+
+  //timecheck();
 }
