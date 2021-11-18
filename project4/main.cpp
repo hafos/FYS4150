@@ -32,19 +32,19 @@ int main()
   {
     for (int i=0; i<T.n_elem; i++)
     {
-      vec energy(n_cycles(j));
-      vec magnetization(n_cycles(j));
-      vec heat_capacity(n_cycles(j));
-      vec susceptibility(n_cycles(j));
+      double energy;
+      double magnetization;
+      double heat_capacity;
+      double susceptibility;
       expectation_values(L, T(i), Ordered, n_cycles(j), n_steps, energy, magnetization, heat_capacity, susceptibility);
       //std::cout << i <<endl;
       ofile << std::setw(width) << std::setprecision(decimals) << std::scientific << T(i)
       << std::setw(width) << std::setprecision(decimals) << std::scientific << n_cycles(j)
       << std::setw(width) << std::setprecision(decimals) << std::scientific << n_steps
-      << std::setw(width) << std::setprecision(decimals) << std::scientific << energy.back()
-      << std::setw(width) << std::setprecision(decimals) << std::scientific << magnetization.back()
-      << std::setw(width) << std::setprecision(decimals) << std::scientific << heat_capacity.back()
-      << std::setw(width) << std::setprecision(decimals) << std::scientific << susceptibility.back()
+      << std::setw(width) << std::setprecision(decimals) << std::scientific << energy
+      << std::setw(width) << std::setprecision(decimals) << std::scientific << magnetization
+      << std::setw(width) << std::setprecision(decimals) << std::scientific << heat_capacity
+      << std::setw(width) << std::setprecision(decimals) << std::scientific << susceptibility
       << std::endl;
     }
   }
@@ -62,58 +62,49 @@ int main()
   //Problem 5
   L = 20;
   T = {1.0, 2.4}; //[J/kB]
-  int n_c = 1000;
+  int n_c = 200;
   Ordered = 1;
 
   ofile.open("burnin_test_ordered.dat");
   ofile << "bounded n_cycles T epsilon m" << std::endl;
-  //spacing in output file
 
   // Compute exp values for different numbers of cycles and temperatures and write to file
   for (int i = 0; i < T.n_elem; i++)
   {
-    vec energy(n_c);
-    vec magnetization(n_c);
-    vec heat_capacity(n_c);
-    vec susceptibility(n_c);
-    //heat capacity and susceptibility are not needed
-    //but I don't know how to safely get rid of them without writing a new function
-    expectation_values(L, T(i), Ordered, n_c, n_steps, energy, magnetization, heat_capacity, susceptibility);
+     vec en(n_c);
+     vec mag(n_c);
+     energy_cycles(L, T(i), Ordered, n_c, n_steps, en);
+     magnetization_cycles(L, T(i), Ordered, n_c, n_steps, mag);
 
-    for (int j = 0; j < n_c; j++){
-      ofile << std::setw(width) << std::setprecision(decimals) << std::scientific << T(i)
-      << std::setw(width) << std::setprecision(decimals) << std::scientific << j
-      << std::setw(width) << std::setprecision(decimals) << std::scientific << energy(j)
-      << std::setw(width) << std::setprecision(decimals) << std::scientific << magnetization(j)
-      << std::endl;
-    }
-  }
+     for (int j = 0; j < n_c; j++){
+       ofile << std::setw(width) << std::setprecision(decimals) << std::scientific << T(i)
+       << std::setw(width) << std::setprecision(decimals) << std::scientific << j
+       << std::setw(width) << std::setprecision(decimals) << std::scientific << en(j)
+       << std::setw(width) << std::setprecision(decimals) << std::scientific << mag(j)
+       << std::endl;
+     }
+   }
   ofile.close();
 
   //random start
   Ordered = 0;
+  n_c = 400;
   ofile.open("burnin_test_random.dat");
   ofile << "bounded n_cycles T epsilon m" << std::endl;
-  //spacing in output file
-
   // Compute exp values for different numbers of cycles and temperatures and write to file
   for (int i = 0; i < T.n_elem; i++)
   {
-    vec energy(n_c);
-    vec magnetization(n_c);
-    vec heat_capacity(n_c);
-    vec susceptibility(n_c);
-    //heat capacity and susceptibility are not needed
-    //but I don't know how to safely get rid of them without writing a new function
-    expectation_values(L, T(i), Ordered, n_c, n_steps, energy, magnetization, heat_capacity, susceptibility);
-
+    vec en(n_c);
+    vec mag(n_c);
+    energy_cycles(L, T(i), Ordered, n_c, n_steps, en);
+    magnetization_cycles(L, T(i), Ordered, n_c, n_steps, mag);
     for (int j = 0; j < n_c; j++){
       ofile << std::setw(width) << std::setprecision(decimals) << std::scientific << T(i)
       << std::setw(width) << std::setprecision(decimals) << std::scientific << j
-      << std::setw(width) << std::setprecision(decimals) << std::scientific << energy(j)
-      << std::setw(width) << std::setprecision(decimals) << std::scientific << magnetization(j)
+      << std::setw(width) << std::setprecision(decimals) << std::scientific << en(j)
+      << std::setw(width) << std::setprecision(decimals) << std::scientific << mag(j)
       << std::endl;
-    }
+   }
   }
   ofile.close();
 
