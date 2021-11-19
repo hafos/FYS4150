@@ -54,6 +54,7 @@ void energy_cycles(int L, double T, bool Ordered, int n_cycles, int n_steps, vec
   }
   //cumulative sum of energies, divided by number of cycles
   e = cumsum(energy)/linspace(0, n_cycles, n_cycles);
+  //e(0) = energy(0); //deal with divide by zero
 }
 
 // Compute magnetization expectation value for each cycle

@@ -62,7 +62,7 @@ int main()
   //Problem 5
   L = 20;
   T = {1.0, 2.4}; //[J/kB]
-  int n_c = 200;
+  int n_c = 100;
   Ordered = 1;
 
   ofile.open("burnin_test_ordered.dat");
@@ -88,7 +88,7 @@ int main()
 
   //random start
   Ordered = 0;
-  n_c = 400;
+  n_c = 200;
   ofile.open("burnin_test_random.dat");
   ofile << "bounded n_cycles T epsilon m" << std::endl;
   // Compute exp values for different numbers of cycles and temperatures and write to file
@@ -107,5 +107,35 @@ int main()
    }
   }
   ofile.close();
+
+
+  //Problem 6
+  n_c = 1000;
+  ofile.open("probability_distribution.dat");
+  ofile << "T n_cycles epsilon" << std::endl;
+  // Compute exp values for different numbers of cycles and temperatures and write to file
+  for (int i = 0; i < T.n_elem; i++)
+  {
+    double energy;
+    // Do 'n_cycles' monte carlo cycles, store energy after each
+    for (int j = 0; j<n_c; j++){
+      //Initialize new lattice
+      Lattice config(L, T(i), Ordered);
+      // Do one monte carlo cycle, length: 'n_steps'
+      for (int i = 0; i<n_steps; i++){
+        config.spin_flip();
+      }
+      //get energy
+      energy = config.get_energy();
+      //write to file
+      ofile << std::setw(width) << std::setprecision(decimals) << std::scientific << T(i)
+      << std::setw(width) << std::setprecision(decimals) << std::scientific << j
+      << std::setw(width) << std::setprecision(decimals) << std::scientific << energy
+      << std::endl;
+    }
+  }
+  ofile.close();
+
+
 
 }

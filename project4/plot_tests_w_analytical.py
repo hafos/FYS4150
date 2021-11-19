@@ -84,7 +84,7 @@ ax[1,1].set_ylabel(r'$\chi$ [1/J]')
 
 ax[0,0].legend()
 plt.tight_layout()
-
+plt.savefig("analytical.pdf")
 plt.show()
 #print(exp_epsilon(1))
 #print(exp_magn(1))
@@ -116,7 +116,7 @@ i1 = int(len(T)/2)
 fig, ax = plt.subplots(2, 2)
 ax[0, 0].plot(nc_o[:i1], eps_o[:i1], label = "T = %.2f J/kB" %T[0])
 ax[0, 0].plot(nc_o[i1:], eps_o[i1:], label = "T = %.2f J/kB" %T[-1])
-ax[0, 0].legend()
+#ax[0, 0].legend()
 ax[0, 0].set_xlabel("Number of cycles")
 ax[0, 0].set_ylabel(r"$\left<\epsilon\right>$ [J]")
 ax[0, 0].set_title("Ordered")
@@ -128,6 +128,7 @@ ax[1, 0].set_ylabel(r"$\left<|m|\right>$ [1]")
 
 ax[0, 1].plot(nc_r[:i1], eps_r[:i1], label = "T = %.2f J/kB" %T[0])
 ax[0, 1].plot(nc_r[i1:], eps_r[i1:], label = "T = %.2f J/kB" %T[-1])
+ax[0, 1].legend()
 ax[0, 1].set_xlabel("Number of cycles")
 ax[0, 1].set_ylabel(r"$\left<\epsilon\right>$ [J]")
 ax[0, 1].set_title("Random")
@@ -138,4 +139,26 @@ ax[1, 1].set_xlabel("Number of cycles")
 ax[1, 1].set_ylabel(r"$\left<|m|\right>$ [1]")
 plt.tight_layout()
 plt.savefig("burnin.pdf")
+plt.show()
+
+P_E = open('probability_distribution.dat')
+P_E.readline()
+T = []; n_c = []; E = [];
+for line in P_E:
+    T_, n_c_, E_, = line.split()
+    T += [float(T_)]
+    n_c += [float(n_c_)]
+    E += [float(E_)]
+
+i1 = int(len(T)/2)
+
+fig, ax = plt.subplots(1, 2)
+ax[0].hist(E[1:i1], bins = 50, density = True)
+ax[0].set_title("T = %.2f J/kB" %T[0])
+ax[0].set_xlabel("Energy (J)")
+ax[1].hist(E[i1+1:], bins = 50, density = True)
+ax[1].set_title("T = %.2f J/kB" %T[-1])
+ax[1].set_xlabel("Energy (J)")
+plt.tight_layout()
+plt.savefig("probability_distribution.pdf")
 plt.show()
