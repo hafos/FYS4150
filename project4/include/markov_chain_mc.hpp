@@ -10,10 +10,11 @@
 using namespace arma;
 
 // Compute expectation values
-void expectation_values(int L, double T, bool Ordered, int n_cycles,
+void expectation_values(int L, double T, bool Ordered, int n_cycles, int n_burnin,
                         double& eps, double& mag, double& heat, double& sus);
 
-// Compute energy and magnetization expectation value for each cycle
-void energy_cycles(int L, double T, bool Ordered, int n_cycles, vec&e, vec&m);
+// Get energy and magnetization individual samples
+void individual_samples(int L, double T, bool Ordered, int n_cycles, int n_burnin,
+                        vec&e, vec&m);
 
 #endif

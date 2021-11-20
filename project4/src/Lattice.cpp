@@ -53,6 +53,7 @@ void Lattice::spin_flip()
   // Find its neighbours and the corresponding case (which dE it is)
   arma::ivec neighbours = {spin_config_(i+1,j), spin_config_(i-1,j),
                                 spin_config_(i,j+1), spin_config_(i,j-1)};
+  // This is one way of determining the case without using if-tests:
   int case_n = arma::sum(arma::abs(spin_config_(i,j) - neighbours)) /2;
 
   // Generate random r between 0 and 1

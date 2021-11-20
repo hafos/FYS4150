@@ -12,10 +12,10 @@ int main()
 {
   // Problem 4:
   int L = 2;
-  vec T = {0.5, 1.0, 1.5, 2.5, 4.5, 7.0, 10.0, 30.0, 50.0}; // [J/kB]
-  int n_chains = 10; // Run several chains
+  vec T = {0.8, 1.0, 1.5, 2.5, 4.5, 7.0, 10.0, 30.0, 50.0}; // [J/kB]
 
   // Sample spin configurations:
+  int n_burnin = 0; // No burn-in yet
   ivec n_cycles = {2000, 5000, 8000}; // n monte carlo cycles
   bool Ordered = 0;
 
@@ -27,47 +27,34 @@ int main()
   ofile.open("simple_expectation_value_tests.dat");
   ofile << "T   n_cycles   epsilon   m   Cv   X" << std::endl;
 
-  // Compute exp values for different temperatures and n_cycles/steps and write to file
+  // Compute exp values for different temperatures and n_cycles and write to file
   for (int j=0; j<n_cycles.n_elem; j++)
   {
     for (int i=0; i<T.n_elem; i++)
     {
-      double avg_e = 0;
-      double avg_m = 0;
-      double avg_C = 0;
-      double avg_X = 0;
-      for (int k=0; k<n_chains; k++)
-      {
-        double energy;
-        double magnetization;
-        double heat_capacity;
-        double susceptibility;
-        expectation_values(L, T(i), Ordered, n_cycles(j), energy, magnetization, heat_capacity, susceptibility);
-        avg_e += energy;
-        avg_m += magnetization;
-        avg_C += heat_capacity;
-        avg_X += susceptibility;
-      }
+      double energy;
+      double magnetization;
+      double heat_capacity;
+      double susceptibility;
+      expectation_values(L, T(i), Ordered, n_cycles(j), n_burnin, energy, magnetization, heat_capacity, susceptibility);
       ofile << std::setw(width) << std::setprecision(decimals) << std::scientific << T(i)
       << std::setw(width) << std::setprecision(decimals) << std::scientific << n_cycles(j)
-      << std::setw(width) << std::setprecision(decimals) << std::scientific << avg_e/n_chains
-      << std::setw(width) << std::setprecision(decimals) << std::scientific << avg_m/n_chains
-      << std::setw(width) << std::setprecision(decimals) << std::scientific << avg_C/n_chains
-      << std::setw(width) << std::setprecision(decimals) << std::scientific << avg_X/n_chains
+      << std::setw(width) << std::setprecision(decimals) << std::scientific << energy
+      << std::setw(width) << std::setprecision(decimals) << std::scientific << magnetization
+      << std::setw(width) << std::setprecision(decimals) << std::scientific << heat_capacity
+      << std::setw(width) << std::setprecision(decimals) << std::scientific << susceptibility
       << std::endl;
     }
   }
   // Close output file
   ofile.close();
 
-  // Testing how fast methods are
-  //timecheck();
-
 
   //Problem 5
   L = 20;
   T = {1.0, 2.4}; //[J/kB]
   int n_c = 8000;
+  n_burnin = 0; // Still no burn-in yet
   Ordered = 1;
 
   ofile.open("burnin_test_ordered.dat");
@@ -78,7 +65,21 @@ int main()
   {
      vec en(n_c+1);
      vec mag(n_c+1);
-     energy_cycles(L, T(i), Ordered, n_c, en, mag);
+     individual_samples(L, T(i), Ordered, n_c, n_burnin, en, mag); // First element is the random initial state
+     // Store the actual samples, not the initial state:
+     vec energy = en(span(1, en.n_elem-1));
+     vec magnetization = mag(span(1, mag.n_elem-1));
+     //cumulative sum of sample energies, divided by number of cycles
+     energy = cumsum(energy)/linspace(1, n_c+1, n_c);
+     //cumulative sum of sample magnetizations, divided by number of cycles
+     magnetization = cumsum(magnetization)/linspace(1, n_c+1, n_c);
+     // Add the expectation values after the initial state:
+     for (int i=0; i<energy.n_elem; i++)
+     {
+       en(i+1) = energy(i);
+       mag(i+1) = magnetization(i);
+     }
+     // Write to file :
      for (int j = 0; j < n_c+1; j++){
        ofile << std::setw(width) << std::setprecision(decimals) << std::scientific << T(i)
        << std::setw(width) << std::setprecision(decimals) << std::scientific << j
@@ -89,7 +90,7 @@ int main()
    }
   ofile.close();
 
-  //random start
+  // Random start
   Ordered = 0;
   n_c = 8000;
   ofile.open("burnin_test_random.dat");
@@ -99,7 +100,21 @@ int main()
   {
     vec en(n_c+1);
     vec mag(n_c+1);
-    energy_cycles(L, T(i), Ordered, n_c, en, mag);
+    individual_samples(L, T(i), Ordered, n_c, n_burnin, en, mag); // First element is the random initial state
+    // Store the actual samples, not the initial state:
+    vec energy = en(span(1, en.n_elem-1));
+    vec magnetization = mag(span(1, mag.n_elem-1));
+    //cumulative sum of sample energies, divided by number of cycles
+    energy = cumsum(energy)/linspace(1, n_c+1, n_c);
+    //cumulative sum of sample magnetizations, divided by number of cycles
+    magnetization = cumsum(magnetization)/linspace(1, n_c+1, n_c);
+    // Add the expectation values after the initial state:
+    for (int i=0; i<energy.n_elem; i++)
+    {
+      en(i+1) = energy(i);
+      mag(i+1) = magnetization(i);
+    }
+    // Write to file :
     for (int j = 0; j < n_c+1; j++){
       ofile << std::setw(width) << std::setprecision(decimals) << std::scientific << T(i)
       << std::setw(width) << std::setprecision(decimals) << std::scientific << j
@@ -112,39 +127,31 @@ int main()
 
 
   // Problem 6
+  n_burnin = 1000;
   n_c = 3000; // Number of cycles after burn-in
   Ordered = 0;
   ofile.open("probability_distribution.dat");
   ofile << "T n_cycles epsilon" << std::endl;
   int N=L*L;
-  // Compute exp values for different numbers of cycles and temperatures and write to file
+  // Get energy samples and write to file
   for (int i = 0; i < T.n_elem; i++)
   {
-   double energy;
-   // Do 'n_cycles' monte carlo cycles, store energy after each
-   // Initialize new lattice
-   Lattice config(L, T(i), Ordered);
-   // Burn-in:
-   for (int j = 0; j<1000; j++){
-     for (int k = 0; k<N; k++){
-       config.spin_flip();
-     }
-   }
-   for (int j = 0; j<n_c; j++){
-     // Do one monte carlo cycle, length: N
-     for (int k = 0; k<N; k++){
-       config.spin_flip();
-     }
-     //get energy
-     energy = config.get_energy();
-     //write to file
-     ofile << std::setw(width) << std::setprecision(decimals) << std::scientific << T(i)
-     << std::setw(width) << std::setprecision(decimals) << std::scientific << j+1
-     << std::setw(width) << std::setprecision(decimals) << std::scientific << energy/N
-     << std::endl;
-   }
+    vec en(n_c+1);
+    vec mag(n_c+1);
+    individual_samples(L, T(i), Ordered, n_c, n_burnin, en, mag); // First element is the random initial state
+    for (int j = 1; j<n_c+1; j++)
+    {
+      ofile << std::setw(width) << std::setprecision(decimals) << std::scientific << T(i)
+      << std::setw(width) << std::setprecision(decimals) << std::scientific << j
+      << std::setw(width) << std::setprecision(decimals) << std::scientific << en(j)
+      << std::endl;
+    }
   }
   ofile.close();
+
+  // Problem 7
+  // Testing how fast methods are
+  //timecheck();
 
 
 

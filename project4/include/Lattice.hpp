@@ -12,12 +12,16 @@ class Lattice
 private:
   // Stores the whole lattice
   imat spin_config_;
+
   // Size
   int L_;
+
   // Stores the five possible boltzmann factors
   vec boltzmann_factors_;
+
   // Stores the five possible energy differences
   vec delta_E_;
+
   // Mersenne twister random number generator
   std::mt19937 generator_;
 
