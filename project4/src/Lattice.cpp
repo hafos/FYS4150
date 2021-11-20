@@ -5,9 +5,9 @@ Lattice::Lattice(int L_in, double T_in, bool Ordered)
 {
   L_ = L_in;
   // The 5 energy differences:
-  arma::vec dE = {8., 4., 0., -4., -8.}; // [J]
+  delta_E_ = {8., 4., 0., -4., -8.}; // [J]
   // The 5 corresponding boltzmann factors :
-  boltzmann_factors_ = arma::exp(-dE/T_in); // = p(new state) / p(old)
+  boltzmann_factors_ = arma::exp(-delta_E_/T_in); // = p(new state) / p(old)
   if (Ordered == 0)
   {
     // Fill spin config with random spins
@@ -29,6 +29,10 @@ Lattice::Lattice(int L_in, double T_in, bool Ordered)
     // Fill spin config with only ones
     spin_config_ = imat(L_+2, L_+2, fill::ones);
   }
+  total_E_ = get_energy();
+  total_M_ = get_magnetization();
+  //std::cout<< total_E_<<endl;
+  //std::cout<< total_M_<<endl;
 }
 
 // Return the configuration
@@ -56,8 +60,10 @@ void Lattice::spin_flip()
   double r = U(generator_);
 
   // Accept/reject step:
-  if (r < boltzmann_factors_(case_n)) {
+  if (r <= boltzmann_factors_(case_n)) {
     spin_config_(i, j) = -1*spin_config_(i, j);
+    total_E_ += delta_E_(case_n);
+    total_M_ += 2*spin_config_(i, j);
     update_borders(); // Potentially faster (with compiler optimization)
     // than the following if-tests?
     // update_borders() seems to be around as fast with -02 and -O3 but slower without

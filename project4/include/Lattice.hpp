@@ -16,6 +16,8 @@ private:
   int L_;
   // Stores the five possible boltzmann factors
   vec boltzmann_factors_;
+  // Stores the five possible energy differences
+  vec delta_E_;
   // Mersenne twister random number generator
   std::mt19937 generator_;
 
@@ -37,6 +39,12 @@ public:
 
   // Return total magnetizaton
   double get_magnetization();
+
+  // Stores the current total energy
+  double total_E_;
+
+  // Stores the current total magnetization
+  double total_M_;
 };
 
 #endif
