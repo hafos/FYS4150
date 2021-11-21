@@ -17,27 +17,43 @@ int main()
   // Problem 8
   // Run final estimations with parallelized code
   ivec L = {40, 60, 80, 100};
-  vec T = linspace(2.1, 2.4, 20); // Run with 10 first
+  vec T = linspace(2.1, 2.4, 10); // Run with 10 first
   bool Ordered = 0; // Start with random spins
   int n_burnin = 3000;
-  int n_cycles = 15000;
+  int n_cycles = 20000;
+  int n_walkers = 20; // Take average over 5 walkers with different starting states
 
   for (int j=0; j<L.n_elem; j++)
   {
     int N = L(j)*L(j);
 
-    vec energy(T.n_elem);
-    vec magnetization(T.n_elem);
-    vec heat_capacity(T.n_elem);
-    vec susceptibility(T.n_elem);
+    vec energy(T.n_elem, fill::zeros);
+    vec magnetization(T.n_elem, fill::zeros);
+    vec heat_capacity(T.n_elem, fill::zeros);
+    vec susceptibility(T.n_elem, fill::zeros);
 
     // Parallelized loop over temperature:
 
-    #pragma omp parallel for
+    #pragma omp parallel for collapse(2)
     for (int i=0; i<T.n_elem; i++)
     {
-      expectation_values(L(j), T(i), Ordered, n_cycles, n_burnin, energy(i),
-                          magnetization(i), heat_capacity(i), susceptibility(i));
+      for (int k=0; k<n_walkers; k++)
+      {
+        double ener_tmp;
+        double magnet_tmp;
+        double heat_cap_tmp;
+        double suscep_tmp;
+        expectation_values(L(j), T(i), Ordered, n_cycles, n_burnin, ener_tmp,
+                            magnet_tmp, heat_cap_tmp, suscep_tmp);
+        #pragma omp atomic
+        energy(i) += ener_tmp/n_walkers;
+        #pragma omp atomic
+        magnetization(i) += magnet_tmp/n_walkers;
+        #pragma omp atomic
+        heat_capacity(i) += heat_cap_tmp/n_walkers;
+        #pragma omp atomic
+        susceptibility(i) += suscep_tmp/n_walkers;
+      }
     }
     // End of parallelization
 
