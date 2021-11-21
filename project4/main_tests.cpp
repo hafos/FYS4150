@@ -3,7 +3,6 @@
 #include <sstream> // String formatting
 
 #include "Lattice.hpp"
-#include "timecheck.hpp"
 #include "markov_chain_mc.hpp"
 
 using namespace arma;
@@ -148,11 +147,5 @@ int main()
     }
   }
   ofile.close();
-
-  // Problem 7
-  // Testing how fast methods are
-  //timecheck();
-
-
 
 }

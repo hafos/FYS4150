@@ -1,0 +1,120 @@
+#include <iomanip> // Writing to file
+#include <string> // Turn to string
+#include <sstream> // String formatting
+#include <ctime> // Time measurements
+#include "omp.h"  // OpenMP header
+
+#include "Lattice.hpp"
+#include "markov_chain_mc.hpp"
+
+using namespace arma;
+
+int main()
+{
+  // spacing in outputfile
+  int width = 21; int decimals = 9;
+
+  // Problem 7
+  // Check for time improvements
+  int L = 100;
+  vec T = {2.0, 2.1, 2.2, 2.3, 2.5};
+  int N = L*L;
+  bool Ordered = 1; // Less random fluctuations in computation time?
+  int n_burnin = 1000;
+  int n_cycles = 1000;
+
+  vec energy(T.n_elem);
+  vec magnetization(T.n_elem);
+  vec heat_capacity(T.n_elem);
+  vec susceptibility(T.n_elem);
+
+
+
+
+
+  std::clock_t start = std::clock();
+  time_t time_start = std::time(NULL);
+
+  // Loop over temperature, will be paralellized later :
+  for (int i=0; i<T.n_elem; i++)
+  {
+    expectation_values(L, T(i), Ordered, n_cycles, n_burnin, energy(i),
+                        magnetization(i), heat_capacity(i), susceptibility(i));
+  }
+  // End of loop
+
+
+  time_t time_end = std::time(NULL);
+  std::clock_t end = std::clock();
+  std::cout << "Not paralellized: " << endl;
+  std::cout << "Time used " << difftime(time_end, time_start) << " seconds " <<endl;
+  double timeused = 1.*(end-start)/CLOCKS_PER_SEC;
+  std::cout << "timeused = " << timeused << " seconds " << endl;
+
+  // Open outputfile
+  std::ofstream ofile;
+  ofile.open("timing_parallelization_nothing.dat");
+  ofile << "timeused [s]: "
+  << std::setw(width) << std::setprecision(decimals) << std::scientific << timeused << std::endl;
+  ofile << "n_cycles: "
+  << std::setw(width) << std::setprecision(decimals) << std::scientific << n_cycles << std::endl;
+  ofile << "T  epsilon   m   Cv   X" << std::endl;
+  for (int i=0; i<T.n_elem; i++)
+  {
+    ofile << std::setw(width) << std::setprecision(decimals) << std::scientific << T(i)
+    << std::setw(width) << std::setprecision(decimals) << std::scientific << energy(i)
+    << std::setw(width) << std::setprecision(decimals) << std::scientific << magnetization(i)
+    << std::setw(width) << std::setprecision(decimals) << std::scientific << heat_capacity(i)
+    << std::setw(width) << std::setprecision(decimals) << std::scientific << susceptibility(i)
+    << std::endl;
+  }
+  // Close output file
+  ofile.close();
+
+
+
+  // Repeat but paralellized:
+
+  start = std::clock();
+  time_start = std::time(NULL);
+
+  // Parallelized loop over temperature:
+
+  #pragma omp parallel for
+  for (int i=0; i<T.n_elem; i++)
+  {
+    expectation_values(L, T(i), Ordered, n_cycles, n_burnin, energy(i),
+                        magnetization(i), heat_capacity(i), susceptibility(i));
+  }
+  // End of parallelization
+
+
+  time_end = std::time(NULL);
+  end = std::clock();
+  std::cout << "Paralellized: " << endl;
+  std::cout << "Time used " << difftime(time_end, time_start) << " seconds " <<endl;
+  timeused = 1.*(end-start)/CLOCKS_PER_SEC;
+  std::cout << "timeused = " << timeused << " seconds " << endl;
+
+  // Open outputfile
+  ofile.open("timing_parallelization_temperatures.dat");
+  ofile << "timeused [s]: "
+  << std::setw(width) << std::setprecision(decimals) << std::scientific << timeused << std::endl;
+  ofile << "n_cycles: "
+  << std::setw(width) << std::setprecision(decimals) << std::scientific << n_cycles << std::endl;
+  ofile << "T  epsilon   m   Cv   X" << std::endl;
+  for (int i=0; i<T.n_elem; i++)
+  {
+    ofile << std::setw(width) << std::setprecision(decimals) << std::scientific << T(i)
+    << std::setw(width) << std::setprecision(decimals) << std::scientific << energy(i)
+    << std::setw(width) << std::setprecision(decimals) << std::scientific << magnetization(i)
+    << std::setw(width) << std::setprecision(decimals) << std::scientific << heat_capacity(i)
+    << std::setw(width) << std::setprecision(decimals) << std::scientific << susceptibility(i)
+    << std::endl;
+  }
+  // Close output file
+  ofile.close();
+
+
+
+}
