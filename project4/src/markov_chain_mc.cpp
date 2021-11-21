@@ -66,10 +66,10 @@ void individual_samples(int L, double T, bool Ordered, int n_cycles, int n_burni
       config.spin_flip();
     }
     // Update energy
-    double energ = config.get_energy(); // no integer div
+    double energ = config.total_E_; // no integer div
     e(j+1) = energ/N;
     // Update magnetization
-    double magnet = abs(config.get_magnetization()); // no integer div
+    double magnet = abs(config.total_M_); // no integer div
     m(j+1) = magnet/N;
   }
 }
