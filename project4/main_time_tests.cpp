@@ -2,6 +2,7 @@
 #include <string> // Turn to string
 #include <sstream> // String formatting
 #include <ctime> // Time measurements
+#include <chrono>
 #include "omp.h"  // OpenMP header
 
 #include "Lattice.hpp"
@@ -34,6 +35,7 @@ int main()
 
   std::clock_t start = std::clock();
   time_t time_start = std::time(NULL);
+  auto t1 = std::chrono::high_resolution_clock::now();
 
   // Loop over temperature, will be paralellized later :
   for (int i=0; i<T.n_elem; i++)
@@ -43,13 +45,14 @@ int main()
   }
   // End of loop
 
-
+  auto t2 = std::chrono::high_resolution_clock::now();
   time_t time_end = std::time(NULL);
   std::clock_t end = std::clock();
   std::cout << "Not paralellized: " << endl;
   std::cout << "Time used " << difftime(time_end, time_start) << " seconds " <<endl;
   double timeused = 1.*(end-start)/CLOCKS_PER_SEC;
   std::cout << "timeused = " << timeused << " seconds " << endl;
+  std::cout << "Time used (chrono) " << std::chrono::duration_cast<std::chrono::milliseconds>(t2-t1).count()*0.001 << " seconds" << endl;
 
   // Open outputfile
   std::ofstream ofile;
@@ -77,6 +80,7 @@ int main()
 
   start = std::clock();
   time_start = std::time(NULL);
+  t1 = std::chrono::high_resolution_clock::now();
 
   // Parallelized loop over temperature:
 
@@ -88,13 +92,14 @@ int main()
   }
   // End of parallelization
 
-
+  t2 = std::chrono::high_resolution_clock::now();
   time_end = std::time(NULL);
   end = std::clock();
   std::cout << "Paralellized: " << endl;
   std::cout << "Time used " << difftime(time_end, time_start) << " seconds " <<endl;
   timeused = 1.*(end-start)/CLOCKS_PER_SEC;
   std::cout << "timeused = " << timeused << " seconds " << endl;
+  std::cout << "Time used (chrono) " << std::chrono::duration_cast<std::chrono::milliseconds>(t2-t1).count()*0.001 << " seconds" << endl;
 
   // Open outputfile
   ofile.open("timing_parallelization_temperatures.dat");
