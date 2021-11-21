@@ -52,7 +52,7 @@ int main()
   std::cout << "Time used " << difftime(time_end, time_start) << " seconds " <<endl;
   double timeused = 1.*(end-start)/CLOCKS_PER_SEC;
   std::cout << "timeused = " << timeused << " seconds " << endl;
-  double timechrono = std::chrono::duration_cast<std::chrono::milliseconds>(t2-t1).count()*0.001
+  double timechrono = std::chrono::duration_cast<std::chrono::milliseconds>(t2-t1).count()*0.001;
   std::cout << "Time used (chrono) " << timechrono << " seconds" << endl;
 
   // Open outputfile
@@ -96,10 +96,10 @@ int main()
   t2 = std::chrono::high_resolution_clock::now();
   time_end = std::time(NULL);
   end = std::clock();
-  std::cout << "Paralellized: " << endl;
+  std::cout << "Parallelized: " << endl;
   std::cout << "Time used " << difftime(time_end, time_start) << " seconds " <<endl;
   timeused = 1.*(end-start)/CLOCKS_PER_SEC;
-  timechrono = std::chrono::duration_cast<std::chrono::milliseconds>(t2-t1).count()*0.001
+  timechrono = std::chrono::duration_cast<std::chrono::milliseconds>(t2-t1).count()*0.001;
   std::cout << "timeused = " << timeused << " seconds " << endl;
   std::cout << "Time used (chrono) " << timechrono << " seconds" << endl;
 
