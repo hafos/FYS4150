@@ -16,11 +16,11 @@ int main()
 
   // Problem 8
   // Run final estimations with parallelized code
-  ivec L = {40};//, 60, 80 100};
-  vec T = linspace(2.1, 2.4, 2); // Run with 10 first
+  ivec L = {40, 60, 80, 100};
+  vec T = linspace(2.1, 2.4, 20); // Run with 10 first
   bool Ordered = 0; // Start with random spins
-  int n_burnin = 1000;
-  int n_cycles = 2000;
+  int n_burnin = 3000;
+  int n_cycles = 15000;
 
   for (int j=0; j<L.n_elem; j++)
   {

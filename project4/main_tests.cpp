@@ -15,7 +15,7 @@ int main()
 
   // Sample spin configurations:
   int n_burnin = 0; // No burn-in yet
-  ivec n_cycles = {2000, 5000, 8000}; // n monte carlo cycles
+  ivec n_cycles = {500, 1000, 8000}; // n monte carlo cycles
   bool Ordered = 0;
 
   // spacing in outputfile
