@@ -22,22 +22,23 @@ for L in Ls:
 
 fig, ax = plt.subplots(2,2)
 for i in range(len(Ls)):
-    ax[0,0].plot(Ts[i], epss[i])
+    ax[0,0].plot(Ts[i], epss[i], label = f"L = {Ls[i]}")
 ax[0,0].set_ylabel(r'$\left<\epsilon\right>$ [J]')
 ax[0,0].set_xlabel(r'T [J/k$_B$]')
+ax[0,0].legend()
 
 for i in range(len(Ls)):
-    ax[0,1].plot(Ts[i], ms[i])
+    ax[0,1].plot(Ts[i], ms[i], label = f"L = {Ls[i]}")
 ax[0,1].set_xlabel(r'T [J/k$_B$]')
 ax[0,1].set_ylabel(r'$\left<|m|\right>$ [1]')
 
 for i in range(len(Ls)):
-    ax[1,0].plot(Ts[i], Cvs[i])
+    ax[1,0].plot(Ts[i], Cvs[i], label = f"L = {Ls[i]}")
 ax[1,0].set_xlabel(r'T [J/k$_B$]')
 ax[1,0].set_ylabel(r'$C_V$ [k$_B$]')
 
 for i in range(len(Ls)):
-    ax[1,1].plot(Ts[i], Xs[i])
+    ax[1,1].plot(Ts[i], Xs[i], label = f"L = {Ls[i]}")
 ax[1,1].set_xlabel(r'T [J/k$_B$]')
 ax[1,1].set_ylabel(r'$\chi$ [1/J]')
 

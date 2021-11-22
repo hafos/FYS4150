@@ -17,12 +17,12 @@ int main()
   // Problem 8
   // Run final estimations with parallelized code
   ivec L = {40, 60, 80, 100};
-  vec T = linspace(2.1, 2.4, 10); // Run with 10 first
+  vec T = linspace(2.23, 2.31, 10); // Run with 10 first
   bool Ordered = 0; // Start with random spins
   int n_burnin = 3000;
   //int n_cycles = 20000;
   //int n_walkers = 20; // Take average over 5 walkers with different starting states
-  int n_cycles = 1000000; 
+  int n_cycles = 1000000;
   int n_walkers = 1;
 
   for (int j=0; j<L.n_elem; j++)
