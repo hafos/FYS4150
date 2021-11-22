@@ -150,14 +150,20 @@ for line in P_E:
 
 i1 = int(len(T)/2)
 
-nbins1 = 11
-nbins2 = 180
+#nbins1 = len(np.unique(E[0:i1], return_counts = True)[1])
+#nbins1 = 11
+#nbins2 = len(np.uniqe(E[i1:], return_counts = True)[1])
+#nbins2 = 180
+nbins1 = np.unique(E[0:i1], return_counts = True)
+nbins2 = np.unique(E[i1:], return_counts = True)
 
 fig, ax = plt.subplots(1, 2)
-ax[0].hist(E[0:i1], bins = nbins1, density = True)
+#ax[0].hist(E[0:i1], bins = nbins1, density = True)
+ax[0].bar(x = nbins1[0], height = nbins1[1]/np.sum(nbins1[1]), width = 0.01)
 ax[0].set_title("T = %.2f J/kB" %T[0])
 ax[0].set_xlabel("$\epsilon$ [J]")
-ax[1].hist(E[i1:], bins = nbins2, density = True)
+#ax[1].hist(E[i1:], bins = nbins2, density = True)
+ax[1].bar(x = nbins2[0], height = nbins2[1]/np.sum(nbins1[1]), width = 0.01)
 ax[1].set_title("T = %.2f J/kB" %T[-1])
 ax[1].set_xlabel("$\epsilon$ [J]")
 plt.tight_layout()

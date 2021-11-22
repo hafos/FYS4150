@@ -126,8 +126,8 @@ int main()
 
 
   // Problem 6
-  n_burnin = 1000;
-  n_c = 3000; // Number of cycles after burn-in
+  n_burnin = 3000;
+  n_c = 100000; // Number of cycles after burn-in
   Ordered = 0;
   ofile.open("probability_distribution.dat");
   ofile << "T n_cycles epsilon" << std::endl;

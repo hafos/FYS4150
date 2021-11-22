@@ -20,8 +20,10 @@ int main()
   vec T = linspace(2.1, 2.4, 10); // Run with 10 first
   bool Ordered = 0; // Start with random spins
   int n_burnin = 3000;
-  int n_cycles = 20000;
-  int n_walkers = 20; // Take average over 5 walkers with different starting states
+  //int n_cycles = 20000;
+  //int n_walkers = 20; // Take average over 5 walkers with different starting states
+  int n_cycles = 1000000; 
+  int n_walkers = 1;
 
   for (int j=0; j<L.n_elem; j++)
   {
@@ -34,26 +36,32 @@ int main()
 
     // Parallelized loop over temperature:
 
-    #pragma omp parallel for collapse(2)
+    // #pragma omp parallel for collapse(2)
+    // for (int i=0; i<T.n_elem; i++)
+    // {
+    //   for (int k=0; k<n_walkers; k++)
+    //   {
+    //     double ener_tmp;
+    //     double magnet_tmp;
+    //     double heat_cap_tmp;
+    //     double suscep_tmp;
+    //     expectation_values(L(j), T(i), Ordered, n_cycles, n_burnin, ener_tmp,
+    //                         magnet_tmp, heat_cap_tmp, suscep_tmp);
+    //     #pragma omp atomic
+    //     energy(i) += ener_tmp/n_walkers;
+    //     #pragma omp atomic
+    //     magnetization(i) += magnet_tmp/n_walkers;
+    //     #pragma omp atomic
+    //     heat_capacity(i) += heat_cap_tmp/n_walkers;
+    //     #pragma omp atomic
+    //     susceptibility(i) += suscep_tmp/n_walkers;
+    //   }
+    // }
+    #pragma omp parallel for
     for (int i=0; i<T.n_elem; i++)
     {
-      for (int k=0; k<n_walkers; k++)
-      {
-        double ener_tmp;
-        double magnet_tmp;
-        double heat_cap_tmp;
-        double suscep_tmp;
-        expectation_values(L(j), T(i), Ordered, n_cycles, n_burnin, ener_tmp,
-                            magnet_tmp, heat_cap_tmp, suscep_tmp);
-        #pragma omp atomic
-        energy(i) += ener_tmp/n_walkers;
-        #pragma omp atomic
-        magnetization(i) += magnet_tmp/n_walkers;
-        #pragma omp atomic
-        heat_capacity(i) += heat_cap_tmp/n_walkers;
-        #pragma omp atomic
-        susceptibility(i) += suscep_tmp/n_walkers;
-      }
+      expectation_values(L(j), T(i), Ordered, n_cycles, n_burnin, energy(i),
+                        magnetization(i), heat_capacity(i), susceptibility(i));
     }
     // End of parallelization
 
