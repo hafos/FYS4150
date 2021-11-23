@@ -6,7 +6,7 @@ import scipy.interpolate as interpolate
 Ls = np.array([40, 60, 80, 100])
 Ts = []; epss = []; ms = []; Cvs = []; Xs = [];
 for L in Ls:
-    file = open('T100_results/results_L' + str(L) + '_cycles1M_T100.dat')
+    file = open('higher_res_results/results_L' + str(L) + '_cycles1M.dat')
     s, n_cycles = file.readline().split()
     n_cycles = int(n_cycles)
     file.readline()
@@ -83,7 +83,7 @@ plt.tight_layout()
 plt.savefig("results_short.pdf")
 plt.show()
 
-print(T_cCv)
+#print(T_cCv)
 
 plt.figure()
 plt.scatter(Ls, T_cCv)
@@ -91,6 +91,8 @@ Tc_fit = np.polynomial.polynomial.Polynomial.fit(Ls, T_cCv, 1)
 plt.plot(Ls, Tc_fit(Ls), ls = '--', color = 'k')
 plt.xlabel('L')
 plt.ylabel(r'T$_{\rm c}$(L) [J/k$_B$]')
+plt.title(r'Critical temperature (from C$_V$)')
+plt.savefig('Tc_fit.pdf')
 plt.show()
 
 
