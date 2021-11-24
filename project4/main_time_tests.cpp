@@ -18,7 +18,7 @@ int main()
   // Problem 7
   // Check for time improvements
   int L = 100;
-  vec T = {2.0, 2.1, 2.2, 2.3, 2.5};
+  vec T = linspace(2.1, 2.4, 10);
   int N = L*L;
   bool Ordered = 1; // Less random fluctuations in computation time?
   int n_burnin = 1000;
@@ -79,7 +79,7 @@ int main()
 
   // Parallelized loop over temperature:
 
-  #pragma omp parallel for
+  #pragma omp parallel for num_threads(4)
   for (int i=0; i<T.n_elem; i++)
   {
     expectation_values(L, T(i), Ordered, n_cycles, n_burnin, energy(i),
