@@ -5,6 +5,8 @@ plt.rcParams.update({'font.size': 10})
 def exp_epsilon(T):
     """
     T in units J/kB
+
+    Returns the epsilon expectation value for N=4 in units J
     """
     beta = 1/T # [1/J]
     return -8*np.sinh(8*beta)/(4*(np.cosh(8*beta) + 3))
@@ -12,6 +14,8 @@ def exp_epsilon(T):
 def exp_magn(T):
     """
     T in units J/kB
+
+    Returns the |m| expectation value for N=4, unitless
     """
     beta = 1/T # [1/J]
     return (2*np.exp(8*beta) + 4)/(4*(np.cosh(8*beta)+3))
@@ -20,7 +24,7 @@ def exp_Cv(T):
     """
     T in units J/kB
 
-    Returns Cv in unit kB
+    Returns Cv in unit kB, for N=4
     """
     beta = 1/T # [1/J]
     E = exp_epsilon(T)*4
@@ -31,12 +35,15 @@ def exp_X(T):
     """
     T in units J/kB
 
-    Returns X in unit 1/J
+    Returns X in unit 1/J, for N=4
     """
     beta = 1/T # [1/J]
     M = exp_magn(T)*4
     M2 = (8*np.exp(8*beta) + 8)/((np.cosh(8*beta)+3))
     return (M2 - M**2)/(T*4) # [1/J]
+
+
+## Plot for 2x2 computed values:
 
 # Load data:
 file = open('simple_expectation_value_tests.dat')
@@ -110,10 +117,9 @@ plt.savefig("analytical_zoom.pdf")
 plt.show()
 
 
+## Plot burn-in tests :
 
-
-
-#plot burn-in tests
+plt.rcParams.update({'font.size': 10})
 burnin_ordered = open('burnin_test_ordered.dat')
 burnin_ordered.readline()
 T = []; nc_o = []; eps_o = []; m_o = [];
@@ -137,32 +143,39 @@ i1 = int(len(nc_o)/2)
 i2 = int(len(nc_r)/2)
 
 fig, ax = plt.subplots(2, 2, figsize=(9, 5))
-ax[0, 0].plot(nc_o[:i1], eps_o[:i1], label = "T = %.2f J/kB" %T[0])
-ax[0, 0].plot(nc_o[i1:], eps_o[i1:], label = "T = %.2f J/kB" %T[-1])
+ax[0, 0].plot(nc_o[1:i1], eps_o[1:i1], label = "T = %.2f J/kB" %T[0])
+ax[0, 0].plot(nc_o[i1+1:], eps_o[i1+1:], label = "T = %.2f J/kB" %T[-1])
+ax[0, 0].plot(nc_o[0], eps_o[0], 'ko', markersize=3, label='Initial')
 ax[0, 0].legend()
 ax[0, 0].set_xlabel("Number of cycles")
 ax[0, 0].set_ylabel(r"$\left<\epsilon\right>$ [J]")
 ax[0, 0].set_title("Ordered")
 
-ax[1, 0].plot(nc_o[:i1], m_o[:i1], label = "T = %.2f J/kB" %T[0])
-ax[1, 0].plot(nc_o[i1:], m_o[i1:], label = "T = %.2f J/kB" %T[-1])
+ax[1, 0].plot(nc_o[1:i1], m_o[1:i1], label = "T = %.2f J/kB" %T[0])
+ax[1, 0].plot(nc_o[i1+1:], m_o[i1+1:], label = "T = %.2f J/kB" %T[-1])
+ax[1, 0].plot(nc_o[0], m_o[0], 'ko', markersize=3, label = "Initial")
 ax[1, 0].set_xlabel("Number of cycles")
 ax[1, 0].set_ylabel(r"$\left<|m|\right>$ [1]")
 
-ax[0, 1].plot(nc_r[:i2], eps_r[:i2], label = "T = %.2f J/kB" %T[0])
-ax[0, 1].plot(nc_r[i2:], eps_r[i2:], label = "T = %.2f J/kB" %T[-1])
-ax[0, 1].legend()
+ax[0, 1].plot(nc_r[1:i2], eps_r[1:i2], label = "T = %.2f J/kB" %T[0])
+ax[0, 1].plot(nc_r[i2+1:], eps_r[i2+1:], label = "T = %.2f J/kB" %T[-1])
+ax[0, 1].plot(nc_r[0], eps_r[0], 'ko', markersize=3, label = "Initial")
 ax[0, 1].set_xlabel("Number of cycles")
 ax[0, 1].set_ylabel(r"$\left<\epsilon\right>$ [J]")
 ax[0, 1].set_title("Random")
 
-ax[1, 1].plot(nc_r[:i2], m_r[:i2], label = "T = %.2f J/kB" %T[0])
-ax[1, 1].plot(nc_r[i2:], m_r[i2:], label = "T = %.2f J/kB" %T[-1])
+ax[1, 1].plot(nc_r[1:i2], m_r[1:i2], label = "T = %.2f J/kB" %T[0])
+ax[1, 1].plot(nc_r[i2+1:], m_r[i2+1:], label = "T = %.2f J/kB" %T[-1])
+ax[1, 1].plot(nc_r[0], m_r[0], 'ko', markersize=3, label = "Initial")
 ax[1, 1].set_xlabel("Number of cycles")
 ax[1, 1].set_ylabel(r"$\left<|m|\right>$ [1]")
 plt.tight_layout()
 plt.savefig("burnin.pdf")
 plt.show()
+
+
+## Plot histogram :
+
 
 P_E = open('probability_distribution.dat')
 P_E.readline()
@@ -175,6 +188,7 @@ for line in P_E:
 
 i1 = int(len(T)/2)
 
+plt.rcParams.update({'font.size': 14})
 #nbins1 = len(np.unique(E[0:i1], return_counts = True)[1])
 #nbins1 = 11
 #nbins2 = len(np.uniqe(E[i1:], return_counts = True)[1])
