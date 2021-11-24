@@ -32,8 +32,6 @@ int main()
 
 
 
-
-  std::clock_t start = std::clock();
   time_t time_start = std::time(NULL);
   auto t1 = std::chrono::high_resolution_clock::now();
 
@@ -47,11 +45,8 @@ int main()
 
   auto t2 = std::chrono::high_resolution_clock::now();
   time_t time_end = std::time(NULL);
-  std::clock_t end = std::clock();
-  std::cout << "Not paralellized: " << endl;
-  std::cout << "Time used " << difftime(time_end, time_start) << " seconds " <<endl;
-  double timeused = 1.*(end-start)/CLOCKS_PER_SEC;
-  std::cout << "timeused = " << timeused << " seconds " << endl;
+  std::cout << "Not Parallelized: " << endl;
+  std::cout << "Time used (time) " << difftime(time_end, time_start) << " seconds " <<endl;
   double timechrono = std::chrono::duration_cast<std::chrono::milliseconds>(t2-t1).count()*0.001;
   std::cout << "Time used (chrono) " << timechrono << " seconds" << endl;
 
@@ -79,7 +74,6 @@ int main()
 
   // Repeat but paralellized:
 
-  start = std::clock();
   time_start = std::time(NULL);
   t1 = std::chrono::high_resolution_clock::now();
 
@@ -95,12 +89,9 @@ int main()
 
   t2 = std::chrono::high_resolution_clock::now();
   time_end = std::time(NULL);
-  end = std::clock();
   std::cout << "Parallelized: " << endl;
-  std::cout << "Time used " << difftime(time_end, time_start) << " seconds " <<endl;
-  timeused = 1.*(end-start)/CLOCKS_PER_SEC;
+  std::cout << "Time used (time) " << difftime(time_end, time_start) << " seconds " <<endl;
   timechrono = std::chrono::duration_cast<std::chrono::milliseconds>(t2-t1).count()*0.001;
-  std::cout << "timeused = " << timeused << " seconds " << endl;
   std::cout << "Time used (chrono) " << timechrono << " seconds" << endl;
 
   // Open outputfile
