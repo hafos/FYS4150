@@ -82,6 +82,7 @@ int main()
   #pragma omp parallel for num_threads(4)
   for (int i=0; i<T.n_elem; i++){
     if (i==0){
+      // if test for print out should only add nanoseconds to each loop run making its inclusion negligible
       std::cout << "Threads used during parallelized run: " << omp_get_num_threads() << "\n";
     }
     expectation_values(L, T(i), Ordered, n_cycles, n_burnin, energy(i),
