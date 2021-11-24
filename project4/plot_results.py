@@ -21,8 +21,8 @@ for L in Ls:
     Cvs += [Cv]; Xs += [X];
     file.close()
 
-
-fig, ax = plt.subplots(2,2)
+plt.rcParams.update({'font.size': 10})
+fig, ax = plt.subplots(2,2, figsize=(9,5))
 for i in range(len(Ls)):
     T = np.array(Ts[i])
     #L_fit = np.polyfit(T, epss[i], 1)
@@ -84,8 +84,8 @@ plt.savefig("results_short.pdf")
 plt.show()
 
 #print(T_cCv)
-
-fig, ax = plt.subplots(1, 2)
+plt.rcParams.update({'font.size': 14})
+fig, ax = plt.subplots(2, 1, figsize=(7,7))
 ax[0].scatter(Ls, T_cCv)
 Tc_fit = np.polynomial.polynomial.Polynomial.fit(Ls, T_cCv, 1)
 ax[0].plot(Ls, Tc_fit(Ls), ls = '--', color = 'k')
