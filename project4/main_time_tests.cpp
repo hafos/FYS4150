@@ -18,7 +18,7 @@ int main()
   // Problem 7
   // Check for time improvements
   int L = 100;
-  vec T = linspace(2.0, 2.1, 10);
+  vec T = linspace(2.1, 2.4, 10);
   int N = L*L;
   bool Ordered = 1; // Less random fluctuations in computation time?
   int n_burnin = 1000;

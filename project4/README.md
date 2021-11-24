@@ -1,12 +1,12 @@
-Compile 'main_tests.exe' for tests using "g++ main_tests.cpp src/*.cpp -I include/ -larmadillo -O2 -std=c++11 -o main_tests.exe"
+Compile 'main_tests.exe' for tests using: "g++ main_tests.cpp src/*.cpp -I include/ -larmadillo -O2 -std=c++11 -o main_tests.exe"
 
 
-Compile 'main_time_tests.exe' for parallelization tests using
+Compile 'main_time_tests.exe' for parallelization tests using:
 - Linux : "g++ main_time_tests.cpp src/*.cpp -I include/ -larmadillo -O2 -std=c++11 -fopenmp -o main_time_tests.exe"
 - macOS : "g++ main_time_tests.cpp src/*.cpp -I include/ -larmadillo -O2 -std=c++11 -Xpreprocessor -fopenmp -o main_time_tests.exe -lomp"
 
 
-Compile 'main_parallelized.exe' for final estimations using
+Compile 'main_parallelized.exe' for final estimations using:
 - Linux : "g++ main_parallelized.cpp src/*.cpp -I include/ -larmadillo -O2 -std=c++11 -fopenmp -o main_parallelized.exe"
 - macOS : "g++ main_parallelized.cpp src/*.cpp -I include/ -larmadillo -O2 -std=c++11 -Xpreprocessor -fopenmp -o main_parallelized.exe -lomp"
 
