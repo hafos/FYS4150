@@ -112,7 +112,7 @@ plt.show()
 
 
 
-
+plt.rcParams.update({'font.size': 10})
 #plot burn-in tests
 burnin_ordered = open('burnin_test_ordered.dat')
 burnin_ordered.readline()
@@ -137,27 +137,31 @@ i1 = int(len(nc_o)/2)
 i2 = int(len(nc_r)/2)
 
 fig, ax = plt.subplots(2, 2, figsize=(9, 5))
-ax[0, 0].plot(nc_o[:i1], eps_o[:i1], label = "T = %.2f J/kB" %T[0])
-ax[0, 0].plot(nc_o[i1:], eps_o[i1:], label = "T = %.2f J/kB" %T[-1])
+ax[0, 0].plot(nc_o[1:i1], eps_o[1:i1], label = "T = %.2f J/kB" %T[0])
+ax[0, 0].plot(nc_o[i1+1:], eps_o[i1+1:], label = "T = %.2f J/kB" %T[-1])
+ax[0, 0].plot(nc_o[0], eps_o[0], 'ko', markersize=3, label='Initial')
 ax[0, 0].legend()
 ax[0, 0].set_xlabel("Number of cycles")
 ax[0, 0].set_ylabel(r"$\left<\epsilon\right>$ [J]")
 ax[0, 0].set_title("Ordered")
 
-ax[1, 0].plot(nc_o[:i1], m_o[:i1], label = "T = %.2f J/kB" %T[0])
-ax[1, 0].plot(nc_o[i1:], m_o[i1:], label = "T = %.2f J/kB" %T[-1])
+ax[1, 0].plot(nc_o[1:i1], m_o[1:i1], label = "T = %.2f J/kB" %T[0])
+ax[1, 0].plot(nc_o[i1+1:], m_o[i1+1:], label = "T = %.2f J/kB" %T[-1])
+ax[1, 0].plot(nc_o[0], m_o[0], 'ko', markersize=3, label = "Initial")
 ax[1, 0].set_xlabel("Number of cycles")
 ax[1, 0].set_ylabel(r"$\left<|m|\right>$ [1]")
 
-ax[0, 1].plot(nc_r[:i2], eps_r[:i2], label = "T = %.2f J/kB" %T[0])
-ax[0, 1].plot(nc_r[i2:], eps_r[i2:], label = "T = %.2f J/kB" %T[-1])
-ax[0, 1].legend()
+ax[0, 1].plot(nc_r[1:i2], eps_r[1:i2], label = "T = %.2f J/kB" %T[0])
+ax[0, 1].plot(nc_r[i2+1:], eps_r[i2+1:], label = "T = %.2f J/kB" %T[-1])
+ax[0, 1].plot(nc_r[0], eps_r[0], 'ko', markersize=3, label = "Initial")
+#ax[0, 1].legend()
 ax[0, 1].set_xlabel("Number of cycles")
 ax[0, 1].set_ylabel(r"$\left<\epsilon\right>$ [J]")
 ax[0, 1].set_title("Random")
 
-ax[1, 1].plot(nc_r[:i2], m_r[:i2], label = "T = %.2f J/kB" %T[0])
-ax[1, 1].plot(nc_r[i2:], m_r[i2:], label = "T = %.2f J/kB" %T[-1])
+ax[1, 1].plot(nc_r[1:i2], m_r[1:i2], label = "T = %.2f J/kB" %T[0])
+ax[1, 1].plot(nc_r[i2+1:], m_r[i2+1:], label = "T = %.2f J/kB" %T[-1])
+ax[1, 1].plot(nc_r[0], m_r[0], 'ko', markersize=3, label = "Initial")
 ax[1, 1].set_xlabel("Number of cycles")
 ax[1, 1].set_ylabel(r"$\left<|m|\right>$ [1]")
 plt.tight_layout()
@@ -175,6 +179,7 @@ for line in P_E:
 
 i1 = int(len(T)/2)
 
+plt.rcParams.update({'font.size': 14})
 #nbins1 = len(np.unique(E[0:i1], return_counts = True)[1])
 #nbins1 = 11
 #nbins2 = len(np.uniqe(E[i1:], return_counts = True)[1])
