@@ -11,11 +11,11 @@ int main()
 {
   // Problem 4:
   int L = 2;
-  vec T = {0.8, 1.0, 1.5, 2.5, 4.5, 7.0, 10.0, 30.0, 50.0}; // [J/kB]
+  vec T = {1.0, 1.5, 2.0, 2.1, 2.2, 2.3, 2.4, 2.5, 4.5, 7.0, 10.0, 30.0, 50.0}; // [J/kB]
 
   // Sample spin configurations:
   int n_burnin = 0; // No burn-in yet
-  ivec n_cycles = {500, 1000, 8000}; // n monte carlo cycles
+  ivec n_cycles = {10000, 100000, 1000000}; // n monte carlo cycles
   bool Ordered = 0;
 
   // spacing in outputfile

@@ -1,5 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
+plt.rcParams.update({'font.size': 10})
 
 def exp_epsilon(T):
     """
@@ -52,32 +53,24 @@ i2 = 2*i1
 #print(n_s[i1], n_s[i1-1])
 
 temp = np.linspace(0.1, 50.0, 1000)
-fig, ax = plt.subplots(2,2)
+fig, ax = plt.subplots(2,2, figsize=(9, 5))
 ax[0,0].plot(temp, exp_epsilon(temp), label='Analytical')
-ax[0,0].plot(T[:i1], eps[:i1], '+', label='Computed (%s cycles)' %n_c[i1-1])
-ax[0,0].plot(T[i1:i2], eps[i1:i2], '+', label='Computed (%s cycles)' %n_c[i2-1])
-ax[0,0].plot(T[i2:], eps[i2:], '+', label='Computed (%s cycles)' %n_c[-1])
+ax[0,0].plot(T[i2:], eps[i2:], '+', label='Computed (10$^6$ cycles)', markersize=9)
 ax[0,0].set_ylabel(r'$\left<\epsilon\right>$ [J]')
 ax[0,0].set_xlabel(r'T [J/k$_B$]')
 
 ax[0,1].plot(temp, exp_magn(temp))
-ax[0,1].plot(T[:i1], m[:i1], '+', label='Computed (%s cycles)' %n_c[i1-1])
-ax[0,1].plot(T[i1:i2], m[i1:i2], '+', label='Computed (%s cycles)' %n_c[i2-1])
-ax[0,1].plot(T[i2:], m[i2:], '+', label='Computed (%s cycles)' %n_c[-1])
+ax[0,1].plot(T[i2:], m[i2:], '+', label='Computed (%s cycles)' %n_c[-1], markersize=9)
 ax[0,1].set_xlabel(r'T [J/k$_B$]')
 ax[0,1].set_ylabel(r'$\left<|m|\right>$ [1]')
 
 ax[1,0].plot(temp, exp_Cv(temp))
-ax[1,0].plot(T[:i1], Cv[:i1], '+', label='Computed (%s cycles)' %n_c[i1-1])
-ax[1,0].plot(T[i1:i2], Cv[i1:i2], '+', label='Computed (%s cycles)' %n_c[i2-1])
-ax[1,0].plot(T[i2:], Cv[i2:], '+', label='Computed (%s cycles)' %n_c[-1])
+ax[1,0].plot(T[i2:], Cv[i2:], '+', label='Computed (%s cycles)' %n_c[-1], markersize=9)
 ax[1,0].set_xlabel(r'T [J/k$_B$]')
 ax[1,0].set_ylabel(r'$C_V$ [k$_B$]')
 
 ax[1,1].plot(temp, exp_X(temp))
-ax[1,1].plot(T[:i1], X[:i1], '+', label='Computed (%s cycles)' %n_c[i1-1])
-ax[1,1].plot(T[i1:i2], X[i1:i2], '+', label='Computed (%s cycles)' %n_c[i2-1])
-ax[1,1].plot(T[i2:], X[i2:], '+', label='Computed (%s cycles)' %n_c[-1])
+ax[1,1].plot(T[i2:], X[i2:], '+', label='Computed (%s cycles)' %n_c[-1], markersize=9)
 ax[1,1].set_xlabel(r'T [J/k$_B$]')
 ax[1,1].set_ylabel(r'$\chi$ [1/J]')
 
@@ -86,6 +79,38 @@ ax[0,0].legend()
 plt.tight_layout()
 plt.savefig("analytical.pdf")
 plt.show()
+
+
+plt.rcParams.update({'font.size': 14})
+
+fig, ax = plt.subplots(2,1, figsize=(7,7))
+
+ax[0].plot(temp, exp_Cv(temp), label='Analytical')
+ax[0].plot(T[i2:], Cv[i2:], 'o', label='Computed ($10^6$ cycles)')
+ax[0].plot(T[i1:i2], Cv[i1:i2], 'o', label='Computed ($10^5$ cycles)')
+ax[0].plot(T[:i1], Cv[:i1], 'o', label='Computed (10$^4$ cycles)')
+ax[0].set_xlabel(r'T [J/k$_B$]')
+ax[0].set_ylabel(r'$C_V$ [k$_B$]')
+ax[0].set_xlim([1.95,2.6])
+ax[0].set_ylim([0.3,0.43])
+
+ax[1].plot(temp, exp_X(temp))
+ax[1].plot(T[i2:], X[i2:], 'o', label='Computed (%.0e cycles)' %n_c[-1])
+ax[1].plot(T[i1:i2], X[i1:i2], 'o', label='Computed (%.0e cycles)' %n_c[i2-1])
+ax[1].plot(T[:i1], X[:i1], 'o', label='Computed (%.0e cycles)' %n_c[i1-1])
+ax[1].set_xlabel(r'T [J/k$_B$]')
+ax[1].set_ylabel(r'$\chi$ [1/J]')
+ax[1].set_xlim([1.95,2.6])
+ax[1].set_ylim([0.08,0.14])
+
+
+ax[0].legend()
+plt.tight_layout()
+plt.savefig("analytical_zoom.pdf")
+plt.show()
+
+
+
 
 
 #plot burn-in tests
@@ -111,7 +136,7 @@ for line in burnin_random:
 i1 = int(len(nc_o)/2)
 i2 = int(len(nc_r)/2)
 
-fig, ax = plt.subplots(2, 2)
+fig, ax = plt.subplots(2, 2, figsize=(9, 5))
 ax[0, 0].plot(nc_o[:i1], eps_o[:i1], label = "T = %.2f J/kB" %T[0])
 ax[0, 0].plot(nc_o[i1:], eps_o[i1:], label = "T = %.2f J/kB" %T[-1])
 ax[0, 0].legend()
