@@ -57,3 +57,15 @@ void initialize_matrices(int M, double h, double dt, const sp_mat& V, sp_cx_mat&
     }
   }
 }
+
+// Compute and return the next step u^(n+1)
+cx_vec compute_next_step(const cx_vec& u, const sp_cx_mat& A, const sp_cx_mat& B)
+{
+  // Compute the right hand side :
+  cx_vec b = B*u;
+
+  // Now solve the matrix equation Au^(n+1) = b
+  cx_vec u_new = spsolve(A, b);
+
+  return u_new;
+}

@@ -15,4 +15,7 @@ int vector_index(int M, int i, int j);
 void initialize_matrices(int M, double h, double dt, const sp_mat& V,
                           sp_cx_mat& A, sp_cx_mat& B);
 
+// Compute and return the next step u^(n+1)
+cx_vec compute_next_step(const cx_vec& u, const sp_cx_mat& A, const sp_cx_mat& B);
+
 #endif

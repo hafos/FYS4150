@@ -31,4 +31,10 @@ int main()
   initialize_matrices(M, h, dt, V, A, B);
 
   std::cout << "A :" << endl << A << endl  << "B :" << endl << B << endl;
+
+
+  std::cout << "Test of solver :" << endl;
+  cx_vec u = {1,1,1,  0,0,0,  0,0,0};
+  cx_vec u_new = compute_next_step(u, A, B);
+  std::cout << u_new << endl;
 }
