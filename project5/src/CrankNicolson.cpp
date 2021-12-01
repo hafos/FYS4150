@@ -12,34 +12,31 @@ int vector_index(int M, int i, int j)
 // Initialize A and B using M, h, dt and V
 void initialize_matrices(int M, double h, double dt, const sp_mat& V, sp_cx_mat& A, sp_cx_mat& B)
 {
-  // Not finished, complex numbers are now working, but indexing is not.
-
   using namespace std::complex_literals;
   int N = (M-2);
-  cx_double h2_im = 2.*h*h;
-  cx_double dt_im = dt;
-  cx_double r = 1i*dt_im/h2_im;
-  cx_vec a(N);
-  cx_vec b(N);
+  int N2 = N*N;
+  cx_double r = 1i*dt/(2.*h*h);
+  cx_vec a(N2);
+  cx_vec b(N2);
 
   // Fill a and b
-  for (int k=0; k<N; k++)
+  for (int k=0; k<N2; k++)
   {
     int j = k/N; // Integer div.
-    int i = (k + 1) - (j-1)*(M-2); // from vector_index
-    a(k) = 1. + 4.*r + 1i*dt_im/2.*V(i,j);
-    b(k) = 1. - 4.*r - 1i*dt_im/2.*V(i,j);
+    int i = k - j*N; // from vector_index, and subtract boundary
+    a(k) = 1. + 4.*r + 1i*dt/2.*V(i,j);
+    b(k) = 1. - 4.*r - 1i*dt/2.*V(i,j);
   }
 
   // Insert diagonals of a and b
-  for (int k=0; k<N; k++)
+  for (int k=0; k<N2; k++)
   {
     A(k, k) = a(k);
     B(k, k) = b(k);
   }
 
   // Insert diagonals with only r's
-  for (int j=0; j<N-3; j++)
+  for (int j=0; j<N2-3; j++)
   {
     A(j, j+3) = -r;
     A(j+3, j) = -r;
