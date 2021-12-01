@@ -19,13 +19,13 @@ int main()
 
 
 
-  // double h = 1;
-  // double dt = 1;
-  // sp_mat V;
-  // sp_cx_mat A;
-  // sp_cx_mat B;
+  double h = 1;
+  double dt = 1;
+  sp_mat V;
+  sp_cx_mat A;
+  sp_cx_mat B;
 
-  // initialize_matrices(M, h, dt, V, A, B);
+  initialize_matrices(M, h, dt, V, A, B);
 
-  // std::cout << A << endl << endl << B << endl;
+  std::cout << A << endl << endl << B << endl;
 }
