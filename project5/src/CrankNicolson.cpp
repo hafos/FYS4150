@@ -69,7 +69,7 @@ cx_vec compute_next_step(const cx_vec& u, const sp_cx_mat& A, const sp_cx_mat& B
   cx_vec b = B*u;
 
   // Now solve the matrix equation Au^(n+1) = b
-  cx_vec u_new = spsolve(A, b);
+  cx_vec u_new = spsolve(A, b, "superlu");
 
   return u_new;
 }

@@ -25,7 +25,8 @@ int main()
   double dt = 1;
   int N = M-2;
   int N2 = N*N;
-  sp_mat V(M,M); // The potential in Schrodinger class is (MxM)
+  Schrodinger syst1(M);
+  sp_mat V = syst1.potential(); // The potential in Schrodinger class is (MxM)
   sp_cx_mat A(N2, N2);
   sp_cx_mat B(N2, N2);
 
@@ -41,7 +42,7 @@ int main()
   std::cout << u_new << endl;
 
 
-  M = 10;
+  M = 5;
   std::cout << "Test of system initialization: " << endl;
   Schrodinger syst(M);
   syst.U_init(0.5, 0.5, 0.3, 0.3, 0.1, 0.1);
