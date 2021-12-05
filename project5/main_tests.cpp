@@ -1,6 +1,7 @@
 #include <iostream> // Printing to terminal and file
 
 #include "CrankNicolson.hpp"
+#include "Schrodinger.hpp"
 
 int main()
 {
@@ -34,7 +35,14 @@ int main()
 
 
   std::cout << "Test of solver :" << endl;
-  cx_vec u = {1,1,1,  0,0,0,  0,0,0};
+  cx_vec u = {1,0,0,  0,0,0,  0,0,0};
   cx_vec u_new = compute_next_step(u, A, B);
   std::cout << u_new << endl;
+
+
+  std::cout << "Test of system initialization: " << endl;
+  Schrodinger syst(M);
+  cx_mat uin;
+  uin = syst.u_init(1., 1., 1., 1., 1., 1.);
+  std::cout << uin << endl;
 }
