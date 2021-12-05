@@ -31,7 +31,7 @@ int main()
 
   initialize_matrices(M, h, dt, V, A, B);
 
-  std::cout << "A :" << endl << A << endl  << "B :" << endl << B << endl;
+  std::cout << "A :" << endl << cx_mat(A) << endl  << "B :" << endl << cx_mat(B) << endl;
 
 
   std::cout << "Test of solver :" << endl;
@@ -45,4 +45,10 @@ int main()
   cx_mat uin;
   uin = syst.u_init(1., 1., 1., 1., 1., 1.);
   std::cout << uin << endl;
+
+
+  std::cout << "Test of potential initializer: " << endl;
+  sp_mat V2;
+  V2 = syst.initialize_potential();
+  std::cout << mat(V2) << endl;
 }

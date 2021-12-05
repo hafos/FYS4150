@@ -24,9 +24,12 @@ public:
   // Set up an initial state
   cx_mat u_init(double xc, double yc, double sx, double sy,
                 double px, double py);
-                
+
   // Impose boundary conditions on initial state
   void impose_boundaries(cx_mat& u_init);
+
+  // Initialize a potential
+  sp_mat initialize_potential();
 };
 
 
