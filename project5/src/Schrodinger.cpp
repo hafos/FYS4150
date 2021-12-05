@@ -3,10 +3,11 @@
 // Constructor
 Schrodinger::Schrodinger(int M_in)
 {
-  M = M_in;
-  x = linspace(0,1,M);
-  std::cout << x << endl;
-  y = linspace<rowvec>(0,1,M);
+  M_ = M_in;
+  x_ = linspace(0,1,M_);
+  std::cout << x_ << endl;
+  y_ = linspace<rowvec>(0,1,M_);
+  V_ = initialize_potential();
 }
 
 
@@ -17,10 +18,10 @@ cx_mat Schrodinger::u_init(double xc, double yc, double sx, double sy, double px
   // I have double checked this by printing elements X and Y :)
   // Printing the entire matrices puts i in vertical (top to bottom) and j in horizontal (left to right)
   // Make coordinate grid :
-  mat X(M, M);
-  mat Y(M, M);
-  X.each_col() = x;
-  Y.each_row() = y;
+  mat X(M_, M_);
+  mat Y(M_, M_);
+  X.each_col() = x_;
+  Y.each_row() = y_;
   // Make grid of real and imaginary part of exponent :
   mat rel = - pow( (X - xc), 2)/(2.*sx*sx) - pow( (Y - yc), 2)/( 2.*sy*sy );
   mat imag = px*(X - xc) + py*(Y - yc);
@@ -41,16 +42,16 @@ cx_mat Schrodinger::u_init(double xc, double yc, double sx, double sy, double px
 // Impose boundary conditions on initial state
 void Schrodinger::impose_boundaries(cx_mat& u_init)
 {
-  for (int l=0; l<M; l++) // This works fine..
+  for (int l=0; l<M_; l++) // This works fine..
   {
     u_init(0, l) = 0;
-    u_init(M-1, l) = 0;
+    u_init(M_-1, l) = 0;
     u_init(l, 0) = 0;
-    u_init(l, M-1) = 0;
+    u_init(l, M_-1) = 0;
   }
   // The following might be a more elegant way of doing it but it doesn't work..
   //using namespace std::complex_literals;
-  //uvec indices = {0, M-1};
+  //uvec indices = {0, M_-1};
   //u_init.each_col(indices) = 0i;
   //u_init.each_row(indices) = 0i;
 }
@@ -62,46 +63,46 @@ sp_mat Schrodinger::initialize_potential()
   // Parameters of potential :
   // Make it so that these can be read in from a file?
   double wall_thickness = 0.02; // 0.02
-  double wall_position = 0.5; // Place at (M)/2
+  double wall_position = 0.5; // Place at (M_)/2
   double slit_distance = 0.05; // 0.05
   double slit_aperture = 0.05; // 0.05
   double v0 = 10; // Strength of potential in wall..
   int n_slits = 2; // Number of slits
 
   // Find start and end of wall in i-index (x):
-  int i_0 = index_min(abs( x - (wall_position - 0.5*wall_thickness) ));
-  int i_1 = index_min(abs( x - (wall_position + 0.5*wall_thickness) ));
+  int i_0 = index_min(abs( x_ - (wall_position - 0.5*wall_thickness) ));
+  int i_1 = index_min(abs( x_ - (wall_position + 0.5*wall_thickness) ));
 
   // Find starts and ends of wall in j-index (y):
   ivec j(2*n_slits+2);            // To store indices
   j(0)=0;                         // Border
-  j(j.n_elem-1)=M-1;              // Border
+  j(j.n_elem-1)=M_-1;              // Border
 
   // Set a few characteristic lengths
-  double midpoint = 0.5*(max(y) - min(y)); // or y(-1) - y(0)
+  double midpoint = 0.5*(max(y_) - min(y_)); // or y_(-1) - y_(0)
   double length = n_slits*slit_aperture + (n_slits - 1)*slit_distance; // From start of first slit to the end of the last
   double position = (midpoint - length/2); // Start from start of first slit
 
   // Set the first internal wall border :
-  j(1) = index_min(abs( y - position ) );
+  j(1) = index_min(abs( y_ - position ) );
 
   // Now loop over internal wall borders after the first one :
   for (int l=2; l<j.n_elem-2; l++)
   {
     position += slit_aperture;
-    j(l) = index_min(abs( y - position ) );
+    j(l) = index_min(abs( y_ - position ) );
     position += slit_distance;
-    j(l+1) = index_min(abs( y - position ) );
+    j(l+1) = index_min(abs( y_ - position ) );
     l += 1; // Skip one
   }
 
   // Set the last internal wall border :
-  j(j.n_elem-2) = index_min(abs( y - (position + slit_aperture) ) );
+  j(j.n_elem-2) = index_min(abs( y_ - (position + slit_aperture) ) );
 
   // Rows: from i0 to i1 is wall
   // Columns: From j0 to j1 and from j2 to j3 and from j4 to j5 etc is wall.
 
-  sp_mat V(M, M);
+  sp_mat V(M_, M_);
 
   // Loop over the indices and set wall areas in potential :
   for (int l=0; l<j.n_elem; l++)

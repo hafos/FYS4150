@@ -11,11 +11,14 @@ class Schrodinger
 {
 private:
   // Grid
-  vec x;
-  rowvec y;
+  vec x_;
+  rowvec y_;
 
-  // Number of points:
-  int M;
+  // Number of points
+  int M_;
+
+  // Potential
+  sp_mat V_;
 
 public:
   // Constructor
