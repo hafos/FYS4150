@@ -25,13 +25,14 @@ int main()
   double dt = 1;
   int N = M-2;
   int N2 = N*N;
-  sp_mat V(N,N);
+  sp_mat V(M,M); // The potential in Schrodinger class is (MxM)
   sp_cx_mat A(N2, N2);
   sp_cx_mat B(N2, N2);
 
   initialize_matrices(M, h, dt, V, A, B);
 
-  std::cout << "A :" << endl << cx_mat(A) << endl  << "B :" << endl << cx_mat(B) << endl;
+  std::cout << "A real + imag :" << endl << real(cx_mat(A)) << endl << imag(cx_mat(A)) << endl;
+  std::cout << "B real + imag :" << endl << real(cx_mat(B)) << endl << imag(cx_mat(B)) << endl;
 
 
   std::cout << "Test of solver :" << endl;
@@ -43,16 +44,15 @@ int main()
   M = 10;
   std::cout << "Test of system initialization: " << endl;
   Schrodinger syst(M);
-  cx_mat uin;
-  uin = syst.u_init(1., 1., 1., 1., 1., 1.);
-  std::cout << uin << endl;
+  syst.U_init(0.5, 0.5, 0.3, 0.3, 0.1, 0.1);
+  std::cout << real(syst.wave_function()%conj(syst.wave_function())) << endl;
 
 
-  std::cout << "Test of potential initializer: " << endl;
-  sp_mat V2;
-  V2 = syst.initialize_potential();
-  std::cout << mat(V2) << endl;
+  std::cout << "Test of potential initialization: " << endl;
+  //syst.initialize_potential(); // Is done in constructor...
+  std::cout << mat(syst.potential()) << endl;
   // If the slits are not visible here it is because;
   // - M is too small
-  // - slit_aperture is too small
+  // - slit_aperture is too small for the M
+  // Will of course be better when simulating with small h -> large M.
 }

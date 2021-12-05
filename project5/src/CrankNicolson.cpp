@@ -12,7 +12,9 @@ int vector_index(int M, int i, int j)
 // Initialize A and B using M, h, dt and V
 void initialize_matrices(int M, double h, double dt, const sp_mat& V, sp_cx_mat& A, sp_cx_mat& B)
 {
-  using namespace std::complex_literals;
+  // V of size (MxM)
+  // A and B of size ((M-2)**2 x (M-2)**2)
+  using namespace std::complex_literals; // For 1i notation
   int N = (M-2);
   int N2 = N*N;
   cx_double r = 1i*dt/(2.*h*h);
@@ -22,8 +24,10 @@ void initialize_matrices(int M, double h, double dt, const sp_mat& V, sp_cx_mat&
   // Fill a and b
   for (int k=0; k<N2; k++)
   {
-    int j = k/N; // Integer div.
-    int i = k - j*N; // from vector_index, and subtract boundary
+    // int j = k/N; // Integer div., for V without borders, size (NxN)
+    // int i = k - j*N; // from vector_index, and subtract boundary
+    int j = k/N + 1; // Integer div., for V with boundaries, size (MxM)
+    int i = (k + 1) - (j - 1)*N; // from vector_index
     a(k) = 1. + 4.*r + 1i*dt/2.*V(i,j);
     b(k) = 1. - 4.*r - 1i*dt/2.*V(i,j);
   }

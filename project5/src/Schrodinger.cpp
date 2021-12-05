@@ -4,16 +4,20 @@
 Schrodinger::Schrodinger(int M_in)
 {
   M_ = M_in;
+  // Coordinates:
   x_ = linspace(0,1,M_);
-  std::cout << x_ << endl;
   y_ = linspace<rowvec>(0,1,M_);
-  V_ = initialize_potential();
+  // Set up the potential:
+  initialize_potential();
 }
 
 
 // Set up an initial state
-cx_mat Schrodinger::u_init(double xc, double yc, double sx, double sy, double px, double py)
+void Schrodinger::U_init(double xc, double yc, double sx, double sy, double px, double py)
 {
+  // Center position of wavepacket:     (xc, yc)
+  // Standard deviation of wavepacket:  (sx, sy)
+  // Momentum of wavepacket:            (px, py)
   // Constructing matrices so that indexing (i,j) corresponds to (x,y)
   // I have double checked this by printing elements X and Y :)
   // Printing the entire matrices puts i in vertical (top to bottom) and j in horizontal (left to right)
@@ -28,37 +32,37 @@ cx_mat Schrodinger::u_init(double xc, double yc, double sx, double sy, double px
   // Put the exponent together as a complex matrix :
   cx_mat exponent(rel, imag);
   // Compute the initial state grid :
-  cx_mat u_in = exp(exponent);
+  U_ = exp(exponent);
   // Impose boundary conditions :
-  impose_boundaries(u_in);
+  impose_boundaries(U_);
   // Normalize the initial state :
-  cx_double n = accu(u_in%conj(u_in)); // Operator % does element-wise multiplication
-  u_in /= sqrt(n);
-  n = accu(u_in%conj(u_in)); // Operator % does element-wise multiplication
+  cx_double n = accu(U_%conj(U_)); // Operator % does element-wise multiplication
+  U_ /= sqrt(n);
+  n = accu(U_%conj(U_)); // Operator % does element-wise multiplication
   //std::cout << "Normalized if 1 : " << n << endl;
-  return u_in;
 }
 
-// Impose boundary conditions on initial state
-void Schrodinger::impose_boundaries(cx_mat& u_init)
+// Impose boundary conditions
+void Schrodinger::impose_boundaries(cx_mat& U)
 {
-  for (int l=0; l<M_; l++) // This works fine..
+  // Set boundaries to 0, only necessary to do this once
+  for (int l=0; l<M_; l++) // This works fine
   {
-    u_init(0, l) = 0;
-    u_init(M_-1, l) = 0;
-    u_init(l, 0) = 0;
-    u_init(l, M_-1) = 0;
+    U(0, l) = 0;
+    U(M_-1, l) = 0;
+    U(l, 0) = 0;
+    U(l, M_-1) = 0;
   }
   // The following might be a more elegant way of doing it but it doesn't work..
   //using namespace std::complex_literals;
   //uvec indices = {0, M_-1};
-  //u_init.each_col(indices) = 0i;
-  //u_init.each_row(indices) = 0i;
+  //U.each_col(indices) = 0i;
+  //U.each_row(indices) = 0i;
 }
 
 
 // Initialize a potential
-sp_mat Schrodinger::initialize_potential()
+void Schrodinger::initialize_potential()
 {
   // Parameters of potential :
   // Make it so that these can be read in from a file?
@@ -112,5 +116,19 @@ sp_mat Schrodinger::initialize_potential()
     V( span(i_0, i_1), span( j(l), j(l+1) ) ) = sec;
     l += 1; // Skip one
   }
-  return V;
+  V_ = V;
+}
+
+
+// Return the wave function
+cx_mat Schrodinger::wave_function()
+{
+  return U_;
+}
+
+
+// Return the potential
+sp_mat Schrodinger::potential()
+{
+  return V_;
 }
