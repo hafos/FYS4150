@@ -59,37 +59,57 @@ void Schrodinger::impose_boundaries(cx_mat& u_init)
 // Initialize a potential
 sp_mat Schrodinger::initialize_potential()
 {
+  // Parameters of potential :
   // Make it so that these can be read in from a file?
   double wall_thickness = 0.02; // 0.02
   double wall_position = 0.5; // Place at (M)/2
   double slit_distance = 0.05; // 0.05
   double slit_aperture = 0.05; // 0.05
   double v0 = 10; // Strength of potential in wall..
+  int n_slits = 2; // Number of slits
 
   // Find start and end of wall in i-index (x):
   int i_0 = index_min(abs( x - (wall_position - 0.5*wall_thickness) ));
   int i_1 = index_min(abs( x - (wall_position + 0.5*wall_thickness) ));
 
   // Find starts and ends of wall in j-index (y):
-  int j_0 = 0;
-  int j_1 = index_min(abs( y - ( 0.5*(max(y) - min(y)) - 0.5*slit_distance - slit_aperture ) ));
-  int j_2 = index_min(abs( y - ( 0.5*(max(y) - min(y)) - 0.5*slit_distance ) ));
-  int j_3 = index_min(abs( y - ( 0.5*(max(y) - min(y)) + 0.5*slit_distance ) ));
-  int j_4 = index_min(abs( y - ( 0.5*(max(y) - min(y)) + 0.5*slit_distance + slit_aperture ) ));
-  int j_5 = M-1;
+  ivec j(2*n_slits+2);            // To store indices
+  j(0)=0;                         // Border
+  j(j.n_elem-1)=M-1;              // Border
 
-  // Rows: from i0 to i1
-  // Columns: From j0 to j1 and from j2 to j3 and from j4 to j5.
+  // Set a few characteristic lengths
+  double midpoint = 0.5*(max(y) - min(y)); // or y(-1) - y(0)
+  double length = n_slits*slit_aperture + (n_slits - 1)*slit_distance; // From start of first slit to the end of the last
+  double position = (midpoint - length/2); // Start from start of first slit
+
+  // Set the first internal wall border :
+  j(1) = index_min(abs( y - position ) );
+
+  // Now loop over internal wall borders after the first one :
+  for (int l=2; l<j.n_elem-2; l++)
+  {
+    position += slit_aperture;
+    j(l) = index_min(abs( y - position ) );
+    position += slit_distance;
+    j(l+1) = index_min(abs( y - position ) );
+    l += 1; // Skip one
+  }
+
+  // Set the last internal wall border :
+  j(j.n_elem-2) = index_min(abs( y - (position + slit_aperture) ) );
+
+  // Rows: from i0 to i1 is wall
+  // Columns: From j0 to j1 and from j2 to j3 and from j4 to j5 etc is wall.
 
   sp_mat V(M, M);
-  mat sec1(i_1-i_0+1, j_1-j_0+1);
-  sec1.fill(v0); // Doing this as Ubuntu has arma v.9.8 and not >10.6 pre-installed -> fill::value(v0) not available
-  mat sec2(i_1-i_0+1, j_3-j_2+1);
-  sec2.fill(v0);
-  mat sec3(i_1-i_0+1, j_5-j_4+1);
-  sec3.fill(v0);
-  V( span(i_0, i_1), span(j_0, j_1) ) = sec1;
-  V( span(i_0, i_1), span(j_2, j_3) ) = sec2;
-  V( span(i_0, i_1), span(j_4, j_5) ) = sec3;
+
+  // Loop over the indices and set wall areas in potential :
+  for (int l=0; l<j.n_elem; l++)
+  {
+    mat sec(i_1-i_0+1, j(l+1)-j(l)+1);
+    sec.fill(v0); // Doing this as Ubuntu has arma v.9.8 and not >10.6 pre-installed -> fill::value(v0) not available
+    V( span(i_0, i_1), span( j(l), j(l+1) ) ) = sec;
+    l += 1; // Skip one
+  }
   return V;
 }

@@ -40,6 +40,7 @@ int main()
   std::cout << u_new << endl;
 
 
+  M = 10;
   std::cout << "Test of system initialization: " << endl;
   Schrodinger syst(M);
   cx_mat uin;
@@ -51,4 +52,7 @@ int main()
   sp_mat V2;
   V2 = syst.initialize_potential();
   std::cout << mat(V2) << endl;
+  // If the slits are not visible here it is because;
+  // - M is too small
+  // - slit_aperture is too small
 }
