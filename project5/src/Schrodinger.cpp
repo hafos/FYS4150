@@ -1,14 +1,14 @@
 #include "Schrodinger.hpp"
 
 // Constructor
-Schrodinger::Schrodinger(int M_in)
+Schrodinger::Schrodinger(int M_in, double v0, int n_slits)
 {
   M_ = M_in;
   // Coordinates:
   x_ = linspace(0,1,M_);
   y_ = linspace<rowvec>(0,1,M_);
   // Set up the potential:
-  initialize_potential();
+  initialize_potential(v0, n_slits);
 }
 
 
@@ -62,7 +62,7 @@ void Schrodinger::impose_boundaries(cx_mat& U)
 
 
 // Initialize a potential
-void Schrodinger::initialize_potential()
+void Schrodinger::initialize_potential(double v0, int n_slits)
 {
   // Parameters of potential :
   // Make it so that these can be read in from a file?
@@ -70,8 +70,8 @@ void Schrodinger::initialize_potential()
   double wall_position = 0.5; // Place at (M_)/2
   double slit_distance = 0.05; // 0.05
   double slit_aperture = 0.05; // 0.05
-  double v0 = 10; // Strength of potential in wall..
-  int n_slits = 2; // Number of slits
+  //double v0 = 10; // Strength of potential in wall..
+  //int n_slits = 2; // Number of slits
 
   // Find start and end of wall in i-index (x):
   int i_0 = index_min(abs( x_ - (wall_position - 0.5*wall_thickness) ));

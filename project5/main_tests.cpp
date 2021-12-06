@@ -25,7 +25,9 @@ int main()
   double dt = 1;
   int N = M-2;
   int N2 = N*N;
-  Schrodinger syst1(M);
+  double v0 = 10.0;
+  int n_slits = 2;
+  Schrodinger syst1(M, v0, n_slits);
   sp_mat V = syst1.potential(); // The potential in Schrodinger class is (MxM)
   sp_cx_mat A(N2, N2);
   sp_cx_mat B(N2, N2);
@@ -43,8 +45,10 @@ int main()
 
 
   M = 5;
+  N = M-2;
+  N2 = N*N;
   std::cout << "Test of system initialization: " << endl;
-  Schrodinger syst(M);
+  Schrodinger syst(M, v0, n_slits);
   syst.U_init(0.5, 0.5, 0.3, 0.3, 0.1, 0.1);
   std::cout << real(syst.wave_function()%conj(syst.wave_function())) << endl;
 

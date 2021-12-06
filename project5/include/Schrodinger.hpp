@@ -25,7 +25,7 @@ private:
 
 public:
   // Constructor
-  Schrodinger(int M);
+  Schrodinger(int M_in, double v0, int n_slits);
 
   // Set up an initial state
   void U_init(double xc, double yc, double sx, double sy,
@@ -35,7 +35,7 @@ public:
   void impose_boundaries(cx_mat& U);
 
   // Initialize a potential
-  void initialize_potential();
+  void initialize_potential(double v0, int n_slits);
 
   // Return the wave function
   cx_mat wave_function();

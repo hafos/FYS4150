@@ -73,3 +73,40 @@ cx_vec compute_next_step(const cx_vec& u, const sp_cx_mat& A, const sp_cx_mat& B
 
   return u_new;
 }
+
+// Convert matrix to vector representation
+cx_vec mat2vec(int M, cx_mat U)
+{
+  int N = M-2;
+  int N2 = N*N;
+
+  cx_vec u_vec(N2); //initialize
+
+  for (int j = 1; j < M-1; j++)
+  {
+    for (int i = 1; i < M-1; i++)
+    {
+      int k = vector_index(M, i, j);
+      //std::cout << "i: " << i << "  j: " << j << "  -->  k: " << k << endl;
+      u_vec(k) = U(i, j);
+    }
+  }
+  return u_vec;
+}
+
+// Convert vector to matrix representation
+cx_mat vec2mat(int M, cx_vec u)
+{
+  cx_mat U_mat(M, M, fill::zeros); //initialize
+  int i = 0;
+  int j = 0;
+  for (int k = 0; k < u.n_rows; k++)
+  {
+    i = k % (M-2) + 1; //% is the modulus here
+    j = (k-i+1)/(M-2) + 1;
+    //std::cout << "k = " << k << " --> i: " << i << "  j: " << j << endl;
+
+    U_mat(i, j) = u(k);
+  }
+  return U_mat;
+}
