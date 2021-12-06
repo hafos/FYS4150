@@ -33,7 +33,7 @@ int main(int argc, char* argv[])
   double py_in = atof(argv[9]); // initial momentum of wave packet (y)
   double v0_in = atof(argv[10]); // potential barrier height
 
-  int M = 5; // just testing
+  int M = 5; // just for testing
   int N = M-2;
   int N2 = N*N;
   int n_slits = 0;
@@ -42,8 +42,6 @@ int main(int argc, char* argv[])
   syst.U_init(xc_in, yc_in, sx_in, sy_in, px_in, py_in); // sets up initial state matrix
   cx_mat U = syst.wave_function(); // matrix form
   cx_vec u_vec = mat2vec(M, U); // vector form
-  // std::cout << U << endl;
-  // std::cout << u_vec << endl;
 
   sp_mat V = syst.potential();
   sp_cx_mat A(N2, N2);
@@ -59,7 +57,6 @@ int main(int argc, char* argv[])
   while (t < Tmax_in)
   {
     u_vec = compute_next_step(u_vec, A, B);
-    //cx_mat U_new = vec2mat(M, u_vec);
     U_n = join_slices(U_n, vec2mat(M, u_vec));
     t = t+dt_in;
   }
