@@ -36,11 +36,12 @@ int main(int argc, char* argv[])
   int M = 5; // just for testing
   int N = M-2;
   int N2 = N*N;
-  int n_slits = 0;
+  int n_slits = 2;
   Schrodinger syst(M, v0_in, n_slits); // sets up potential and system
 
   syst.U_init(xc_in, yc_in, sx_in, sy_in, px_in, py_in); // sets up initial state matrix
   cx_mat U = syst.wave_function(); // matrix form
+  //std::cout << U << endl;
   cx_vec u_vec = mat2vec(M, U); // vector form
 
   sp_mat V = syst.potential();
@@ -49,18 +50,25 @@ int main(int argc, char* argv[])
   initialize_matrices(M, h_in, dt_in, V, A, B); // sets up Crank-Nicolson
 
   // loop over time
-  // store initial condition as first slice of cube
-  cx_cube U_n(M, M, 1);
-  U_n.slice(0) = U;
+  // store initial condition as first slice of probability density cube
+  cube P_n(M, M, 1, fill::zeros);
+  P_n.slice(0) = real(U%conj(U));
 
   double t = 0;
+  mat p(M, M);
   while (t < Tmax_in)
   {
     u_vec = compute_next_step(u_vec, A, B);
-    U_n = join_slices(U_n, vec2mat(M, u_vec));
+    U = vec2mat(M, u_vec);
+    p = real(U%conj(U));
+    P_n = join_slices(P_n, p);
     t = t+dt_in;
   }
 
+  std::cout << P_n.tail_slices(1) << endl;
+
   // save as binary data file
-  U_n.save("schrodinger.bin");
+  P_n.save("schrodinger_probability.bin");
+
+
 }
