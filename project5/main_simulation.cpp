@@ -33,7 +33,7 @@ int main(int argc, char* argv[])
   double py_in = atof(argv[9]); // initial momentum of wave packet (y)
   double v0_in = atof(argv[10]); // potential barrier height
 
-  int M = 5; // just for testing
+  int M = 1/h_in;
   int N = M-2;
   int N2 = N*N;
   int n_slits = 2;
@@ -65,10 +65,12 @@ int main(int argc, char* argv[])
     t = t+dt_in;
   }
 
-  std::cout << P_n.tail_slices(1) << endl;
+  //std::cout << P_n.tail_slices(1) << endl;
+
+  //P_n.each_slice( [](mat& X){ std::cout << accu(X) << endl; } );
 
   // save as binary data file
-  P_n.save("schrodinger_probability.bin");
+  P_n.save("probability_prob7b.bin");
 
 
 }
