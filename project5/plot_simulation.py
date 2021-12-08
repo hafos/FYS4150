@@ -25,27 +25,25 @@ y = np.linspace(0, 1, prob_7a.shape[2])
 
 plt.figure()
 plt.plot(t, total_prob_7a)
-#plt.ylim(0.5, 1.5)
+plt.ylim(0.5, 1.5)
 plt.xlabel("Time")
 plt.ylabel("Total probability (no wall)")
 plt.show()
 
 extent = [0, 1, 0, 1]
 
-fig, ax = plt.subplots(2, 2)
-im0 = ax[0, 0].imshow(prob_7a[0].transpose(), extent = extent,
+fig, ax = plt.subplots(1, 3, figsize = (15, 5))
+im0 = ax[0].imshow(prob_7a[0].transpose(), extent = extent,
                         vmin = 0, vmax = np.amax(prob_7a[0]), cmap = 'plasma')
-ax[0, 0].set_title('Initial conditions')
-im1 = ax[0, 1].imshow(prob_7a[int(prob_7a.shape[0]/3)].transpose(), extent = extent,
+ax[0].set_title('Initial conditions')
+im1 = ax[1].imshow(prob_7a[int(prob_7a.shape[0]/2)].transpose(), extent = extent,
                         vmin = 0, vmax = np.amax(prob_7a[0]), cmap = 'plasma')
-ax[0, 1].set_title('Snapshot 1')
-im2 = ax[1, 0].imshow(prob_7a[int(prob_7a.shape[0]*2/3)].transpose(), extent = extent,
+ax[1].set_title('Halfway through')
+im2 = ax[2].imshow(prob_7a[prob_7a.shape[0]-1].transpose(), extent = extent,
                         vmin = 0, vmax = np.amax(prob_7a[0]), cmap = 'plasma')
-ax[1, 0].set_title('Snapshot 2')
-im3 = ax[1, 1].imshow(prob_7a[prob_7a.shape[0]-1].transpose(), extent = extent,
-                        vmin = 0, vmax = np.amax(prob_7a[0]), cmap = 'plasma')
-ax[1, 1].set_title('Final outcome')
-[fig.colorbar(imi, ax=axi, shrink=0.8, label = 'PDF') for imi, axi in zip([im0, im1, im2, im3], ax)]
+ax[2].set_title('Final outcome')
+[fig.colorbar(imi, ax=axi, shrink=0.8) for imi, axi in zip([im0, im1, im2], ax)]
+plt.tight_layout()
 plt.show()
 
 ## same thing but with double slit this time
@@ -63,28 +61,24 @@ for i in range(prob_7b.shape[0]):
 
 plt.figure()
 plt.plot(t, total_prob_7b)
-#plt.ylim(0.5, 1.5)
+plt.ylim(0.5, 1.5)
 plt.xlabel("Time")
 plt.ylabel("Total probability (double slit)")
 plt.show()
 
-extent = [0, 1, 0, 1]
-
-fig, ax = plt.subplots(2, 2)
-im0 = ax[0, 0].imshow(prob_7b[0].transpose(), extent = extent,
+fig, ax = plt.subplots(1, 3, figsize = (15, 5))
+im0 = ax[0].imshow(prob_7b[0].transpose(), extent = extent,
                         vmin = 0, vmax = np.amax(prob_7b[0]), cmap = 'plasma')
-ax[0, 0].set_title('Initial conditions')
-im1 = ax[0, 1].imshow(prob_7b[int(prob_7b.shape[0]/3)].transpose(), extent = extent,
+ax[0].set_title('Initial conditions')
+im1 = ax[1].imshow(prob_7b[int(prob_7b.shape[0]/2)].transpose(), extent = extent,
                         vmin = 0, vmax = np.amax(prob_7b[0]), cmap = 'plasma')
-ax[0, 1].set_title('Snapshot 1')
-im2 = ax[1, 0].imshow(prob_7b[int(prob_7b.shape[0]*2/3)].transpose(), extent = extent,
+ax[1].set_title('Halfway through')
+im2 = ax[2].imshow(prob_7b[prob_7b.shape[0]-1].transpose(), extent = extent,
                         vmin = 0, vmax = np.amax(prob_7b[0]), cmap = 'plasma')
-ax[1, 0].set_title('Snapshot 2')
-im3 = ax[1, 1].imshow(prob_7b[prob_7b.shape[0]-1].transpose(), extent = extent,
-                        vmin = 0, vmax = np.amax(prob_7b[0]), cmap = 'plasma')
-ax[1, 1].set_title('Final outcome')
-[fig.colorbar(imi, ax=axi, shrink=0.8, label = 'PDF') for imi, axi in zip([im0, im1, im2, im3], ax)]
+ax[2].set_title('Final outcome')
+[fig.colorbar(imi, ax=axi, shrink=0.8) for imi, axi in zip([im0, im1, im2], ax)]
+plt.tight_layout()
 plt.show()
 
-#animate_result(x, y, np.swapaxes(prob_7a, 1, 2), t)
+animate_result(x, y, np.swapaxes(prob_7a, 1, 2), t)
 animate_result(x, y, np.swapaxes(prob_7b, 1, 2), t)
