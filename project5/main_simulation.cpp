@@ -1,6 +1,7 @@
 #include <iostream> // Printing to terminal and file
 #include <fstream> // Open and read file
-#include <string>
+#include <sstream> // stringstream
+#include <string> // strings
 
 #include "CrankNicolson.hpp"
 #include "Schrodinger.hpp"
@@ -20,14 +21,14 @@ int main(int argc, char* argv[])
 
     std::fstream myfile;
     myfile.open(config_file);
-    if (myfile.is_open())
+    if (myfile.is_open()) // Make sure that the file was opened correctly
     {
       std::string line;
-      int linecount = 0;
+      int linecount = 0; // To make sure there is only one line with numbers ..
 
       while (std::getline(myfile, line))
       {
-        if (line.at(0) == '#')
+        if (line.at(0) == '#') // Skip lines that start with #
         {
           continue;
         }
@@ -37,6 +38,7 @@ int main(int argc, char* argv[])
           {
             std::cout << "Warning: More than one configuration in config file " << std::endl;
           }
+          // Save the contents of the line :
           std::stringstream mysstream(line);
           mysstream >> h_in >> dt_in >> Tmax_in >> xc_in >> sx_in >> px_in >> yc_in >> sy_in >> py_in >> v0_in >> n_slits >> filename;
           linecount += 1;
@@ -82,18 +84,21 @@ int main(int argc, char* argv[])
     filename = argv[12]; // filename to save data to
   }
 
-  std::cout << h_in << endl;
-  std::cout << dt_in << endl;
-  std::cout << Tmax_in << endl;
-  std::cout << xc_in << endl;
-  std::cout << sx_in << endl;
-  std::cout << px_in << endl;
-  std::cout << yc_in << endl;
-  std::cout << sy_in << endl;
-  std::cout << py_in << endl;
-  std::cout << v0_in << endl;
-  std::cout << n_slits << endl;
-  std::cout << filename << endl;
+  std::cout << endl;
+  std::cout << "Configuration :" << endl;
+  std::cout << "---------------------------------------" << endl;
+  std::cout << "       h : " << h_in << endl;
+  std::cout << "      dt : " << dt_in << endl;
+  std::cout << "       T : " << Tmax_in << endl;
+  std::cout << "      xc : " << xc_in << endl;
+  std::cout << "      sx : " << sx_in << endl;
+  std::cout << "      px : " << px_in << endl;
+  std::cout << "      yc : " << yc_in << endl;
+  std::cout << "      sy : " << sy_in << endl;
+  std::cout << "      py : " << py_in << endl;
+  std::cout << "      v0 : " << v0_in << endl;
+  std::cout << " n_slits : " << n_slits << endl;
+  std::cout << "filename : " << filename << endl << endl;
 
   int M = 1/h_in + 1;
   int N = M-2;
