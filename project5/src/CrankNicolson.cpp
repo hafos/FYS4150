@@ -8,6 +8,16 @@ int vector_index(int M, int i, int j)
   return k;
 }
 
+// Find the correct matrix index from the vector indexes of u (including the boundaries!)
+void matrix_index(int M, int k, int& i, int& j)
+{
+  // Both methods give same answer ;
+  //i = k % (M-2) + 1; //% is the modulus here
+  //j = (k-i+1)/(M-2) + 1;
+  j = k/(M-2) + 1; // Integer div., for V with boundaries, size (MxM)
+  i = (k + 1) - (j - 1)*(M-2); // from vector_index
+}
+
 
 // Initialize A and B using M, h, dt and V
 void initialize_matrices(int M, double h, double dt, const sp_mat& V, sp_cx_mat& A, sp_cx_mat& B)
@@ -24,10 +34,8 @@ void initialize_matrices(int M, double h, double dt, const sp_mat& V, sp_cx_mat&
   // Fill a and b
   for (int k=0; k<N2; k++)
   {
-    // int j = k/N; // Integer div., for V without borders, size (NxN)
-    // int i = k - j*N; // from vector_index, and subtract boundary
-    int j = k/N + 1; // Integer div., for V with boundaries, size (MxM)
-    int i = (k + 1) - (j - 1)*N; // from vector_index
+    int i, j;
+    matrix_index(M, k, i, j);
     a(k) = 1. + 4.*r + 1i*dt/2.*V(i,j);
     b(k) = 1. - 4.*r - 1i*dt/2.*V(i,j);
   }
@@ -98,14 +106,11 @@ cx_vec mat2vec(int M, cx_mat U)
 cx_mat vec2mat(int M, cx_vec u)
 {
   cx_mat U_mat(M, M, fill::zeros); //initialize
-  int i = 0;
-  int j = 0;
   for (int k = 0; k < u.n_rows; k++)
   {
-    i = k % (M-2) + 1; //% is the modulus here
-    j = (k-i+1)/(M-2) + 1;
+    int i, j;
+    matrix_index(M, k, i, j);
     //std::cout << "k = " << k << " --> i: " << i << "  j: " << j << endl;
-
     U_mat(i, j) = u(k);
   }
   return U_mat;

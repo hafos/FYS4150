@@ -19,14 +19,24 @@ int main()
   }
   std::cout << endl;
 
+  std::cout << "Test of matrix_index : " << endl;
+  for (int k=0; k<=8; k++)
+  {
+      int i, j;
+      matrix_index(M, k, i, j);
+      std::cout << "i: " << i << "  j: " << j << "  <--  k: " << k << endl;
+  }
+  std::cout << endl;
+
 
   std::cout << "Test of initialize_matrices :" << endl;
-  double h = 1;
+  M = 5;
+  double h = 1./(M-1.);
   double dt = 1;
   int N = M-2;
   int N2 = N*N;
-  double v0 = 10.0;
-  int n_slits = 2;
+  double v0 = 1.;
+  int n_slits = 0;
   Schrodinger syst1(M, v0, n_slits);
   sp_mat V = syst1.potential(); // The potential in Schrodinger class is (MxM)
   sp_cx_mat A(N2, N2);
@@ -39,9 +49,14 @@ int main()
 
 
   std::cout << "Test of solver :" << endl;
-  cx_vec u = {1,0,0,  0,0,0,  0,0,0};
+  cx_vec u = {0.8,0,0,  0,0.2,0.01,  0,0.3,0};
   cx_vec u_new = compute_next_step(u, A, B);
-  std::cout << u_new << endl;
+  // Compute the right hand side :
+  cx_vec b = B*u;
+  // Compute left hand side :
+  cx_vec a = A*u_new;
+  std::cout << "LHS and RHS should approximately equal : " << endl;
+  std::cout << a << endl << b << endl << endl;
 
 
   M = 5;
@@ -55,9 +70,16 @@ int main()
 
   std::cout << "Test of potential initialization: " << endl;
   // syst.initialize_potential(v0, 0); // Is done in constructor...
-  std::cout << mat(syst.potential()) << endl;
+  std::cout << mat(syst.potential()) << endl << endl;
   // If the slits are not visible here it is because;
   // - M is too small
   // - slit_aperture is too small for the M
   // Will of course be better when simulating with small h -> large M.
+
+
+  std::cout << "Test of matrix-vector conversion: " << endl;
+  cx_vec u_ = mat2vec(M, syst.wave_function());
+  std::cout << real(u_%conj(u_)) << endl;
+  cx_mat U_ = vec2mat(M, u_);
+  std::cout << real(U_%conj(U_)) << endl;
 }
