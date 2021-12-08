@@ -86,4 +86,5 @@ ax[1, 1].set_title('Final outcome')
 [fig.colorbar(imi, ax=axi, shrink=0.8, label = 'PDF') for imi, axi in zip([im0, im1, im2, im3], ax)]
 plt.show()
 
+#animate_result(x, y, np.swapaxes(prob_7a, 1, 2), t)
 animate_result(x, y, np.swapaxes(prob_7b, 1, 2), t)

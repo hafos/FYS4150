@@ -55,7 +55,7 @@ def animate_result(x_points, y_points, z_data_list, t_points):
     anim = FuncAnimation(fig, animation, interval=1, frames=np.arange(0, len(z_data_list), 2), repeat=False, blit=0)
 
     # Run the animation!
-    #plt.show()
+    plt.show()
 
     # # Save the animation
     anim.save('./animation.mp4', writer="ffmpeg", bitrate=-1, fps=30)
