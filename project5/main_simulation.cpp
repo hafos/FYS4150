@@ -9,13 +9,13 @@ int main(int argc, char* argv[])
 {
   // Check number of command-line arguments
 
-  if (argc != 11)  // Expect 10 command-line arguments
+  if (argc != 13)  // Expect 12 command-line arguments
   {
     // Get the name of the executable file
     std::string executable_name = argv[0];
 
     std::cerr << "Error: Wrong number of input arguments." << std::endl;
-    std::cerr << "Usage: " << executable_name << " <some integer> <some double> <some string>" << std::endl;
+    std::cerr << "Usage: " << executable_name << " <double h> <double dt> <double T> <double xc> <double sx> <double px> <double yc> <double sy> <double py> <double v0> <int n_slits> <string filename>" << std::endl;
 
     // Exit program with non-zero return code to indicate a problem
     return 1;
@@ -32,11 +32,12 @@ int main(int argc, char* argv[])
   double sy_in = atof(argv[8]); // initial width of wave packet (y)
   double py_in = atof(argv[9]); // initial momentum of wave packet (y)
   double v0_in = atof(argv[10]); // potential barrier height
+  int n_slits = atoi(argv[11]); // number of slits, must be positive or 0
+  std::string filename = argv[12]; // filename to save data to
 
-  int M = 1/h_in;
+  int M = 1/h_in + 1;
   int N = M-2;
   int N2 = N*N;
-  int n_slits = 2;
   Schrodinger syst(M, v0_in, n_slits); // sets up potential and system
 
   syst.U_init(xc_in, yc_in, sx_in, sy_in, px_in, py_in); // sets up initial state matrix
@@ -70,7 +71,7 @@ int main(int argc, char* argv[])
   //P_n.each_slice( [](mat& X){ std::cout << accu(X) << endl; } );
 
   // save as binary data file
-  P_n.save("probability_prob7b.bin");
+  P_n.save(filename);
 
 
 }

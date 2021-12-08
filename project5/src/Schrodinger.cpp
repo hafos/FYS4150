@@ -82,26 +82,29 @@ void Schrodinger::initialize_potential(double v0, int n_slits)
   j(0)=0;                         // Border
   j(j.n_elem-1)=M_-1;              // Border
 
-  // Set a few characteristic lengths
-  double midpoint = 0.5*(max(y_) - min(y_)); // or y_(-1) - y_(0)
-  double length = n_slits*slit_aperture + (n_slits - 1)*slit_distance; // From start of first slit to the end of the last
-  double position = (midpoint - length/2); // Start from start of first slit
-
-  // Set the first internal wall border :
-  j(1) = index_min(abs( y_ - position ) );
-
-  // Now loop over internal wall borders after the first one :
-  for (int l=2; l<j.n_elem-2; l++)
+  if (n_slits > 0) // If n_slits = 0, j is already filled with the correct indices
   {
-    position += slit_aperture;
-    j(l) = index_min(abs( y_ - position ) );
-    position += slit_distance;
-    j(l+1) = index_min(abs( y_ - position ) );
-    l += 1; // Skip one
-  }
+    // Set a few characteristic lengths
+    double midpoint = 0.5*(max(y_) - min(y_)); // or y_(-1) - y_(0)
+    double length = n_slits*slit_aperture + (n_slits - 1)*slit_distance; // From start of first slit to the end of the last
+    double position = (midpoint - length/2); // Start from start of first slit
 
-  // Set the last internal wall border :
-  j(j.n_elem-2) = index_min(abs( y_ - (position + slit_aperture) ) );
+    // Set the first internal wall border :
+    j(1) = index_min(abs( y_ - position ) );
+
+    // Now loop over internal wall borders after the first one :
+    for (int l=2; l<j.n_elem-2; l++)
+    {
+      position += slit_aperture;
+      j(l) = index_min(abs( y_ - position ) );
+      position += slit_distance;
+      j(l+1) = index_min(abs( y_ - position ) );
+      l += 1; // Skip one
+    }
+
+    // Set the last internal wall border :
+    j(j.n_elem-2) = index_min(abs( y_ - (position + slit_aperture) ) );
+  }
 
   // Rows: from i0 to i1 is wall
   // Columns: From j0 to j1 and from j2 to j3 and from j4 to j5 etc is wall.
