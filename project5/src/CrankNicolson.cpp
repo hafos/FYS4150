@@ -48,12 +48,12 @@ void initialize_matrices(int M, double h, double dt, const sp_mat& V, sp_cx_mat&
   }
 
   // Insert diagonals with only r's
-  for (int j=0; j<N2-3; j++)
+  for (int j=0; j<N2-N; j++)
   {
-    A(j, j+3) = -r;
-    A(j+3, j) = -r;
-    B(j, j+3) = r;
-    B(j+3, j) = r;
+    A(j, j+N) = -r;
+    A(j+N, j) = -r;
+    B(j, j+N) = r;
+    B(j+N, j) = r;
   }
 
   // Insert diagonals with r's and some zeros:

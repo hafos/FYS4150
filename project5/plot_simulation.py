@@ -12,7 +12,7 @@ from animate import animate_result # Animation function example
 prob_7a = pa.cube()
 prob_7a.load("probability_prob7a.bin")
 prob_7a = np.array(prob_7a)
-print(prob_7a.shape)
+#print(prob_7a.shape)
 
 total_prob_7a = np.zeros(prob_7a.shape[0])
 for i in range(prob_7a.shape[0]):
@@ -25,9 +25,9 @@ y = np.linspace(0, 1, prob_7a.shape[2])
 
 plt.figure()
 plt.plot(t, total_prob_7a)
-plt.ylim(0.5, 1.5)
+#plt.ylim(0.5, 1.5)
 plt.xlabel("Time")
-plt.ylabel("Total probability (no slit)")
+plt.ylabel("Total probability (no wall)")
 plt.show()
 
 extent = [0, 1, 0, 1]
@@ -63,7 +63,7 @@ for i in range(prob_7b.shape[0]):
 
 plt.figure()
 plt.plot(t, total_prob_7b)
-plt.ylim(0.5, 1.5)
+#plt.ylim(0.5, 1.5)
 plt.xlabel("Time")
 plt.ylabel("Total probability (double slit)")
 plt.show()

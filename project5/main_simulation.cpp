@@ -107,7 +107,6 @@ int main(int argc, char* argv[])
 
   syst.U_init(xc_in, yc_in, sx_in, sy_in, px_in, py_in); // sets up initial state matrix
   cx_mat U = syst.wave_function(); // matrix form
-  //std::cout << U << endl;
   cx_vec u_vec = mat2vec(M, U); // vector form
 
   sp_mat V = syst.potential();
