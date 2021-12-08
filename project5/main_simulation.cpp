@@ -84,6 +84,11 @@ int main(int argc, char* argv[])
     filename = argv[12]; // filename to save data to
   }
 
+  std::string filename_real = filename;
+  filename_real.insert(filename.length()-4, "_real");
+  std::string filename_imag = filename;
+  filename_imag.insert(filename.length()-4, "_imag");
+
   std::cout << endl;
   std::cout << "Configuration :" << endl;
   std::cout << "---------------------------------------" << endl;
@@ -98,7 +103,9 @@ int main(int argc, char* argv[])
   std::cout << "      py : " << py_in << endl;
   std::cout << "      v0 : " << v0_in << endl;
   std::cout << " n_slits : " << n_slits << endl;
-  std::cout << "filename : " << filename << endl << endl;
+  std::cout << "filename : " << filename << endl;
+  std::cout << "filename_real : " << filename_real << endl;
+  std::cout << "filename_imag : " << filename_imag << endl << endl;
 
   int M = 1/h_in + 1;
   int N = M-2;
@@ -117,7 +124,11 @@ int main(int argc, char* argv[])
   // loop over time
   // store initial condition as first slice of probability density cube
   cube P_n(M, M, 1, fill::zeros);
+  cube Preal(M, M, 1, fill::zeros);
+  cube Pconj(M, M, 1, fill::zeros);
   P_n.slice(0) = real(U%conj(U));
+  Preal.slice(0) = real(U);
+  Pconj.slice(0) = imag(U);
 
   double t = 0;
   mat p(M, M);
@@ -127,6 +138,8 @@ int main(int argc, char* argv[])
     U = vec2mat(M, u_vec);
     p = real(U%conj(U));
     P_n = join_slices(P_n, p);
+    Preal = join_slices(Preal, real(U));
+    Pconj = join_slices(Pconj, imag(U));
     t = t+dt_in;
   }
 
@@ -136,6 +149,8 @@ int main(int argc, char* argv[])
 
   // save as binary data file
   P_n.save(filename);
+  Preal.save(filename_real);
+  Pconj.save(filename_imag);
 
 
 }

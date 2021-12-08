@@ -3,7 +3,7 @@ import matplotlib
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
 
-def animate_result(x_points, y_points, z_data_list, t_points):
+def animate_result(x_points, y_points, z_data_list, t_points, filename):
     dt = t_points[1]-t_points[0]
     # Some settings
     fontsize = 12
@@ -58,4 +58,4 @@ def animate_result(x_points, y_points, z_data_list, t_points):
     plt.show()
 
     # # Save the animation
-    anim.save('./animation.mp4', writer="ffmpeg", bitrate=-1, fps=30)
+    anim.save(filename, writer="ffmpeg", bitrate=-1, fps=30)
