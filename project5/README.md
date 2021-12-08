@@ -14,4 +14,4 @@ where h is the position step size, dt is the time step size, T is the simulation
 
 Or use config file:
 
-./main_simulatons.exe configurations/config_file_name.dat
+./main_simulation.exe configurations/config_file_name.dat
