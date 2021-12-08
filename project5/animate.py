@@ -29,7 +29,7 @@ def animate_result(x_points, y_points, z_data_list, t_points):
 
     # Add a colourbar
     cbar = fig.colorbar(img, ax=ax)
-    cbar.set_label("u(x,y,t)", fontsize=fontsize)
+    cbar.set_label(r"$p_{ij}^n$", fontsize=fontsize)
     cbar.ax.tick_params(labelsize=fontsize)
 
     # Add a text element showing the time
