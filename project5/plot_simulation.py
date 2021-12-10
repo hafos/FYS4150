@@ -21,7 +21,7 @@ for i in range(prob_7a.shape[0]):
 t = np.linspace(0, 0.008, prob_7a.shape[0])
 x = np.linspace(0, 1, prob_7a.shape[1])
 y = np.linspace(0, 1, prob_7a.shape[2])
-#print(total_prob_7a)
+extent = [0, 1, 0, 1]
 
 plt.figure()
 plt.scatter(t, np.abs(np.ones(len(total_prob_7a)) - total_prob_7a), marker='x', s=16) # abs deviation
@@ -29,8 +29,6 @@ plt.xlabel("Time [s]")
 plt.ylabel("Absolute probability deviation (no wall)")
 plt.savefig('probability_deviation_no_wall.png')
 plt.show()
-
-extent = [0, 1, 0, 1]
 
 fig, ax = plt.subplots(1, 3, figsize = (15, 5))
 im0 = ax[0].imshow(prob_7a[0].transpose(), extent = extent,
@@ -77,27 +75,8 @@ ax[2].set_title('t=0.008')
 plt.tight_layout()
 plt.show()
 
-prob_8 = pa.cube()
-prob_8.load("probability_prob8.bin")
-prob_8 = np.array(prob_8)
-
-fig, ax = plt.subplots(1, 3, figsize = (15, 5))
-im0 = ax[0].imshow(prob_8[0].transpose(), extent = extent,
-                        vmin = 0, vmax = np.amax(prob_8[0]), cmap = 'plasma')
-ax[0].set_title('t=0')
-im1 = ax[1].imshow(prob_8[int(prob_8.shape[0]/2)].transpose(), extent = extent,
-                        vmin = 0, vmax = np.amax(prob_8[0]), cmap = 'plasma')
-ax[1].set_title('t=0.001')
-im2 = ax[2].imshow(prob_8[prob_8.shape[0]-1].transpose(), extent = extent,
-                        vmin = 0, vmax = np.amax(prob_8[0]), cmap = 'plasma')
-ax[2].set_title('t=0.002')
-[fig.colorbar(imi, ax=axi, shrink=0.8) for imi, axi in zip([im0, im1, im2], ax)]
-plt.suptitle(r'$p_{ij}^n = u_{ij}^{n*} u_{ij}^n$')
-plt.tight_layout()
-plt.show()
-
 prob_8_imag = pa.cube()
-prob_8_imag.load("probability_prob8_imag.bin")
+prob_8_imag.load("wavefunc_prob8_imag.bin")
 prob_8_imag = np.array(prob_8_imag)
 
 fig, ax = plt.subplots(1, 3, figsize = (15, 5))
@@ -116,7 +95,7 @@ plt.tight_layout()
 plt.show()
 
 prob_8_real = pa.cube()
-prob_8_real.load("probability_prob8_real.bin")
+prob_8_real.load("wavefunc_prob8_real.bin")
 prob_8_real = np.array(prob_8_real)
 
 fig, ax = plt.subplots(1, 3, figsize = (15, 5))
@@ -133,6 +112,26 @@ ax[2].set_title('t=0.002')
 plt.suptitle(r'Re($u_{ij}$)')
 plt.tight_layout()
 plt.show()
+
+
+prob_8 = prob_8_real**2 + prob_8_imag**2 # Complex conjugate
+
+fig, ax = plt.subplots(1, 3, figsize = (15, 5))
+im0 = ax[0].imshow(prob_8[0].transpose(), extent = extent,
+                        vmin = 0, vmax = np.amax(prob_8[0]), cmap = 'plasma')
+ax[0].set_title('t=0')
+im1 = ax[1].imshow(prob_8[int(prob_8.shape[0]/2)].transpose(), extent = extent,
+                        vmin = 0, vmax = np.amax(prob_8[0]), cmap = 'plasma')
+ax[1].set_title('t=0.001')
+im2 = ax[2].imshow(prob_8[prob_8.shape[0]-1].transpose(), extent = extent,
+                        vmin = 0, vmax = np.amax(prob_8[0]), cmap = 'plasma')
+ax[2].set_title('t=0.002')
+[fig.colorbar(imi, ax=axi, shrink=0.8) for imi, axi in zip([im0, im1, im2], ax)]
+plt.suptitle(r'$p_{ij}^n = u_{ij}^{n*} u_{ij}^n$')
+plt.tight_layout()
+plt.show()
+
+
 
 # print(len(prob_8[-1][:][160]))
 prob_slice = np.trapz(prob_8[-1][:][160])
