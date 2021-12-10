@@ -24,10 +24,16 @@ y = np.linspace(0, 1, prob_7a.shape[2])
 #print(total_prob_7a)
 
 plt.figure()
-plt.plot(t, total_prob_7a)
-plt.ylim(0.5, 1.5)
+# plt.plot(t, np.abs(np.ones(len(total_prob_7a)) - total_prob_7a))
+# plt.plot(t, np.ones(len(total_prob_7a)) - total_prob_7a)
+plt.scatter(t, np.abs(np.ones(len(total_prob_7a)) - total_prob_7a), marker='+') # abs diff
+# plt.scatter(t, np.ones(len(total_prob_7a)) - total_prob_7a, marker='+') # diff
+# plt.ylim(0.5, 1.5)
 plt.xlabel("Time")
 plt.ylabel("Total probability (no wall)")
+plt.savefig('probability_deviation_no_wall.png')
+# plt.yscale('log')
+# plt.loglog()
 plt.show()
 
 extent = [0, 1, 0, 1]
@@ -60,10 +66,11 @@ for i in range(prob_7b.shape[0]):
 #print(total_prob_7b)
 
 plt.figure()
-plt.plot(t, total_prob_7b)
-plt.ylim(0.5, 1.5)
+plt.plot(t, np.abs(np.ones(len(total_prob_7b)) - total_prob_7b))
+# plt.ylim(0.5, 1.5)
 plt.xlabel("Time")
 plt.ylabel("Total probability (double slit)")
+plt.savefig('probability_deviation_double.png')
 plt.show()
 
 fig, ax = plt.subplots(1, 3, figsize = (15, 5))
@@ -137,6 +144,39 @@ plt.suptitle(r'Re($u_{ij}$)')
 plt.tight_layout()
 plt.show()
 
-#animate_result(x, y, np.swapaxes(prob_7a, 1, 2), t, './animation_7a.mp4')
-#animate_result(x, y, np.swapaxes(prob_7b, 1, 2), t, './animation_7b.mp4')
+# print(len(prob_8[-1][:][160]))
+prob_slice = np.trapz(prob_8[-1][:][160])
+y = np.linspace(0, 1, len(prob_8[-1][:][160]))
+plt.plot(y, prob_8[-1][:][160]/np.trapz(prob_8[-1][:][160]))
+plt.title('Double slit detection at t = 0.002s')
+plt.savefig('2_slit_detection.pdf')
+plt.show()
+
+# print(np.trapz(prob_slice))
+
+
+prob_9_1_slit = pa.cube()
+prob_9_1_slit.load("probability_prob9_1_slit.bin")
+prob_9_1_slit = np.array(prob_9_1_slit)
+
+# prob_slice2 = np.trapz(prob_9_1_slit[-1][:][160])
+plt.plot(y, prob_9_1_slit[-1][:][160]/np.trapz(prob_9_1_slit[-1][:][160]))
+plt.title('Single slit detection at t = 0.002s')
+plt.savefig('1_slit_detection.pdf')
+plt.show()
+
+# prob_slice3 =
+prob_9_3_slits = pa.cube()
+prob_9_3_slits.load("probability_prob9_3_slits.bin")
+prob_9_3_slits = np.array(prob_9_3_slits)
+
+plt.plot(y, prob_9_3_slits[-1][:][160]/np.trapz(prob_9_3_slits[-1][:][160]))
+plt.title('Three slit detection at t = 0.002s')
+plt.savefig('3_slit_detection.pdf')
+plt.show()
+
+animate_result(x, y, np.swapaxes(prob_7a, 1, 2), t, './animation_7a.mp4')
+animate_result(x, y, np.swapaxes(prob_7b, 1, 2), t, './animation_7b.mp4')
 animate_result(x, y, np.swapaxes(prob_8, 1, 2), t, './animation_8.mp4')
+animate_result(x, y, np.swapaxes(prob_9_1_slit, 1, 2), t, './animation_9_1_slit.mp4')
+animate_result(x, y, np.swapaxes(prob_9_3_slits, 1, 2), t, './animation_9_3_slits.mp4')
