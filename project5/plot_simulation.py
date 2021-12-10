@@ -25,7 +25,7 @@ y = np.linspace(0, 1, prob_7a.shape[2])
 
 plt.figure()
 plt.scatter(t, np.abs(np.ones(len(total_prob_7a)) - total_prob_7a), marker='x', s=16) # abs deviation
-plt.xlabel("Time")
+plt.xlabel("Time [s]")
 plt.ylabel("Absolute probability deviation (no wall)")
 plt.savefig('probability_deviation_no_wall.png')
 plt.show()
@@ -58,7 +58,7 @@ for i in range(prob_7b.shape[0]):
 
 plt.figure()
 plt.scatter(t, np.abs(np.ones(len(total_prob_7b)) - total_prob_7b), marker='x', s=16) # abs deviation
-plt.xlabel("Time")
+plt.xlabel("Time [s]")
 plt.ylabel("Absolute probability deviation (double slit)")
 plt.savefig('probability_deviation_double.png')
 plt.show()
