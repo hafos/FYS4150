@@ -6,6 +6,9 @@
 *.dat
 *.txt
 *.md.swp
-*.pdf
-
 *.bin
+
+# Images and videos
+*.mp4
+*.png
+*.pdf
