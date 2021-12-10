@@ -24,16 +24,10 @@ y = np.linspace(0, 1, prob_7a.shape[2])
 #print(total_prob_7a)
 
 plt.figure()
-# plt.plot(t, np.abs(np.ones(len(total_prob_7a)) - total_prob_7a))
-# plt.plot(t, np.ones(len(total_prob_7a)) - total_prob_7a)
-plt.scatter(t, np.abs(np.ones(len(total_prob_7a)) - total_prob_7a), marker='+') # abs diff
-# plt.scatter(t, np.ones(len(total_prob_7a)) - total_prob_7a, marker='+') # diff
-# plt.ylim(0.5, 1.5)
+plt.scatter(t, np.abs(np.ones(len(total_prob_7a)) - total_prob_7a), marker='x', s=16) # abs deviation
 plt.xlabel("Time")
-plt.ylabel("Total probability (no wall)")
+plt.ylabel("Absolute probability deviation (no wall)")
 plt.savefig('probability_deviation_no_wall.png')
-# plt.yscale('log')
-# plt.loglog()
 plt.show()
 
 extent = [0, 1, 0, 1]
@@ -57,19 +51,15 @@ plt.show()
 prob_7b = pa.cube()
 prob_7b.load("probability_prob7b.bin")
 prob_7b = np.array(prob_7b)
-#print(prob_7b.shape)
 
 total_prob_7b = np.zeros(prob_7b.shape[0])
 for i in range(prob_7b.shape[0]):
     total_prob_7b[i] = np.sum(prob_7b[i])
 
-#print(total_prob_7b)
-
 plt.figure()
-plt.plot(t, np.abs(np.ones(len(total_prob_7b)) - total_prob_7b))
-# plt.ylim(0.5, 1.5)
+plt.scatter(t, np.abs(np.ones(len(total_prob_7b)) - total_prob_7b), marker='x', s=16) # abs deviation
 plt.xlabel("Time")
-plt.ylabel("Total probability (double slit)")
+plt.ylabel("Absolute probability deviation (double slit)")
 plt.savefig('probability_deviation_double.png')
 plt.show()
 
