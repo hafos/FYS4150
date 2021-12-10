@@ -158,21 +158,21 @@ int main(int argc, char* argv[])
   }
   else
   {
-    cube Preal(M, M, 1, fill::zeros);
-    cube Pconj(M, M, 1, fill::zeros);
-    Preal.slice(0) = real(U);
-    Pconj.slice(0) = imag(U);
+    cube Ureal(M, M, 1, fill::zeros);
+    cube Uimag(M, M, 1, fill::zeros);
+    Ureal.slice(0) = real(U);
+    Uimag.slice(0) = imag(U);
     while (t < Tmax_in)
     {
       u_vec = compute_next_step(u_vec, A, B);
       U = vec2mat(M, u_vec);
-      Preal = join_slices(Preal, real(U));
-      Pconj = join_slices(Pconj, imag(U));
+      Ureal = join_slices(Ureal, real(U));
+      Uimag = join_slices(Uimag, imag(U));
       t = t+dt_in;
     }
     // Save as binary data file :
-    Preal.save(filename_real);
-    Pconj.save(filename_imag);
+    Ureal.save(filename_real);
+    Uimag.save(filename_imag);
   }
 
 }
