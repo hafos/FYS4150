@@ -15,3 +15,5 @@ where h is the position step size, dt is the time step size, T is the simulation
 Or use config file:
 
 ./main_simulation.exe configurations/config_file_name.dat
+
+After running all the config_file scenarios spaning problem 7-9 we plot our results using plot_simulation.py .
