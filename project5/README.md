@@ -16,4 +16,4 @@ Or use config file:
 
 ./main_simulation.exe configurations/config_file_name.dat
 
-After running all the config_file scenarios spaning problem 7-9 we plot our results using plot_simulation.py .
+After running all the config_file scenarios spaning problem 7-9 the results can be plotted using plot_simulation.py, it will also produce animations of the 5 scenarios. If one just wants to see the animations they are in the repo in the dictonary /animations.
