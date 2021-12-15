@@ -50,7 +50,6 @@ ax[1].set_ylabel('Absolute probability deviation')
 ax[1].set_xlabel('Time')
 fig.tight_layout()
 plt.savefig('probability_deviation_checks.pdf')
-plt.show()
 
 
 
@@ -74,22 +73,23 @@ prob_8 = prob_8_real**2 + prob_8_imag**2 # p = u^*u
 ##### Plot all in one 3x3 figure: (Alternative 1)
 ticks = np.linspace(0.1, 0.9, 5) # Specifies placement of xticks/yticks for closely spaced figures.
 extent = [0, 1, 0, 1] # Extent of the plot
-fig, ax = plt.subplots(3, 3, figsize = (15,13.5), sharey=True, sharex=True, constrained_layout=True)
+fig, ax = plt.subplots(3, 3, figsize = (15/1.3,13.5/1.3), sharey=True, sharex=True, constrained_layout=True)
 def plot_three(data, row, ax, name):
     """
     Plots data to a row in ax.
     name is the name of the data (p, Re(u), Im(u)).
+    The row has common vmin and vmax so a common colorbar can be appended to [row, 2]
     """
-    Vmax = np.max(data[0])
+    Vmax = np.max(data[0]) # Common upper limit to scale for the three times
     im0 = ax[row,0].imshow(data[0].transpose(), extent = extent,
                             vmin = 0, vmax = Vmax, cmap = 'plasma')
     im1 = ax[row,1].imshow(data[int(data.shape[0]/2)].transpose(), extent = extent,
                             vmin = 0, vmax = Vmax, cmap = 'plasma')
     im2 = ax[row,2].imshow(data[data.shape[0]-1].transpose(), extent = extent,
                             vmin = 0, vmax = Vmax, cmap = 'plasma')
-    ax[row,0].set_title(name+ '\n$t$ = 0', y=0.8, x=0.8, color='w')
-    ax[row,1].set_title(name+'\n$t$ = 0.001', y=0.8, x=0.75, color='w')
-    ax[row,2].set_title(name+'\n$t$ = 0.002', y=0.8, x=0.75, color='w')
+    ax[row,0].set_title(name+ '\n$t$ = 0', y=0.8, x=0.8, color='w', fontsize=14)
+    ax[row,1].set_title(name+'\n$t$ = 0.001', y=0.8, x=0.75, color='w', fontsize=14)
+    ax[row,2].set_title(name+'\n$t$ = 0.002', y=0.8, x=0.75, color='w', fontsize=14)
     return [im0, im1, im2] # To produce colorbars later
 labeli = [r'$p = u^*u$', r'Re($u$)', r'Im($u$)']
 ## Plot each row :
@@ -110,96 +110,12 @@ plt.savefig('nine_panels.pdf')
 
 
 
-##### Plot individual panels of 3x1: (Alternative 2)
-def plot_three_panels(data, name):
-    """
-    Plots the data for three different times.
-    Returns figure and axis objects.
-
-    Parameters
-    ----------
-    data: np.array of u(x,y,t)
-    """
-    extent = [0, 1, 0, 1]
-    fig, ax = plt.subplots(1, 3, figsize = (15,7), sharey=True, constrained_layout=True)
-    im0 = ax[0].imshow(data[0].transpose(), extent = extent,
-                            vmin = 0, vmax = np.amax(data[0]), cmap = 'plasma')
-    ax[0].set_title('t=0')
-    ax[0].set_xlabel('x')
-    ax[0].set_ylabel('y')
-    ax[0].set_xticks(ticks)
-    im1 = ax[1].imshow(data[int(data.shape[0]/2)].transpose(), extent = extent,
-                            vmin = 0, vmax = np.amax(data[1]), cmap = 'plasma')
-    ax[1].set_title('t=0.001')
-    ax[1].set_xlabel('x')
-    ax[1].set_xticks(ticks)
-    im2 = ax[2].imshow(data[data.shape[0]-1].transpose(), extent = extent,
-                            vmin = 0, vmax = np.amax(data[2]), cmap = 'plasma')
-    ax[2].set_title('t=0.002')
-    ax[2].set_xlabel('x')
-    ax[2].set_xticks(ticks)
-    fig.set_constrained_layout_pads(w_pad=0.1 / 144, h_pad=0.1 / 144, hspace=0.02, wspace=0)
-    fig.colorbar(im2, ax=ax, orientation='horizontal', label=name)
-    return fig, ax
-
-fig, ax = plot_three_panels(prob_8_imag, r'Im($u$)')
-plt.savefig('three_panels_imag.pdf')
-
-fig, ax = plot_three_panels(prob_8_real, r'Re($u$)')
-plt.savefig('three_panels_real.pdf')
-
-fig, ax = plot_three_panels(prob_8, r'$p = u^*u$')
-plt.savefig('three_panels_prob.pdf')
-
-
-## Old version of plot:
-'''fig, ax = plt.subplots(1, 3, figsize = (13, 5))
-im0 = ax[0].imshow(prob_8_real[0].transpose(), extent = extent,
-                        vmin = 0, vmax = np.amax(prob_8_real[0]), cmap = 'plasma')
-ax[0].set_title('t=0')
-im1 = ax[1].imshow(prob_8_real[int(prob_8_real.shape[0]/2)].transpose(), extent = extent,
-                        vmin = 0, vmax = np.amax(prob_8_real[0]), cmap = 'plasma')
-ax[1].set_title('t=0.001')
-im2 = ax[2].imshow(prob_8_real[prob_8_real.shape[0]-1].transpose(), extent = extent,
-                        vmin = 0, vmax = np.amax(prob_8_real[0]), cmap = 'plasma')
-ax[2].set_title('t=0.002')
-[fig.colorbar(imi, ax=axi, shrink=0.8) for imi, axi in zip([im0, im1, im2], ax)]
-plt.suptitle(r'Re($u$)')
-plt.tight_layout()
-plt.show()
-
-fig, ax = plt.subplots(1, 3, figsize = (13, 5))
-im0 = ax[0].imshow(prob_8[0].transpose(), extent = extent,
-                        vmin = 0, vmax = np.amax(prob_8[0]), cmap = 'plasma')
-ax[0].set_title('t=0')
-im1 = ax[1].imshow(prob_8[int(prob_8.shape[0]/2)].transpose(), extent = extent,
-                        vmin = 0, vmax = np.amax(prob_8[0]), cmap = 'plasma')
-ax[1].set_title('t=0.001')
-im2 = ax[2].imshow(prob_8[prob_8.shape[0]-1].transpose(), extent = extent,
-                        vmin = 0, vmax = np.amax(prob_8[0]), cmap = 'plasma')
-ax[2].set_title('t=0.002')
-[fig.colorbar(imi, ax=axi, shrink=0.8) for imi, axi in zip([im0, im1, im2], ax)]
-plt.suptitle(r'$p = u^*u$')
-plt.tight_layout()
-plt.show()'''
-
-
-
-
 
 
 """ Plotting detection probabilities along screen for single-, double- and triple-slit cases: """
 x08 = np.argmin(np.abs(x-0.8)) # argument position where x = 0.8
 
-## Double-slit :
-slice = prob_8[-1, x08] # Extract slice at screen position
 plt.figure()
-plt.plot(y, slice/np.sum(slice)) # Plot normalized probability
-plt.title('Double-slit detection probability along screen')
-plt.xlabel('$y$')
-plt.ylabel('$p(y|x=0.8; t=0.002)$')
-plt.tight_layout()
-plt.savefig('2_slit_detection.pdf')
 
 ## Single-slit:
 prob_9_1_slit = pa.cube()
@@ -207,13 +123,13 @@ prob_9_1_slit.load("probability_prob9_1_slit.bin")
 prob_9_1_slit = np.array(prob_9_1_slit)
 
 slice = prob_9_1_slit[-1, x08] # Extract slice at screen position
-plt.figure()
-plt.plot(y, slice/np.sum(slice)) # Plot normalized probability
+plt.plot(y, slice/np.sum(slice), label='Single-slit') # Plot normalized probability
 plt.xlabel('$y$')
 plt.ylabel('$p(y|x=0.8; t=0.002)$')
-plt.title('Single-slit detection probability along screen')
-plt.tight_layout()
-plt.savefig('1_slit_detection.pdf')
+
+## Double-slit :
+slice = prob_8[-1, x08] # Extract slice at screen position
+plt.plot(y, slice/np.sum(slice), label = 'Double-slit', color='tab:red') # Plot normalized probability
 
 ## Triple-slit:
 prob_9_3_slits = pa.cube()
@@ -221,14 +137,13 @@ prob_9_3_slits.load("probability_prob9_3_slits.bin")
 prob_9_3_slits = np.array(prob_9_3_slits)
 
 slice = prob_9_3_slits[-1, x08] # Extract slice at screen position
-plt.figure()
-plt.plot(y, slice/np.sum(slice)) # Plot normalized probability
-plt.xlabel('$y$')
-plt.ylabel('$p(y|x=0.8; t=0.002)$')
-plt.title('Triple-slit detection probability along screen')
-plt.tight_layout()
-plt.savefig('3_slit_detection.pdf')
+plt.plot(y, slice/np.sum(slice), label='Triple-slit', color='tab:olive') # Plot normalized probability
 
+
+plt.legend()
+plt.title('Detection probability along detector screen')
+plt.tight_layout()
+plt.savefig('detection_screen.pdf')
 
 
 
