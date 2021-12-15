@@ -69,7 +69,6 @@ int main()
 
 
   std::cout << "Test of potential initialization: " << endl;
-  // syst.initialize_potential(v0, 0); // Is done in constructor...
   std::cout << mat(syst.potential()) << endl << endl;
   // If the slits are not visible here it is because;
   // - M is too small

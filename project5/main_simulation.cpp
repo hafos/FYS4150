@@ -13,7 +13,7 @@ int main(int argc, char* argv[])
   // Get configuration from config file or command-line:
   double h_in, dt_in, Tmax_in, xc_in, sx_in, px_in, yc_in, sy_in, py_in, v0_in;
   int n_slits;
-  bool save_prob; // If we want to save the probability only (1 file instead of 2)
+  bool save_prob; // Is True if we want to save the probability only (1 file instead of 2)
   std::string filename;
   if (argc == 2)
   {
@@ -53,7 +53,7 @@ int main(int argc, char* argv[])
     }
     myfile.close();
   }
-  else
+  else // Parameters from command-line
   {
     // Check number of command-line arguments
 
@@ -86,6 +86,7 @@ int main(int argc, char* argv[])
     filename = argv[13]; // filename to save data to (base)
   }
 
+  // Prepare filenames :
   std::string filename_real;
   std::string filename_imag;
   if (save_prob == 0)
@@ -96,6 +97,9 @@ int main(int argc, char* argv[])
 
   filename += ".bin";
 
+
+  // Print out the simulation parameters that were read in:
+  // This should help prevent mistakes
   std::cout << endl;
   std::cout << "Configuration :" << endl;
   std::cout << "----------------------------------" << endl;
@@ -122,9 +126,30 @@ int main(int argc, char* argv[])
     std::cout << "filename_imag : " << filename_imag << endl << endl;
   }
 
-  int M = 1/h_in + 1;
-  int N = M-2;
+  int M = 1/h_in + 1; // Number of elelemts in the box
+  int N = M-2; // Number of elements without the borders
   int N2 = N*N;
+
+  // These are a few tests that can help catch unfortunate mistakes in the input:
+  if ((M-1)*h_in !=1){
+    // Make sure that the step size fits with the simulation box.
+    std::cout << "Please specify a step length h so that 1/h is an integer" << endl;
+    return 1;
+  }
+
+  if (dt_in <= 0){
+    // Safeguard from infinitely running loop later
+    std::cout << "Please specify a positive, nonzero time step size" << endl;
+    return 1;
+  }
+
+  if (n_slits < 0){
+    // If negative the program would throw out-of-bounds errors later
+    std::cout << "Please specify a positive number of slits" << endl;
+    return 1;
+  }
+
+
   Schrodinger syst(M, v0_in, n_slits); // sets up potential and system
 
   syst.U_init(xc_in, yc_in, sx_in, sy_in, px_in, py_in); // sets up initial state matrix
