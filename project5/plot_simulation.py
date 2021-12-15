@@ -1,57 +1,38 @@
 import numpy as np
 import pyarma as pa
-import math
 
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
-from matplotlib import cm
-from cycler import cycler
 
-from animate import animate_result # Animation function example
+from animate import animate_result # Modified from animation function example
 
+plt.rcParams.update({'font.size': 14})
+plt.rcParams["figure.figsize"] = (6.5,4.5) # Set a standard figsize that is used unless specified
+
+
+""" Plot deviation of total probability from 1 : """
+## Loading data from first simulation without walls :
 prob_7a = pa.cube()
 prob_7a.load("probability_prob7a.bin")
 prob_7a = np.array(prob_7a)
-#print(prob_7a.shape)
 
+## Compute total probability :
 total_prob_7a = np.zeros(prob_7a.shape[0])
 for i in range(prob_7a.shape[0]):
     total_prob_7a[i] = np.sum(prob_7a[i])
 
-t = np.linspace(0, 0.008, prob_7a.shape[0])
-x = np.linspace(0, 1, prob_7a.shape[1])
-y = np.linspace(0, 1, prob_7a.shape[2])
-extent = [0, 1, 0, 1]
+## Construct x, y, t
+dt = 2.5e-5
+t = np.linspace(0, (prob_7a.shape[0]-1)*dt, prob_7a.shape[0])
+y = np.linspace(0, 1, prob_7a.shape[1])
+x = np.linspace(0, 1, prob_7a.shape[2])
 
-
-plt.figure()
-plt.scatter(t, np.abs(np.ones(len(total_prob_7a)) - total_prob_7a), marker='x', s=16) # abs deviation
-plt.xlabel("Time [s]")
-plt.ylabel("Absolute probability deviation (no wall)")
-plt.savefig('probability_deviation_no_wall.png')
-plt.show()
-
-fig, ax = plt.subplots(1, 3, figsize = (15, 5))
-im0 = ax[0].imshow(prob_7a[0].transpose(), extent = extent,
-                        vmin = 0, vmax = np.amax(prob_7a[0]), cmap = 'plasma')
-ax[0].set_title('t=0')
-im1 = ax[1].imshow(prob_7a[int(prob_7a.shape[0]/2)].transpose(), extent = extent,
-                        vmin = 0, vmax = np.amax(prob_7a[0]), cmap = 'plasma')
-ax[1].set_title('t=0.004')
-im2 = ax[2].imshow(prob_7a[prob_7a.shape[0]-1].transpose(), extent = extent,
-                        vmin = 0, vmax = np.amax(prob_7a[0]), cmap = 'plasma')
-ax[2].set_title('t=0.008')
-[fig.colorbar(imi, ax=axi, shrink=0.8) for imi, axi in zip([im0, im1, im2], ax)]
-plt.tight_layout()
-plt.savefig('7a_snapshots.pdf')
-plt.show()
-
-## same thing but with double slit this time
-
+## Loading data from second simulation with double-slit :
 prob_7b = pa.cube()
 prob_7b.load("probability_prob7b.bin")
 prob_7b = np.array(prob_7b)
 
+## Compute total probability :
 total_prob_7b = np.zeros(prob_7b.shape[0])
 for i in range(prob_7b.shape[0]):
     total_prob_7b[i] = np.sum(prob_7b[i])
@@ -69,40 +50,16 @@ ax[1].set_xlabel('Time')
 fig.tight_layout()
 plt.savefig('probability_deviation_checks.pdf')
 
-fig, ax = plt.subplots(1, 3, figsize = (15, 5))
-im0 = ax[0].imshow(prob_7b[0].transpose(), extent = extent,
-                        vmin = 0, vmax = np.amax(prob_7b[0]), cmap = 'plasma')
-ax[0].set_title('t=0')
-im1 = ax[1].imshow(prob_7b[int(prob_7b.shape[0]/2)].transpose(), extent = extent,
-                        vmin = 0, vmax = np.amax(prob_7b[0]), cmap = 'plasma')
-ax[1].set_title('t=0.004')
-im2 = ax[2].imshow(prob_7b[prob_7b.shape[0]-1].transpose(), extent = extent,
-                        vmin = 0, vmax = np.amax(prob_7b[0]), cmap = 'plasma')
-ax[2].set_title('t=0.008')
-[fig.colorbar(imi, ax=axi, shrink=0.8) for imi, axi in zip([im0, im1, im2], ax)]
-plt.tight_layout()
-plt.savefig('7b_snapshots.pdf')
-plt.show()
 
+
+
+
+
+""" Plot colormaps of Re(u), Im(u) and p for double-slit simulation """
+# Open imaginary and real results and combine to get the probability:
 prob_8_imag = pa.cube()
 prob_8_imag.load("wavefunc_prob8_imag.bin")
 prob_8_imag = np.array(prob_8_imag)
-
-fig, ax = plt.subplots(1, 3, figsize = (15, 5))
-im0 = ax[0].imshow(prob_8_imag[0].transpose(), extent = extent,
-                        vmin = 0, vmax = np.amax(prob_8_imag[0]), cmap = 'plasma')
-ax[0].set_title('t=0')
-im1 = ax[1].imshow(prob_8_imag[int(prob_8_imag.shape[0]/2)].transpose(), extent = extent,
-                        vmin = 0, vmax = np.amax(prob_8_imag[0]), cmap = 'plasma')
-ax[1].set_title('t=0.001')
-im2 = ax[2].imshow(prob_8_imag[prob_8_imag.shape[0]-1].transpose(), extent = extent,
-                        vmin = 0, vmax = np.amax(prob_8_imag[0]), cmap = 'plasma')
-ax[2].set_title('t=0.002')
-[fig.colorbar(imi, ax=axi, shrink=0.8) for imi, axi in zip([im0, im1, im2], ax)]
-plt.suptitle(r'Im($u_{ij}$)')
-plt.tight_layout()
-plt.savefig('8_imag.pdf')
-plt.show()
 
 prob_8_real = pa.cube()
 prob_8_real.load("wavefunc_prob8_real.bin")
@@ -152,7 +109,9 @@ plt.savefig('nine_panels.pdf')
 
 
 
-# print(np.trapz(prob_slice))
+
+
+""" Plotting detection probabilities along screen for single-, double- and triple-slit cases: """
 x08 = np.argmin(np.abs(x-0.8)) # argument position where x = 0.8
 
 plt.figure()
@@ -167,11 +126,11 @@ plt.plot(y, slice/np.sum(slice), label='Single-slit') # Plot normalized probabil
 plt.xlabel('$y$')
 plt.ylabel('$p(y|x=0.8; t=0.002)$')
 
-## Double-slit :
+## Double-slit:
 slice = prob_8[-1, x08] # Extract slice at screen position
 plt.plot(y, slice/np.sum(slice), label = 'Double-slit', color='tab:red') # Plot normalized probability
 
-# prob_slice3 =
+## Triple-slit:
 prob_9_3_slits = pa.cube()
 prob_9_3_slits.load("probability_prob9_3_slits.bin")
 prob_9_3_slits = np.array(prob_9_3_slits)
@@ -183,11 +142,10 @@ plt.plot(y, slice/np.sum(slice), label='Triple-slit', color='tab:olive') # Plot 
 plt.legend()
 plt.title('Detection probability along detector screen')
 plt.tight_layout()
-plt.show()
 plt.savefig('detection_screen.pdf')
 
 
-
+plt.close('all') # Closes current figures so that they are not shown in animation code
 
 """ Make animations : """
 animate_result(x, y, np.swapaxes(prob_7a, 1, 2), t, './animations/animation_7a.mp4')
