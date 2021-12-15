@@ -19,7 +19,6 @@ void Schrodinger::U_init(double xc, double yc, double sx, double sy, double px, 
   // Standard deviation of wavepacket:  (sx, sy)
   // Momentum of wavepacket:            (px, py)
   // Constructing matrices so that indexing (i,j) corresponds to (x,y)
-  // I have double checked this by printing elements X and Y :)
   // Printing the entire matrices puts i in vertical (top to bottom) and j in horizontal (left to right)
   // Make coordinate grid :
   mat X(M_, M_);
@@ -38,26 +37,19 @@ void Schrodinger::U_init(double xc, double yc, double sx, double sy, double px, 
   // Normalize the initial state :
   cx_double n = accu(U_%conj(U_)); // Operator % does element-wise multiplication
   U_ /= sqrt(n);
-  n = accu(U_%conj(U_)); // Operator % does element-wise multiplication
-  //std::cout << "Normalized if 1 : " << n << endl;
 }
 
 // Impose boundary conditions
 void Schrodinger::impose_boundaries(cx_mat& U)
 {
   // Set boundaries to 0, only necessary to do this once
-  for (int l=0; l<M_; l++) // This works fine
+  for (int l=0; l<M_; l++)
   {
     U(0, l) = 0;
     U(M_-1, l) = 0;
     U(l, 0) = 0;
     U(l, M_-1) = 0;
   }
-  // The following might be a more elegant way of doing it but it doesn't work..
-  //using namespace std::complex_literals;
-  //uvec indices = {0, M_-1};
-  //U.each_col(indices) = 0i;
-  //U.each_row(indices) = 0i;
 }
 
 
@@ -70,8 +62,6 @@ void Schrodinger::initialize_potential(double v0, int n_slits)
   double wall_position = 0.5; // Place at (M_)/2
   double slit_distance = 0.05; // 0.05
   double slit_aperture = 0.05; // 0.05
-  //double v0 = 10; // Strength of potential in wall..
-  //int n_slits = 2; // Number of slits
 
   // Find start and end of wall in i-index (x):
   int i_0 = index_min(abs( x_ - (wall_position - 0.5*wall_thickness) ));
