@@ -23,6 +23,7 @@ x = np.linspace(0, 1, prob_7a.shape[1])
 y = np.linspace(0, 1, prob_7a.shape[2])
 extent = [0, 1, 0, 1]
 
+
 plt.figure()
 plt.scatter(t, np.abs(np.ones(len(total_prob_7a)) - total_prob_7a), marker='x', s=16) # abs deviation
 plt.xlabel("Time [s]")
@@ -151,9 +152,8 @@ plt.savefig('nine_panels.pdf')
 
 
 
-
 # print(np.trapz(prob_slice))
-
+x08 = np.argmin(np.abs(x-0.8)) # argument position where x = 0.8
 
 plt.figure()
 
@@ -183,14 +183,15 @@ plt.plot(y, slice/np.sum(slice), label='Triple-slit', color='tab:olive') # Plot 
 plt.legend()
 plt.title('Detection probability along detector screen')
 plt.tight_layout()
+plt.show()
 plt.savefig('detection_screen.pdf')
 
 
 
 
 """ Make animations : """
-#animate_result(x, y, np.swapaxes(prob_7a, 1, 2), t, './animation_7a.mp4')
-#animate_result(x, y, np.swapaxes(prob_7b, 1, 2), t, './animation_7b.mp4')
-#animate_result(x, y, np.swapaxes(prob_8, 1, 2), t, './animation_8.mp4')
-#animate_result(x, y, np.swapaxes(prob_9_1_slit, 1, 2), t, './animation_9_1_slit.mp4')
-#animate_result(x, y, np.swapaxes(prob_9_3_slits, 1, 2), t, './animation_9_3_slits.mp4')
+animate_result(x, y, np.swapaxes(prob_7a, 1, 2), t, './animations/animation_7a.mp4')
+animate_result(x, y, np.swapaxes(prob_7b, 1, 2), t, './animations/animation_7b.mp4')
+animate_result(x, y, np.swapaxes(prob_8, 1, 2), t, './animations/animation_8.mp4', fps=15)
+animate_result(x, y, np.swapaxes(prob_9_1_slit, 1, 2), t, './animations/animation_9_1_slit.mp4', fps=15)
+animate_result(x, y, np.swapaxes(prob_9_3_slits, 1, 2), t, './animations/animation_9_3_slits.mp4', fps=15)

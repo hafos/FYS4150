@@ -3,7 +3,7 @@ import matplotlib
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
 
-def animate_result(x_points, y_points, z_data_list, t_points, filename):
+def animate_result(x_points, y_points, z_data_list, t_points, filename, fps=30):
     dt = t_points[1]-t_points[0]
     # Some settings
     fontsize = 12
@@ -19,7 +19,7 @@ def animate_result(x_points, y_points, z_data_list, t_points, filename):
     norm = matplotlib.cm.colors.Normalize(vmin=0.0, vmax=np.max(z_data_list[0]))
 
     # Plot the first frame
-    img = ax.imshow(z_data_list[0], extent=[x_min,x_max,y_min,y_max], cmap=plt.get_cmap("viridis"), norm=norm)
+    img = ax.imshow(z_data_list[0], extent=[x_min,x_max,y_min,y_max], cmap=plt.get_cmap("plasma"), norm=norm)
 
     # Axis labels
     plt.xlabel("x", fontsize=fontsize)
@@ -29,7 +29,7 @@ def animate_result(x_points, y_points, z_data_list, t_points, filename):
 
     # Add a colourbar
     cbar = fig.colorbar(img, ax=ax)
-    cbar.set_label(r"$p_{ij}^n$", fontsize=fontsize)
+    cbar.set_label(r"$u^{*}u$", fontsize=fontsize)
     cbar.ax.tick_params(labelsize=fontsize)
 
     # Add a text element showing the time
@@ -58,4 +58,4 @@ def animate_result(x_points, y_points, z_data_list, t_points, filename):
     plt.show()
 
     # # Save the animation
-    anim.save(filename, writer="ffmpeg", bitrate=-1, fps=30)
+    anim.save(filename, writer="ffmpeg", bitrate=-1, fps=fps)
