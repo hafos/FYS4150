@@ -4,6 +4,8 @@
 
 g++ main_tests.cpp src/*.cpp -I include/ -larmadillo -std=c++14 -o main_tests.exe
 
+*Note: main_tests.cpp was mainly a diagnostic for us to see that seperate parts of the code behaved as we expected. Thus it is not referenced in the paper.
+
 - Compile for simulations with:
 
 g++ main_simulation.cpp src/*.cpp -I include/ -larmadillo -std=c++14 -o main_simulation.exe
