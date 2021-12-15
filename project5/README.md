@@ -16,4 +16,8 @@ Or use config file:
 
 ./main_simulation.exe configurations/config_file_name.dat
 
-After running all the config_file scenarios spaning problems 7-9, the results can be plotted using plot_simulation.py, it will also produce animations of the 5 scenarios. If one just wants to see the animations they are in the repo in the directory /animations.
+After running all the config_file scenarios spaning problems 7-9, the results can be plotted using plot_simulation.py, which will also produce animations of the 5 scenarios. If one just wants to see the animations they are in the repo in the directory /animations.
+
+To make a file containing two animations that play side by side, use the following command:
+
+ffmpeg -i left_filename.mp4 -i right_filename.mp4 -filter_complex hstack output_filename.mp4
